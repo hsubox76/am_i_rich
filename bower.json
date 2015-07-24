@@ -1,0 +1,21 @@
+{
+  "name": "am_i_rich",
+  "version": "0.0.0",
+  "authors": [
+    "Christina Holland <hsubox@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.13.3",
+    "d3": "~3.5.6",
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}
