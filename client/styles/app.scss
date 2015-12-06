@@ -1,0 +1,42 @@
+@import 'colors';
+body {
+  background-color: $color-primary-0;
+}
+.box-container {
+  width: 720px;
+  margin: 25px auto 0 auto;
+}
+.box {
+  height: 60px;
+  width: 100%;
+}
+.box-location {
+  background-color: $color-primary-1;
+}
+.box-body {
+  padding: 10px 0 0 20px;
+  display: inline-block;
+  height: 100%;
+  float: left;
+}
+.box-title {
+  font-size: 20px;
+  display: inline-block;
+  height: 100%;
+  float: left;
+  padding: 12px 10px 0 10px;
+}
+.box-title-location {
+  background-color: $color-primary-2;
+  color: #fff;
+}
+.box label {
+  margin-right: 5px;
+}
+.box select {
+  margin-right: 15px;
+  min-width: 200px;
+}
+.box-body-location {
+  color: #fff;
+}

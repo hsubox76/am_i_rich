@@ -1,16 +1,9 @@
 var React = require('react');
+var $ = require('jquery');
 
 var StateInput = React.createClass({
 
-  getInitialState: function() {
-    return {
-      value: '01'
-    }
-  },
-
-  handleStateSelect: function (event) {
-    this.setState({value: event.target.value});
-    console.log(event.target.value);
+  onStateSelect: function (event) {
     this.props.getCountiesInState(event.target.value);
   },
 
@@ -20,12 +13,10 @@ var StateInput = React.createClass({
     });
     return (
       <div className="form-group">
-        <label className="col-sm-2 control-label">State:</label>
-        <div className="col-sm-10">
-          <select value={this.state.value} className="form-control" onChange={this.handleStateSelect}>
-            {listItems}
-          </select>
-        </div>
+        <label className="control-label">State:</label>
+        <select value={this.props.currentState} className="form-control" onChange={this.onStateSelect}>
+          {listItems}
+        </select>
       </div>
     );
   }
@@ -33,20 +24,50 @@ var StateInput = React.createClass({
 });
 
 var CountyInput = React.createClass({
+  onCountySelect: function (event) {
+    this.props.setCurrentCounty(event.target.value);
+  },
   render: function () {
     var listItems = this.props.counties.map(function(county) {
       return <option key={'county-'+county.countyCode} value={county.countyCode}>{county.name}</option>
     });
     return (
       <div className="form-group">
-        <label className="col-sm-2 control-label">County:</label>
-        <div className="col-sm-10">
-          <select className="form-control">
-            {listItems}
-          </select>
-        </div>
+        <label className="control-label">County:</label>
+        <select value={this.props.currentCounty} className="form-control" onChange={this.onCountySelect}>
+          {listItems}
+        </select>
       </div>
     );
+  }
+});
+
+var LocationBox = React.createClass({
+  render: function () {
+    var countyInput = this.props.currentState === "0"
+        ? null
+        : (<CountyInput
+        currentCounty={this.props.currentCounty}
+        setCurrentCounty={this.props.setCounty}
+        counties={this.props.counties} />);
+   return (
+       <div className="box-container">
+         <div className="box box-location">
+           <div className="box-title box-title-location">
+             Where
+           </div>
+           <div className="box-body box-body-location">
+             <form className="form-inline">
+               <StateInput
+                   currentState={this.props.currentState}
+                   states={this.props.states}
+                   getCountiesInState={this.props.getCountiesInState} />
+               {countyInput}
+             </form>
+           </div>
+         </div>
+       </div>
+   );
   }
 });
 
@@ -54,7 +75,10 @@ var CountyInput = React.createClass({
 var Home = React.createClass({
   getInitialState: function (){
     return {
+      currentState: "0",
+      currentCounty: "0",
       states: [
+        {name: "select a state", code: "0"},
         {name: "Alabama", code: "01"},
         {name: "Alaska", code: "02"},
         {name: "Arizona", code: "04"},
@@ -112,6 +136,10 @@ var Home = React.createClass({
     };
   },
 
+  setCounty: function(countyCode) {
+    this.setState({currentCounty: countyCode});
+  },
+
   getCountiesInState: function(stateCode) {
     $.ajax({
       url: 'counties',
@@ -120,13 +148,19 @@ var Home = React.createClass({
       data: {state: stateCode},
       success: function(data) {
         this.setState({
-          counties: data.map(function(county) {
+          currentState: stateCode,
+          counties: [{
+            name: 'select a county',
+            stateCode: '0',
+            countyCode: '0'
+          }].concat(
+              data.map(function(county) {
             return {
               name: county[0].split(',')[0],
               stateCode: county[1],
               countyCode: county[2]
             }
-          })
+          }))
         })
       }.bind(this)
     });
@@ -135,30 +169,18 @@ var Home = React.createClass({
   render: function() {
     return (
       <div className="main-page">
+        <LocationBox
+            currentState={this.state.currentState}
+            currentCounty={this.state.currentCounty}
+            states={this.state.states}
+            counties={this.state.counties}
+            getCountiesInState={this.getCountiesInState}
+            setCounty={this.setCounty}
+        />
         <div className="row">
-          <div className="col-xs-6 col-md-4 col-md-offset-2">
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <h3 className="panel-title">Where Are You At?</h3>
-              </div>
-              <div className="panel-body">
-                <form className="form-horizontal">
-                <StateInput
-                  states={this.state.states}
-                  getCountiesInState={this.getCountiesInState} />
-                <CountyInput counties={this.state.counties} />
-                </form>
-              </div>
-            </div>
-          </div>
-          <div className="col-xs-6 col-md-4">
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <h3 className="panel-title">How Much Do You Make?</h3>
-              </div>
-              <div className="panel-body">
-
-              </div>
+          <div className="col-xs-12 col-md-8 col-md-offset-2 box">
+            <div className="box box-salary">
+              filler text
             </div>
           </div>
         </div>

@@ -1,12 +1,14 @@
 /*global module:false*/
 module.exports = function(grunt) {
+  // load all grunt tasks
+  require('load-grunt-tasks')(grunt);
 
   // Project configuration.
   grunt.initConfig({
 
     concurrent: {
       dev: {
-        tasks: ['shell:nodemon', 'watch:scripts'],
+        tasks: ['shell:nodemon', 'watch'],
         options: {
           logConcurrentOutput: true
         }
@@ -17,14 +19,14 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         src: ['client/scripts/*.js'],
-        dest: 'public/scripts/'
+        dest: 'public/scripts/client.min.js'
       }
     },
     
     uglify: {
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'public/scripts/*.min.js'
+        dest: 'public/scripts/client.min.js'
       }
     },
 
@@ -57,6 +59,25 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+      html: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['client/*.html'],
+          dest: 'public/'
+        }]
+      },
+      css: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['client/lib/styles/*.css'],
+          dest: 'public/styles/'
+        }]
+      }
+    },
+
     shell: {
       nodemon: {
           command: 'nodemon index.js'
@@ -69,29 +90,35 @@ module.exports = function(grunt) {
       },
       client: {
         src: ['client/scripts/*.jsx'],
-        dest: 'client/scripts/app.build.js'
+        dest: 'public/scripts/app.build.js'
+      },
+      lib: {
+        src: ['client/lib/scripts/jquery.min.js',
+        'client/lib/scripts/d3.min.js'],
+        dest: 'public/lib/scripts/lib.min.js'
       }
     },
-
+    sass: {
+      dist: {
+        files: {
+          'public/styles/app.css': 'client/styles/app.scss'
+        }
+      }
+    },
     watch: {
       scripts: {
         files: ['client/scripts/*.jsx', 'client/routes/*.js'],
         tasks: ['browserify']
+      },
+      css: {
+        files: ['client/styles/*.scss'],
+        tasks: ['sass']
       }
     }
   });
 
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-shell');
-  grunt.loadNpmTasks('grunt-concurrent');
-
   // Default task.
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'copy', 'sass', 'browserify']);
   grunt.registerTask('serve', ['browserify', 'concurrent:dev']);
 
 };
