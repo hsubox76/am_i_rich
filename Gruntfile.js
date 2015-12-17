@@ -59,6 +59,10 @@ module.exports = function(grunt) {
       }
     },
 
+    eslint: {
+      src: ["client/scripts/**/*.jsx", "client/routes/**/*.jsx"]
+    },
+
     copy: {
       html: {
         files: [{
@@ -75,6 +79,14 @@ module.exports = function(grunt) {
           src: ['client/lib/styles/*.css'],
           dest: 'public/styles/'
         }]
+      },
+      fonts: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['bower_components/bootstrap/fonts/*.*'],
+          dest: 'public/fonts/'
+        }]
       }
     },
 
@@ -86,16 +98,19 @@ module.exports = function(grunt) {
 
     browserify: {
       options: {
-        transform: [require('grunt-react').browserify]
+        browserifyOptions: {
+          extensions: [".js", ".jsx"],
+          transform: [
+            ["babelify", {
+              presets: ["es2015", "react"]
+            }]
+          ]
+        },
+        watch: true
       },
-      client: {
-        src: ['client/scripts/*.jsx'],
+      all: {
+        src: ['client/scripts/**/*.jsx'],
         dest: 'public/scripts/app.build.js'
-      },
-      lib: {
-        src: ['client/lib/scripts/jquery.min.js',
-        'client/lib/scripts/d3.min.js'],
-        dest: 'public/lib/scripts/lib.min.js'
       }
     },
     sass: {
@@ -106,9 +121,9 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      scripts: {
-        files: ['client/scripts/*.jsx', 'client/routes/*.js'],
-        tasks: ['browserify']
+      jsx: {
+        files: ['client/scripts/**/*.jsx', 'client/routes/**/*.jsx'],
+        tasks: ['eslint']
       },
       css: {
         files: ['client/styles/*.scss'],
@@ -119,6 +134,7 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'copy', 'sass', 'browserify']);
+  grunt.registerTask('check', ['eslint']);
   grunt.registerTask('serve', ['browserify', 'concurrent:dev']);
 
 };

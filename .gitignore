@@ -2,3 +2,5 @@ data/*
 bower_components/*
 node_modules/*
 public/*
+.idea/*
+.sass-cache/*

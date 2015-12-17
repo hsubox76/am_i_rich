@@ -1,42 +1,148 @@
 @import 'colors';
+
+$number-box-height: 60px;
+$number-circle-height: 50px;
+$number-circle-border-width: 2px;
+
 body {
-  background-color: $color-primary-0;
+  background-color: #cccf;
 }
-.box-container {
-  width: 720px;
+.main-page {
+  //width: 720px;
   margin: 25px auto 0 auto;
 }
+#d3-element {
+  background-color: #fff;
+}
+.d3-container {
+  background-color: $color-primary-1;
+  padding: 0 $number-box-height;
+  margin: 5px 0;
+  box-shadow: 0 0 10px 2px #ccc;
+}
+.x-axis,
+.y-axis {
+  .tick {
+    fill: $color-primary-3;
+  }
+  path.domain {
+    fill: none;
+    stroke-width: 2;
+    stroke: $color-primary-3;
+  }
+}
+.graph-line {
+  stroke-width: 6;
+  stroke: $color-primary-2;
+}
+.graph-area {
+  fill: $color-primary-1;
+}
+.row {
+}
 .box {
-  height: 60px;
+  min-height: 60px;
   width: 100%;
+  display: flex;
+  background-color: #fff;
+  //border-bottom: 1px solid #eee;
+  margin: 5px 0;
+  box-shadow: 0 0 10px 2px #ccc;
+  .box-body {
+    padding: 10px 0 0 20px;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    height: 100%;
+    .form-flex {
+      display: flex;
+      flex-wrap: wrap;
+      > div.form-group {
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        display: flex;
+      }
+      label {
+        color: $color-primary-0;
+        margin: auto 5px auto 0;
+      }
+      .label-state {
+        flex: 0 0 55px;
+      }
+      .label-county {
+        flex: 0 0 55px;
+      }
+      .label-income {
+        flex: 0 0 auto;
+      }
+      select {
+        margin-right: 15px;
+        min-width: 200px;
+      }
+      .select-state {
+        flex: 1 1 200px;
+      }
+      .select-county {
+        flex: 1 1 250px;
+      }
+      .input-income {
+        flex: 1 1 150px;
+        input {
+          width: auto;
+        }
+        span {
+          width: auto;
+        }
+      }
+      .input-percentile {
+        flex: 1 1 100px;
+        input {
+          width: 55px;
+        }
+        span {
+          width: auto;
+        }
+      }
+      .button-next {
+        font-size: 2em;
+        color: $color-primary-3;
+        vertical-align: middle;
+        padding: 0;
+        margin: 0 0 0 10px;
+        border: none;
+        background-color: transparent;
+        &:hover,
+        &:active {
+          color: $color-primary-2;
+        }
+      }
+    }
+  }
+  .box-title {
+    flex: 0 0 60px;
+    font-size: 20px;
+    display: inline-block;
+    height: 100%;
+    float: left;
+    padding: 5px;
+    .number-circle {
+      text-align: center;
+      vertical-align: middle;
+      line-height: $number-circle-height - 2 * $number-circle-border-width;
+      width: $number-circle-height;
+      height: $number-circle-height;
+      color: $color-primary-0;
+      border: $number-circle-border-width solid $color-primary-0;
+      border-radius: 50%;
+    }
+  }
 }
 .box-location {
-  background-color: $color-primary-1;
-}
-.box-body {
-  padding: 10px 0 0 20px;
-  display: inline-block;
-  height: 100%;
-  float: left;
-}
-.box-title {
-  font-size: 20px;
-  display: inline-block;
-  height: 100%;
-  float: left;
-  padding: 12px 10px 0 10px;
+  //background-color: $color-primary-1;
 }
 .box-title-location {
-  background-color: $color-primary-2;
-  color: #fff;
-}
-.box label {
-  margin-right: 5px;
-}
-.box select {
-  margin-right: 15px;
-  min-width: 200px;
+  //background-color: $color-primary-3;
+  //color: #fff;
 }
 .box-body-location {
-  color: #fff;
+
 }

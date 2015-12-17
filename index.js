@@ -17,7 +17,7 @@ var incomeBrackets = [
   {code: 'DP03_0058E', min: 75000, max: 99999},
   {code: 'DP03_0059E', min: 100000, max: 149999},
   {code: 'DP03_0060E', min: 150000, max: 199999},
-  {code: 'DP03_0061E', min: 200000, max: null}
+  {code: 'DP03_0061E', min: 200000, max: 225000}
 ];
 
 app.use(express.static('public'));
@@ -65,11 +65,11 @@ app.get('/incomes', function (req, res) {
       if (!error) {
         bracketsSoFar++;
         allBrackets[index].households = parseInt(response.body[1][0]);
-        console.log(bracketsSoFar);
-        console.log(response.body);
-        console.log(totalBrackets);
         if (bracketsSoFar === totalBrackets) {
-          res.send(JSON.stringify(allBrackets));
+          // Split first point into 2 points to smooth out beginning and have it start at 0
+          const zeroBracket = {min: 0, max: 0, households: allBrackets[0].households * 0.25};
+          allBrackets[0].households *= 0.75;
+          res.send(JSON.stringify(zeroBracket.concat(allBrackets)));
         }
       }
       else {
