@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import AmIRichApp from '../routes/am-i-rich-app';
+import AmIRichApp from '../components/AmIRichApp';
 
 ReactDOM.render(
     <AmIRichApp />,

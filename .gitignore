@@ -4,3 +4,4 @@ node_modules/*
 public/*
 .idea/*
 .sass-cache/*
+server/apikey_local.js

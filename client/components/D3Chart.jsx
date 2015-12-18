@@ -1,10 +1,17 @@
 "use strict";
-var React = require('react');
-var d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
 const NUMBER_BOX_HEIGHT = 60;
 
-var D3Chart = React.createClass({
+const MARGINS = {
+  top: 20,
+  right: 20,
+  bottom: 50,
+  left: 50
+};
+
+const D3Chart = React.createClass({
   propTypes: {
     data: React.PropTypes.array,
     chartWidth: React.PropTypes.number,
@@ -17,15 +24,10 @@ var D3Chart = React.createClass({
   componentDidMount() {
     const chartWidth = this.refs.container.getDOMNode().offsetWidth - 2 * NUMBER_BOX_HEIGHT;
     this.props.setChartWidth(chartWidth);
-    var vis = d3.select('#d3-element'),
+    const vis = d3.select('#d3-element'),
         WIDTH = chartWidth,
         HEIGHT = Math.round(chartWidth * 0.66),
-        MARGINS = {
-          top: 20,
-          right: 20,
-          bottom: 50,
-          left: 50
-        },
+
         MAX_Y = d3.max(this.props.data, function(d) {
           return d.households;
         }),
@@ -72,7 +74,7 @@ var D3Chart = React.createClass({
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
 
-    //var graphLine = d3.svg.line()
+    //const graphLine = d3.svg.line()
     //    .x(function(d) {
     //      console.log(d);
     //      if (d.max) {
@@ -85,7 +87,7 @@ var D3Chart = React.createClass({
     //    })
     //    .interpolate('basis');
 
-    var verticalLine = d3.svg.line()
+    const verticalLine = d3.svg.line()
         .x(function(d) {
           return (xRange(d.x));
         })
@@ -94,16 +96,7 @@ var D3Chart = React.createClass({
         })
         .interpolate('linear');
 
-    var verticalLine = d3.svg.line()
-        .x(function(d) {
-          return (xRange(d.x));
-        })
-        .y(function(d) {
-          return (yRange(d.y));
-        })
-        .interpolate('linear');
-
-    var graphArea = d3.svg.area()
+    const graphArea = d3.svg.area()
         .x(function(d) {
           if (d.max === 0) {
             return xRange(1000);

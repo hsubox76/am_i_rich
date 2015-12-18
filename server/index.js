@@ -1,13 +1,15 @@
-var _ = require('lodash');
-var express = require('express');
-var app = express();
+'use strict';
 
-var request = require('request');
-var bodyParser = require('body-parser');
+const _ = require('lodash');
+const express = require('express');
+const app = express();
 
-var APIkey = 'fdc3a832f54351b9f6e2c40313d6232c8af5c71e';
+const APIkey = process.env.API_KEY || require('./apikey_local');
 
-var incomeBrackets = [
+const request = require('request');
+const bodyParser = require('body-parser');
+
+const incomeBrackets = [
   {code: 'DP03_0052E', min: 0, max: 9999},
   {code: 'DP03_0053E', min: 10000, max: 14999},
   {code: 'DP03_0054E', min: 15000, max: 24999},
@@ -21,7 +23,8 @@ var incomeBrackets = [
 ];
 
 app.use(express.static('public'));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 app.get('/counties', function (req, res) {
   console.log(req.query);
@@ -35,7 +38,7 @@ app.get('/counties', function (req, res) {
       'key': APIkey
     },
     json: true
-  }, function (error, response, body) {
+  }, function (error, response) {
     if (!error && response.statusCode === 200) {
       res.send(response.body.slice(1));
     }
@@ -44,13 +47,9 @@ app.get('/counties', function (req, res) {
 });
 
 app.get('/incomes', function (req, res) {
-  var allBrackets = _.cloneDeep(incomeBrackets);
-  //var allBrackets = _.reduce(incomeBrackets, function(bracketMap, bracket) {
-  //  bracketMap[bracket.code] = bracket;
-  //  return bracketMap;
-  //}, {});
-  var totalBrackets = incomeBrackets.length;
-  var bracketsSoFar = 0;
+  const allBrackets = _.cloneDeep(incomeBrackets);
+  const totalBrackets = incomeBrackets.length;
+  let bracketsSoFar = 0;
   _.forEach(allBrackets, function(bracket, index) {
     request({
       url: 'http://api.census.gov/data/2013/acs1/profile',
@@ -61,7 +60,7 @@ app.get('/incomes', function (req, res) {
         'key': APIkey
       },
       json: true
-    }, function (error, response, body) {
+    }, function (error, response) {
       if (!error) {
         bracketsSoFar++;
         allBrackets[index].households = parseInt(response.body[1][0]);

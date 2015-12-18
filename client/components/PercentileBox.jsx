@@ -1,0 +1,49 @@
+import React from 'react';
+
+const PercentileBox = React.createClass({
+  propTypes: {
+    setPercentile: React.PropTypes.func
+  },
+  onSubmit(e) {
+    e.preventDefault();
+    const self = this;
+    this.props.setPercentile(self.refs.percentile.getDOMNode().value);
+  },
+  render: function() {
+    return (
+        <div className="row">
+          <div className="box-container col-md-8 col-md-offset-2">
+            <div className="box box-income">
+              <div className="box-title box-title-percentile">
+                <div className="number-circle">3</div>
+              </div>
+              <div className="box-body box-body-percentile">
+                <form
+                    className="form-flex"
+                    onSubmit={this.onSubmit}
+                    ref="form">
+                  <label className="control-label label-percentile">Guess Your Percentile:</label>
+                  <div className="input-group input-percentile">
+                    <input
+                        type="number"
+                        className="form-control"
+                        required
+                        ref="percentile"
+                        aria-label="Guess your percentile" />
+                    <span className="input-group-addon">%</span>
+                  </div>
+                  <button className="button-next">
+                  <span
+                      className="glyphicon glyphicon-circle-arrow-down"
+                  />
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    );
+  }
+});
+
+export default PercentileBox;

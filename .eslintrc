@@ -1,0 +1,101 @@
+/* Copyright (C) 2015 Pepperdata Inc. - All rights reserved.
+ *
+ * Configuration file for eslint
+ * For a list of rules: http://eslint.org/docs/rules/
+ */
+{
+  // ues a babel parser instead of esprima to have es7 syntax support
+  "parser": "babel-eslint",
+  "globals": {
+    "requirejs": true,
+    "require": true,
+    "module": true,
+    "jQuery": true,
+    "$": true,
+    "_": true,
+
+    // test globals
+    "sinon": true,
+    "expect": true,
+    "it": true,
+    "describe": true,
+    "chai": true,
+    "mocha": true,
+    "before": true,
+    "beforeEach": true,
+    "after": true,
+    "afterEach": true
+  },
+  "ecmaFeatures": {
+    "arrowFunctions": true,
+    "binaryLiterals": true,
+    "blockBindings": true,
+    "classes": true,
+    "defaultParams": true,
+    "destructuring": true,
+    "forOf": true,
+    "generators": true,
+    "modules": true,
+    "objectLiteralComputedProperties": true,
+    "objectLiteralDuplicateProperties": true,
+    "objectLiteralShorthandMethods": true,
+    "objectLiteralShorthandProperties": true,
+    "octalLiterals": true,
+    "regexUFlag": true,
+    "regexYFlag": true,
+    "restParams": true,
+    "spread": true,
+    "superInFunctions": true,
+    "templateStrings": true,
+    "unicodeCodePointEscapes": true,
+    "globalReturn": true,
+    "blockBindings": true,
+    "forOf": true,
+    "jsx": true
+  },
+  "rules": {
+    // spacing rules
+    "max-len": [2, 100, 2],
+    // allow "use strict" in functions
+    "no-extra-strict": 0,
+    // allow functions within a loop.
+    "no-loop-func": 0,
+    // allow both quotes
+    "quotes": 0,
+    // maybe we should enable this and provide css resets instead for missing hrefs
+    "no-script-url": 0,
+    // allow console.log
+    "no-console": 0,
+    // this is valid in newer js langs
+    "no-use-before-define": 0,
+    "yoda": 0,
+    // disable use of var, use const or let instead
+    "no-var": 1,
+    "prefer-const": 1,
+    "jsx-quotes": 1,
+
+    // react plugin rules
+    "react/display-name": 0,
+    "react/jsx-boolean-value": 1,
+    "react/jsx-no-undef": 1,
+    "react/jsx-sort-prop-types": 0,
+    "react/jsx-sort-props": 0,
+    "react/jsx-uses-react": 1,
+    "react/jsx-uses-vars": 1,
+    "react/no-did-mount-set-state": 1,
+    "react/no-did-update-set-state": 1,
+    "react/no-multi-comp": 0,
+    "react/no-unknown-property": 1,
+    "react/prop-types": 1,
+    "react/react-in-jsx-scope": 1,
+    "react/self-closing-comp": 1,
+    "react/sort-comp": 0,
+    "react/wrap-multilines": 1
+  },
+  "env": {
+    "browser": true,
+    "amd": true,
+    "es6": true
+  },
+  "plugins": ["react"]
+}

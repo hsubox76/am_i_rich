@@ -6,6 +6,8 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
 
+    clean: ["public"],
+
     concurrent: {
       dev: {
         tasks: ['shell:nodemon', 'watch'],
@@ -31,15 +33,23 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      ignore_warning: {
+      server: {
         options: {
           '-W117': true,
+          'globalstrict': true
         },
-        src: ['Gruntfile.js', 'server.js', 'server/**/*.js', 'test/**/*.js'],
+        src: ['server/**/index.js']
+      },
+      client: {
+        options: {
+          '-W117': true
+        },
+        src: ['client/**/*.js']
       },
       options: {
         curly: true,
         eqeqeq: true,
+        esnext: true,
         immed: true,
         latedef: true,
         newcap: true,
@@ -53,9 +63,6 @@ module.exports = function(grunt) {
         globals: {
           jQuery: true
         }
-      },
-      lib_test: {
-        src: ['lib/**/*.js', 'test/**/*.js']
       }
     },
 
@@ -76,7 +83,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           flatten: true,
-          src: ['client/lib/styles/*.css'],
+          src: ['bower_components/**/bootstrap.min.css'],
           dest: 'public/styles/'
         }]
       },
@@ -92,7 +99,7 @@ module.exports = function(grunt) {
 
     shell: {
       nodemon: {
-          command: 'nodemon index.js'
+          command: 'nodemon --harmony server/index.js'
       }
     },
 
@@ -122,7 +129,7 @@ module.exports = function(grunt) {
     },
     watch: {
       jsx: {
-        files: ['client/scripts/**/*.jsx', 'client/routes/**/*.jsx'],
+        files: ['client/scripts/**/*.jsx', 'client/components/**/*.jsx'],
         tasks: ['eslint']
       },
       css: {
@@ -133,8 +140,8 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'copy', 'sass', 'browserify']);
-  grunt.registerTask('check', ['eslint']);
+  grunt.registerTask('check', ['jshint', 'eslint']);
+  grunt.registerTask('default', ['clean', 'check', 'copy', 'sass', 'browserify']);
   grunt.registerTask('serve', ['browserify', 'concurrent:dev']);
 
 };
