@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
+import { Provider } from 'react-redux';
 import AmIRichApp from '../components/AmIRichApp';
+import store from './store';
 
 ReactDOM.render(
-    <AmIRichApp />,
-    $('#content')[0]
+    <Provider store={store}>
+      <AmIRichApp />
+    </Provider>,
+    document.getElementById('content')
 );

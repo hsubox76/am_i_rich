@@ -1,18 +1,40 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-const StateInput = React.createClass({
+import * as AmIRichActions from '../actions/actions.jsx';
 
-  propTypes: {
-    currentState: React.PropTypes.string,
-    states: React.PropTypes.array,
-    getCountiesInState: React.PropTypes.func
-  },
 
-  onStateSelect: function (event) {
-    this.props.getCountiesInState(event.target.value);
-  },
+function mapStateToProps(state) {
+  return {
+    currentState: state.currentState,
+    states: state.states
+  }
+}
 
-  render: function () {
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AmIRichActions, dispatch)
+  }
+}
+
+const propTypes = {
+  currentState: React.PropTypes.string,
+  states: React.PropTypes.array,
+  getCountiesInState: React.PropTypes.func
+};
+
+class StateInput extends React.Component {
+  constructor() {
+    super();
+    this.onStateSelect = this.onStateSelect.bind(this);
+  }
+
+  onStateSelect(event) {
+    this.props.actions.setCurrentState(event.target.value);
+  }
+
+  render() {
     const listItems = this.props.states.map(function(state) {
       return <option key={'state-'+state.code} value={state.code}>{state.name}</option>
     });
@@ -28,6 +50,8 @@ const StateInput = React.createClass({
         </div>
     );
   }
-});
+}
 
-export default StateInput;
+StateInput.propTypes = propTypes;
+
+export default connect(mapStateToProps, mapDispatchToProps)(StateInput);

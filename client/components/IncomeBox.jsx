@@ -1,15 +1,37 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-const IncomeBox = React.createClass({
-  propTypes: {
-    setIncome: React.PropTypes.func
-  },
+import * as AmIRichActions from '../actions/actions.jsx';
+
+const propTypes = {
+  setIncome: React.PropTypes.func
+};
+
+function mapStateToProps() {
+  return {
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AmIRichActions, dispatch)
+  }
+}
+
+class IncomeBox extends React.Component {
+  constructor() {
+    super();
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
   onSubmit(e) {
     e.preventDefault();
     const self = this;
-    this.props.setIncome(self.refs.income.value);
-  },
-  render: function() {
+    this.props.actions.setIncome(self.refs.income.value);
+  }
+
+  render() {
     return (
         <div className="row">
           <div className="box-container col-md-8 col-md-offset-2">
@@ -45,6 +67,8 @@ const IncomeBox = React.createClass({
         </div>
     );
   }
-});
+}
 
-export default IncomeBox;
+IncomeBox.propTypes = propTypes;
+
+export default connect(mapStateToProps, mapDispatchToProps)(IncomeBox);

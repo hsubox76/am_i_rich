@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 
     concurrent: {
       dev: {
-        tasks: ['shell:nodemon', 'watch'],
+        tasks: ['shell:nodemon', 'watch', 'browserify:client'],
         options: {
           logConcurrentOutput: true
         }
@@ -105,19 +105,39 @@ module.exports = function(grunt) {
 
     browserify: {
       options: {
-        browserifyOptions: {
-          extensions: [".js", ".jsx"],
-          transform: [
-            ["babelify", {
-              presets: ["es2015", "react"]
-            }]
-          ]
-        },
-        watch: true
       },
-      all: {
-        src: ['client/scripts/**/*.jsx'],
-        dest: 'public/scripts/app.build.js'
+      vendor: {
+        src: [],
+        dest: 'public/scripts/vendor.build.js',
+        options: {
+          require: ["d3", "react", "react-dom", "jquery", "lodash", "redux", "react-redux"],
+          browserifyOptions: {
+            extensions: [".js", ".jsx"],
+            transform: [
+              ["babelify", {
+                presets: ["es2015"]
+              }]
+            ]
+          }
+        }
+      },
+      client: {
+        src: ['client/scripts/index.jsx'],
+        dest: 'public/scripts/app.build.js',
+        options: {
+          external: ["node_modules/**/*.js"],
+          watch: true,
+          keepAlive: true,
+          browserifyOptions: {
+            extensions: [".js", ".jsx"],
+            debug: true,
+            transform: [
+              ["babelify", {
+                presets: ["es2015", "react"]
+              }]
+            ]
+          }
+        }
       }
     },
     sass: {
@@ -128,10 +148,13 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      jsx: {
-        files: ['client/scripts/**/*.jsx', 'client/components/**/*.jsx'],
-        tasks: ['eslint']
+      options: {
+        livereload: true
       },
+      //scripts: {
+      //  files: ['client/**/*.jsx', 'client/**/*.js'],
+      //  tasks: ['eslint', 'browserify:client']
+      //},
       css: {
         files: ['client/styles/*.scss'],
         tasks: ['sass']
@@ -140,8 +163,8 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('check', ['jshint', 'eslint']);
+  grunt.registerTask('check', ['eslint']);
   grunt.registerTask('default', ['clean', 'check', 'copy', 'sass', 'browserify']);
-  grunt.registerTask('serve', ['browserify', 'concurrent:dev']);
+  grunt.registerTask('serve', ['concurrent:dev']);
 
 };

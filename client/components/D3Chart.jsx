@@ -1,6 +1,10 @@
 "use strict";
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import d3 from 'd3';
+
+import * as AmIRichActions from '../actions/actions.jsx';
 
 const NUMBER_BOX_HEIGHT = 60;
 
@@ -11,19 +15,37 @@ const MARGINS = {
   left: 50
 };
 
-const D3Chart = React.createClass({
-  propTypes: {
-    data: React.PropTypes.array,
-    chartWidth: React.PropTypes.number,
-    userIncome: React.PropTypes.number,
-    userPercentile: React.PropTypes.number,
-    guessedIncome: React.PropTypes.number,
-    guessedPercentile: React.PropTypes.number,
-    setChartWidth: React.PropTypes.func
-  },
+const propTypes = {
+  data: React.PropTypes.array,
+  chartWidth: React.PropTypes.number,
+  userIncome: React.PropTypes.number,
+  userPercentile: React.PropTypes.number,
+  guessedIncome: React.PropTypes.number,
+  guessedPercentile: React.PropTypes.number,
+  setChartWidth: React.PropTypes.func
+};
+
+function mapStateToProps(state) {
+  return {
+    data: state.incomeData,
+    chartWidth: state.chartWidth,
+    userIncome: state.userIncome,
+    userPercentile: state.userPercentile,
+    guessedIncome: state.guessedIncome,
+    guessedPercentile: state.guessedPercentile
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AmIRichActions, dispatch)
+  }
+}
+
+class D3Chart extends React.Component {
   componentDidMount() {
-    const chartWidth = this.refs.container.getDOMNode().offsetWidth - 2 * NUMBER_BOX_HEIGHT;
-    this.props.setChartWidth(chartWidth);
+    const chartWidth = this.refs.container.offsetWidth - 2 * NUMBER_BOX_HEIGHT;
+    this.props.actions.setChartWidth(chartWidth);
     const vis = d3.select('#d3-element'),
         WIDTH = chartWidth,
         HEIGHT = Math.round(chartWidth * 0.66),
@@ -74,20 +96,7 @@ const D3Chart = React.createClass({
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
 
-    //const graphLine = d3.svg.line()
-    //    .x(function(d) {
-    //      console.log(d);
-    //      if (d.max) {
-    //        return xRange((d.max + d.min)/2);
-    //      }
-    //      return xRange(225000);
-    //    })
-    //    .y(function(d) {
-    //      return yRange(d.households);
-    //    })
-    //    .interpolate('basis');
-
-    const verticalLine = d3.svg.line()
+    const markerLine = d3.svg.line()
         .x(function(d) {
           return (xRange(d.x));
         })
@@ -112,41 +121,40 @@ const D3Chart = React.createClass({
         })
         .interpolate('basis');
 
-    //vis.append('svg:path')
-    //    .attr('d', graphLine(this.props.data))
-    //    .attr('class', 'graph-line')
-    //    .attr('fill', 'none');
-
-
     vis.append('svg:path')
         .attr('d', graphArea(this.props.data))
         .attr('class', 'graph-area');
 
     vis.append('svg:path')
-        .attr('d', verticalLine([{x: this.props.userIncome, y: 0},
+        .attr('d', markerLine([{x: this.props.userIncome, y: 0},
           {x: this.props.userIncome, y: MAX_Y}]))
         .attr('stroke', 'black')
         .attr('fill', 'none');
 
     vis.append('svg:path')
-        .attr('d', verticalLine([{x: this.props.guessedIncome, y: 0},
+        .attr('d', markerLine([{x: this.props.guessedIncome, y: 0},
           {x: this.props.guessedIncome, y: MAX_Y}]))
         .attr('stroke', 'black')
         .attr('fill', 'none');
-  },
-  render: function() {
+  }
+
+  render() {
     return (
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
             <div
                 ref="container"
                 className="d3-container">
-              <svg id="d3-element" width={this.props.chartWidth} height="400"/>
+              <svg
+                  id="d3-element"
+                  width={this.props.chartWidth} height="400"/>
             </div>
           </div>
         </div>
     );
   }
-});
+}
 
-export default D3Chart;
+D3Chart.propTypes = propTypes;
+
+export default connect(mapStateToProps, mapDispatchToProps)(D3Chart);

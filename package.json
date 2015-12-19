@@ -11,7 +11,7 @@
     "eslint-plugin-react": "^3.11.3",
     "express": "^4.13.3",
     "grunt": "^0.4.5",
-    "grunt-browserify": "^3.8.0",
+    "grunt-browserify": "^4.0.1",
     "grunt-concurrent": "^2.0.0",
     "grunt-contrib-clean": "^0.7.0",
     "grunt-contrib-concat": "~0.4.0",
@@ -28,6 +28,9 @@
     "load-grunt-tasks": "^3.3.0",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
+    "react-redux": "^4.0.1",
+    "redux": "^3.0.5",
+    "redux-devtools": "^3.0.0",
     "request": "^2.60.0",
     "shell": "^0.3.2"
   },

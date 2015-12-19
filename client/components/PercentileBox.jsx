@@ -1,15 +1,36 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-const PercentileBox = React.createClass({
-  propTypes: {
-    setPercentile: React.PropTypes.func
-  },
+import * as AmIRichActions from '../actions/actions.jsx';
+
+const propTypes = {
+  setPercentile: React.PropTypes.func
+};
+
+function mapStateToProps() {
+  return {
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AmIRichActions, dispatch)
+  }
+}
+
+class PercentileBox extends React.Component {
+  constructor() {
+    super();
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
   onSubmit(e) {
     e.preventDefault();
-    const self = this;
-    this.props.setPercentile(self.refs.percentile.getDOMNode().value);
-  },
-  render: function() {
+    this.props.actions.setPercentile(this.refs.percentile.value);
+  }
+
+  render() {
     return (
         <div className="row">
           <div className="box-container col-md-8 col-md-offset-2">
@@ -44,6 +65,8 @@ const PercentileBox = React.createClass({
         </div>
     );
   }
-});
+}
 
-export default PercentileBox;
+PercentileBox.propTypes = propTypes;
+
+export default connect(mapStateToProps, mapDispatchToProps)(PercentileBox);

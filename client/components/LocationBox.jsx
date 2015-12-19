@@ -1,23 +1,24 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import StateInput from './StateInput';
 import CountyInput from './CountyInput';
 
-const LocationBox = React.createClass({
-  propTypes: {
-    currentState: React.PropTypes.string,
-    currentCounty: React.PropTypes.string,
-    states: React.PropTypes.array,
-    counties: React.PropTypes.array,
-    getCountiesInState: React.PropTypes.func,
-    setCounty: React.PropTypes.func
-  },
-  render: function () {
+const propTypes = {
+  currentState: React.PropTypes.string
+};
+
+function mapStateToProps(state) {
+  return {
+    currentState: state.currentState
+  }
+}
+
+class LocationBox extends React.Component {
+  render () {
     const countyInput = this.props.currentState === "0"
         ? null
-        : (<CountyInput
-        currentCounty={this.props.currentCounty}
-        setCurrentCounty={this.props.setCounty}
-        counties={this.props.counties} />);
+        : (<CountyInput />);
     return (
         <div className="row">
           <div className="box-container col-md-8 col-md-offset-2">
@@ -27,10 +28,7 @@ const LocationBox = React.createClass({
               </div>
               <div className="box-body box-body-location">
                 <form className="form-flex">
-                  <StateInput
-                      currentState={this.props.currentState}
-                      states={this.props.states}
-                      getCountiesInState={this.props.getCountiesInState} />
+                  <StateInput />
                   {countyInput}
                 </form>
               </div>
@@ -39,6 +37,8 @@ const LocationBox = React.createClass({
         </div>
     );
   }
-});
+}
 
-export default LocationBox;
+LocationBox.propTypes = propTypes;
+
+export default connect(mapStateToProps)(LocationBox);

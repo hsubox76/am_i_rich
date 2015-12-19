@@ -1,15 +1,38 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-const CountyInput = React.createClass({
-  propTypes: {
-    currentCounty: React.PropTypes.string,
-    counties: React.PropTypes.array,
-    setCurrentCounty: React.PropTypes.func
-  },
-  onCountySelect: function (event) {
-    this.props.setCurrentCounty(event.target.value);
-  },
-  render: function () {
+import * as AmIRichActions from '../actions/actions.jsx';
+
+const propTypes = {
+  currentCounty: React.PropTypes.string,
+  counties: React.PropTypes.array,
+  setCurrentCounty: React.PropTypes.func
+};
+
+function mapStateToProps(state) {
+  return {
+    currentCounty: state.currentCounty,
+    counties: state.counties
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AmIRichActions, dispatch)
+  }
+}
+
+class CountyInput extends React.Component {
+  constructor() {
+    super();
+    this.onCountySelect = this.onCountySelect.bind(this);
+  }
+  onCountySelect (event) {
+    this.props.actions.setCurrentCounty(event.target.value);
+  }
+
+  render () {
     const listItems = this.props.counties.map(function(county) {
       return (
           <option
@@ -30,6 +53,8 @@ const CountyInput = React.createClass({
         </div>
     );
   }
-});
+}
 
-export default CountyInput;
+CountyInput.propTypes = propTypes;
+
+export default connect(mapStateToProps, mapDispatchToProps)(CountyInput);
