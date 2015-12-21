@@ -12,7 +12,7 @@ import * as AmIRichActions from '../actions/actions.jsx';
 import LocationBox from './LocationBox';
 import IncomeBox from './IncomeBox';
 import PercentileBox from './PercentileBox';
-import D3Chart from './D3Chart';
+import ChartBox from './ChartBox';
 
 function mapStateToProps(state) {
   return {
@@ -58,7 +58,7 @@ class AmIRichApp extends React.Component {
     const d3Chart = _.isUndefined(props.guessedPercentile)
         ? null
         : (
-        <D3Chart />);
+        <ChartBox />);
     const incomeBox = _.isUndefined(props.incomeData)
         ? null
         : <IncomeBox />;
@@ -70,7 +70,7 @@ class AmIRichApp extends React.Component {
         <LocationBox />
         {incomeBox}
         {percentileBox}
-        {d3Chart}
+        <ChartBox />
       </div>
     );
   }

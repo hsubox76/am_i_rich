@@ -26,6 +26,7 @@
     "grunt-shell": "^1.1.2",
     "jquery": "^2.1.4",
     "load-grunt-tasks": "^3.3.0",
+    "mongoose": "^4.3.3",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-redux": "^4.0.1",
