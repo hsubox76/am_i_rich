@@ -12,7 +12,7 @@ const MARGINS = {
   top: 20,
   right: 20,
   bottom: 50,
-  left: 50
+  left: 60
 };
 
 const NUMBER_BOX_HEIGHT = 60;
