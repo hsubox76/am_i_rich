@@ -40,7 +40,7 @@ const initialState = {
   states:
       [{name: "select a state", code: "0"}].concat(STATES),
   counties: [],
-  incomeData: testIncomeData,
+  //incomeData: testIncomeData,
   //guessedPercentile: 25,
   //guessedIncome: 50000,
   //userIncome: 100000,

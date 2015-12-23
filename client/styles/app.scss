@@ -84,10 +84,19 @@ body {
       .select-county {
         flex: 1 1 250px;
       }
+      /* Remove controls from Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
       .input-income {
-        flex: 1 1 150px;
+        flex: 0 1 150px;
         input {
-          width: auto;
+          width: 100px;
         }
         span {
           width: auto;

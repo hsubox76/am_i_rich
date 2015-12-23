@@ -93,7 +93,7 @@ class D3Chart {
         .attr("class", "y-label")
         .attr("text-anchor", "middle")
         .attr("x", -this.height / 2)
-        .attr("y", -32)
+        .attr("y", -40)
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
 

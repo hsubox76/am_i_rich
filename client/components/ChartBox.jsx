@@ -51,7 +51,7 @@ class ChartBox extends React.Component {
   }
 
   componentDidUpdate() {
-    // draw d3 chart after initial box has rendered and container width has been determined
+    // draw d3 chart after initial div has rendered and container width has been determined
     if (this.props.chartWidth) {
       const chart = new D3Chart({
             margins: MARGINS,

@@ -36,23 +36,6 @@ const propTypes = {
 
 // Main AmIRichApp component
 class AmIRichApp extends React.Component {
-  //getInitialState (){
-  //  return {
-  //    currentState: "0",
-  //    currentCounty: "0",
-  //    states:
-  //        [{name: "select a state", code: "0"}].concat(STATES),
-  //    counties: []
-  //  };
-  //}
-
-
-  //setCurrentCounty(countyCode) {
-  //  this.setState({currentCounty: countyCode});
-  //  this.setState({incomeData: testIncomeData});
-  //}
-  //
-
   render() {
     const props = this.props;
     const d3Chart = _.isUndefined(props.guessedPercentile)
