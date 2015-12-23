@@ -87,30 +87,34 @@ export default function mainReducer(state, action) {
   switch (action.type) {
     case 'SET_CHART_WIDTH':
       return Object.assign({}, state, {chartWidth: action.width});
-    case 'SET_CURRENT_STATE':
+    case 'RECEIVE_STATE_DATA':
       return Object.assign({}, state, {
         currentState: action.stateCode,
-        counties: testCountyData.map(function(county) {
-          return {
-            name: county[0].split(',')[0],
-            stateCode: county[1],
-            countyCode: county[2]
-          }
-        })
+        counties: [{name: "select a county", countyCode: "0"}]
+            .concat(
+                action.countyData.map(function(county) {
+                return {
+                  name: county[0].split(',')[0],
+                  stateCode: county[1],
+                  countyCode: county[2],
+                  loadingCountyList: false
+                }
+              })
+            )
       });
-    case 'SET_CURRENT_COUNTY':
-      //  //$.ajax({
-      //  //  url: 'incomes',
-      //  //  dataType: 'json',
-      //  //  type: 'GET',
-      //  //  data: {countyCode: countyCode, stateCode: this.state.currentState},
-      //  //  success: function(data) {
-      //  //    this.setState({incomeData: data});
-      //  //  }.bind(this)
-      //  //});
+    case 'RECEIVE_COUNTY_DATA':
       return Object.assign({}, state, {
         currentCounty: action.countyCode,
-        incomeData: testIncomeData
+        incomeData: action.incomeData,
+        loadingIncomeData: false
+      });
+    case 'SET_CURRENT_COUNTY':
+      return Object.assign({}, state, {
+        loadingIncomeData: true
+      });
+    case 'SET_CURRENT_STATE':
+      return Object.assign({}, state, {
+        loadingCountyList: true
       });
     case 'SET_INCOME':
       const userPercentile = findPercentileAtIncome(state, action.userIncome);
@@ -125,41 +129,3 @@ export default function mainReducer(state, action) {
       return state;
   }
 }
-
-//getCountiesInState(stateCode) {
-//  //$.ajax({
-//  //  url: 'counties',
-//  //  dataType: 'json',
-//  //  type: 'GET',
-//  //  data: {state: stateCode},
-//  //  success: function(data) {
-//  //    this.setState({
-//  //      currentState: stateCode,
-//  //      counties: [{
-//  //        name: 'select a county',
-//  //        stateCode: '0',
-//  //        countyCode: '0'
-//  //      }].concat(
-//  //          data.map(function(county) {
-//  //        return {
-//  //          name: county[0].split(',')[0],
-//  //          stateCode: county[1],
-//  //          countyCode: county[2]
-//  //        }
-//  //      }))
-//  //    })
-//  //  }.bind(this)
-//  //});
-//  this.setState(
-//      {
-//        currentState: stateCode,
-//        counties: testCountyData.map(function(county) {
-//                  return {
-//                    name: county[0].split(',')[0],
-//                    stateCode: county[1],
-//                    countyCode: county[2]
-//                  }
-//                })
-//      }
-//  )
-//}

@@ -12,6 +12,7 @@ const propTypes = {
 
 function mapStateToProps(state) {
   return {
+    currentState: state.currentState,
     currentCounty: state.currentCounty,
     counties: state.counties
   }
@@ -29,7 +30,7 @@ class CountyInput extends React.Component {
     this.onCountySelect = this.onCountySelect.bind(this);
   }
   onCountySelect (event) {
-    this.props.actions.setCurrentCounty(event.target.value);
+    this.props.actions.setCurrentCounty(event.target.value, this.props.currentState);
   }
 
   render () {

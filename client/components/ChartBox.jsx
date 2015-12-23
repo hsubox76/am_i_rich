@@ -11,7 +11,7 @@ import * as AmIRichActions from '../actions/actions.jsx';
 const MARGINS = {
   top: 20,
   right: 20,
-  bottom: 30,
+  bottom: 50,
   left: 50
 };
 
@@ -48,30 +48,37 @@ class ChartBox extends React.Component {
   componentDidMount() {
     const chartWidth = this.refs.container.offsetWidth - 2 * NUMBER_BOX_HEIGHT;
     this.props.actions.setChartWidth(chartWidth);
-    const chart = new D3Chart({
-      margins: MARGINS,
-      width: chartWidth,
-      elementId: 'd3-element'
-    },
-    this.props.data
-    );
+  }
 
-    //const plot = chart.getPlot();
-    const offsets = this.props.userIncome > this.props.guessedIncome ? [1, 0] : [0, 1];
-    chart.drawMarkerLine(this.props.userIncome, 'steelblue', 'your income', offsets[0]);
-    chart.drawMarkerLine(this.props.guessedIncome, 'grey', 'your guess', offsets[1]);
+  componentDidUpdate() {
+    // draw d3 chart after initial box has rendered and container width has been determined
+    if (this.props.chartWidth) {
+      const chart = new D3Chart({
+            margins: MARGINS,
+            width: this.props.chartWidth,
+            elementId: 'd3-element'
+          },
+          this.props.data
+      );
+      const offsets = this.props.userIncome > this.props.guessedIncome ? [1, 0] : [0, 1];
+      chart.drawMarkerLine(this.props.userIncome, 'steelblue', 'your income', offsets[0]);
+      chart.drawMarkerLine(this.props.guessedIncome, 'grey', 'your guess', offsets[1]);
+    }
   }
 
   render() {
+    const svgElement = this.props.chartWidth ? (
+        <svg
+            id="d3-element"
+            width={this.props.chartWidth} height={this.props.chartWidth * 0.66} />
+    ) : null;
     return (
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
             <div
                 ref="container"
                 className="d3-container">
-              <svg
-                  id="d3-element"
-                  width={this.props.chartWidth} height="400"/>
+              {svgElement}
             </div>
           </div>
         </div>

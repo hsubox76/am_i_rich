@@ -70,7 +70,7 @@ class AmIRichApp extends React.Component {
         <LocationBox />
         {incomeBox}
         {percentileBox}
-        <ChartBox />
+        {d3Chart}
       </div>
     );
   }

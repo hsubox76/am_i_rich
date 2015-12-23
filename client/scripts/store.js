@@ -1,4 +1,5 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import STATES from '../data/state-codes.js';
 import mainReducer from '../reducers/reducer';
 
@@ -40,12 +41,16 @@ const initialState = {
       [{name: "select a state", code: "0"}].concat(STATES),
   counties: [],
   incomeData: testIncomeData,
-  guessedPercentile: 25,
-  guessedIncome: 50000,
-  userIncome: 100000,
-  userPercentile: 50
+  //guessedPercentile: 25,
+  //guessedIncome: 50000,
+  //userIncome: 100000,
+  //userPercentile: 50
 };
+// create a store that has redux-thunk middleware enabled
+const createStoreWithMiddleware = applyMiddleware(
+    thunk
+)(createStore);
 
-let store = createStore(mainReducer, initialState);
+let store = createStoreWithMiddleware(mainReducer, initialState);
 
 export default store;

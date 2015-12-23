@@ -110,7 +110,15 @@ module.exports = function(grunt) {
         src: [],
         dest: 'public/scripts/vendor.build.js',
         options: {
-          require: ["d3", "react", "react-dom", "jquery", "lodash", "redux", "react-redux"],
+          require: [
+            "d3",
+            "react",
+            "react-dom",
+            "jquery",
+            "lodash",
+            "redux",
+            "react-redux",
+            "redux-thunk"],
           browserifyOptions: {
             extensions: [".js", ".jsx"],
             transform: [
@@ -126,6 +134,7 @@ module.exports = function(grunt) {
         dest: 'public/scripts/app.build.js',
         options: {
           external: ["node_modules/**/*.js"],
+          debug: true,
           watch: true,
           keepAlive: true,
           browserifyOptions: {

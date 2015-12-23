@@ -23,13 +23,16 @@ class D3Chart {
   }
 
   initRanges() {
+    this.maxX = d3.max(this.data, function(d) {
+      return d.max;
+    });
     this.maxY = d3.max(this.data, function(d) {
       return d.households;
     });
     this.xRange = d3.scale
         .linear()
         .range([this.margins.left, this.width - this.margins.right])
-        .domain([0, 250000]);
+        .domain([0, this.maxX]);
     this.yRange = d3.scale
         .linear()
         .range([this.height - this.margins.top, this.margins.bottom])
@@ -73,7 +76,7 @@ class D3Chart {
   drawGraph() {
     this.plot.append('svg:g')
         .attr('class', 'x-axis')
-        .attr('transform', 'translate(0,' + (this.height - this.margins.top) + ')')
+        .attr('transform', 'translate(0,' + (this.height - this.margins.bottom) + ')')
         .call(this.xAxis)
         .append("text")
         .attr("class", "x-label")
@@ -84,7 +87,7 @@ class D3Chart {
 
     this.plot.append('svg:g')
         .attr('class', 'y-axis')
-        .attr('transform', 'translate(' + (this.margins.left) + ',' + (0) + ')')
+        .attr('transform', 'translate(' + (this.margins.left) + ',' + -(this.margins.bottom - this.margins.top) + ')')
         .call(this.yAxis)
         .append("text")
         .attr("class", "y-label")
@@ -96,6 +99,7 @@ class D3Chart {
 
     this.plot.append('svg:path')
         .attr('d', this.graphArea(this.data))
+        .attr('transform', 'translate(' + (0) + ',' + -(this.margins.bottom - this.margins.top) + ')')
         .attr('class', 'graph-area');
   }
 
@@ -105,7 +109,7 @@ class D3Chart {
     const line = g.append('svg:line')
         .attr('x1', 0)
         .attr('x2', 0)
-        .attr('y2', this.height - this.margins.top)
+        .attr('y2', this.height - this.margins.bottom)
         .attr('stroke-width', 3)
         .attr('stroke', color);
     const box = g.append('rect')
