@@ -33,8 +33,6 @@ class IncomeBox extends React.Component {
 
   render() {
     return (
-        <div className="row">
-          <div className="box-container col-md-8 col-md-offset-2">
             <div className="box box-income">
               <div className="box-title box-title-income">
                 <div className="number-circle">2</div>
@@ -49,6 +47,7 @@ class IncomeBox extends React.Component {
                     <span className="input-group-addon">$</span>
                     <input
                         type="number"
+                        min="0"
                         className="form-control"
                         required
                         ref="income"
@@ -63,8 +62,6 @@ class IncomeBox extends React.Component {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
     );
   }
 }

@@ -13,6 +13,7 @@ import LocationBox from './LocationBox';
 import IncomeBox from './IncomeBox';
 import PercentileBox from './PercentileBox';
 import ChartBox from './ChartBox';
+import UserInfoBox from './UserInfoBox';
 
 function mapStateToProps(state) {
   return {
@@ -23,7 +24,7 @@ function mapStateToProps(state) {
 }
 
 const propTypes = {
-  currentState: React.PropTypes.string,
+  currentState: React.PropTypes.object,
   currentCounty: React.PropTypes.string,
   states: React.PropTypes.array,
   counties: React.PropTypes.array,
@@ -48,12 +49,23 @@ class AmIRichApp extends React.Component {
     const percentileBox = _.isUndefined(props.userIncome)
         ? null
         : <PercentileBox />;
+    const userInfoBox = _.isUndefined(props.incomeData)
+        ? null
+        : <UserInfoBox />;
+    const locationBox = _.isUndefined(props.incomeData)
+        ? <LocationBox />
+        : null;
     return (
       <div className="main-page container">
-        <LocationBox />
-        {incomeBox}
-        {percentileBox}
-        {d3Chart}
+        <div className="row">
+          <div className="box-container col-md-8 col-md-offset-2">
+            {userInfoBox}
+            {locationBox}
+            {incomeBox}
+            {percentileBox}
+            {d3Chart}
+          </div>
+        </div>
       </div>
     );
   }

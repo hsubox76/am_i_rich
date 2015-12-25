@@ -5,7 +5,7 @@ function getPercentileMap(state) {
   const incomeData = state.incomeData;
   const totalHouseholds =_.sum(incomeData, "households");
   const percentileMap = [0];
-  _.forEach(_.range(1,99), function(percentile) {
+  _.forEach(_.range(0,100), function(percentile) {
     const householdsInPercentile = percentile / 100 * totalHouseholds;
     // find correct income bracket
     let householdAccumulator = 0;
@@ -59,7 +59,7 @@ export default function mainReducer(state, action) {
       return Object.assign({}, state, {chartWidth: action.width});
     case 'RECEIVE_STATE_DATA':
       return Object.assign({}, state, {
-        currentState: action.stateCode,
+        //currentState: action.state,
         counties: [{name: "select a county", countyCode: "0"}]
             .concat(
                 action.countyData.map(function(county) {
@@ -74,17 +74,22 @@ export default function mainReducer(state, action) {
       });
     case 'RECEIVE_COUNTY_DATA':
       return Object.assign({}, state, {
-        currentCounty: action.countyCode,
         incomeData: action.incomeData,
         loadingIncomeData: false
       });
     case 'SET_CURRENT_COUNTY':
       return Object.assign({}, state, {
+        currentCounty: action.county,
         loadingIncomeData: true
       });
     case 'SET_CURRENT_STATE':
       return Object.assign({}, state, {
+        currentState: action.state,
         loadingCountyList: true
+      });
+    case 'CREATE_CHART':
+      return Object.assign({}, state, {
+        chart: action.chart
       });
     case 'SET_INCOME':
       const userPercentile = findPercentileAtIncome(state, action.userIncome);

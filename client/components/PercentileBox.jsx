@@ -32,8 +32,6 @@ class PercentileBox extends React.Component {
 
   render() {
     return (
-        <div className="row">
-          <div className="box-container col-md-8 col-md-offset-2">
             <div className="box box-income">
               <div className="box-title box-title-percentile">
                 <div className="number-circle">3</div>
@@ -47,6 +45,8 @@ class PercentileBox extends React.Component {
                   <div className="input-group input-percentile">
                     <input
                         type="number"
+                        min="0"
+                        max="99"
                         className="form-control"
                         required
                         ref="percentile"
@@ -61,8 +61,6 @@ class PercentileBox extends React.Component {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
     );
   }
 }

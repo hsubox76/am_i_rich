@@ -5,7 +5,7 @@ import StateInput from './StateInput';
 import CountyInput from './CountyInput';
 
 const propTypes = {
-  currentState: React.PropTypes.string
+  currentState: React.PropTypes.object
 };
 
 function mapStateToProps(state) {
@@ -20,8 +20,6 @@ class LocationBox extends React.Component {
         ? null
         : (<CountyInput />);
     return (
-        <div className="row">
-          <div className="box-container col-md-8 col-md-offset-2">
             <div className="box box-location">
               <div className="box-title box-title-location">
                 <div className="number-circle">1</div>
@@ -33,8 +31,6 @@ class LocationBox extends React.Component {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
     );
   }
 }

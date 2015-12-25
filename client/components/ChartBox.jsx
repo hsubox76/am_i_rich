@@ -17,20 +17,24 @@ const MARGINS = {
 
 const NUMBER_BOX_HEIGHT = 60;
 
+const TYPES = React.PropTypes;
+
 const propTypes = {
-  data: React.PropTypes.array,
-  chartWidth: React.PropTypes.number,
-  userIncome: React.PropTypes.number,
-  userPercentile: React.PropTypes.number,
-  guessedIncome: React.PropTypes.number,
-  guessedPercentile: React.PropTypes.number,
-  setChartWidth: React.PropTypes.func
+  data: TYPES.array,
+  chartWidth: TYPES.number,
+  chart: TYPES.object,
+  userIncome: TYPES.number,
+  userPercentile: TYPES.number,
+  guessedIncome: TYPES.number,
+  guessedPercentile: TYPES.number,
+  setChartWidth: TYPES.func
 };
 
 function mapStateToProps(state) {
   return {
     data: state.incomeData,
     chartWidth: state.chartWidth,
+    chart: state.chart,
     userIncome: state.userIncome,
     userPercentile: state.userPercentile,
     guessedIncome: state.guessedIncome,
@@ -52,7 +56,7 @@ class ChartBox extends React.Component {
 
   componentDidUpdate() {
     // draw d3 chart after initial div has rendered and container width has been determined
-    if (this.props.chartWidth) {
+    if (this.props.chartWidth && !this.props.chart) {
       const chart = new D3Chart({
             margins: MARGINS,
             width: this.props.chartWidth,
@@ -60,9 +64,12 @@ class ChartBox extends React.Component {
           },
           this.props.data
       );
+      this.props.actions.createChart(chart);
       const offsets = this.props.userIncome > this.props.guessedIncome ? [1, 0] : [0, 1];
-      chart.drawMarkerLine(this.props.userIncome, 'steelblue', 'your income', offsets[0]);
-      chart.drawMarkerLine(this.props.guessedIncome, 'grey', 'your guess', offsets[1]);
+      chart.drawMarkerLine(this.props.userIncome, 'steelblue', 'your income', this.props.userPercentile, offsets[0]);
+      chart.drawMarkerLine(this.props.guessedIncome, 'grey', 'your guess', this.props.guessedPercentile, offsets[1]);
+    } else if (this.props.chart) {
+      this.props.chart.updateGraph(this.props.data);
     }
   }
 
@@ -73,15 +80,11 @@ class ChartBox extends React.Component {
             width={this.props.chartWidth} height={this.props.chartWidth * 0.66} />
     ) : null;
     return (
-        <div className="row">
-          <div className="col-md-8 col-md-offset-2">
             <div
                 ref="container"
                 className="d3-container">
               {svgElement}
             </div>
-          </div>
-        </div>
     );
   }
 }

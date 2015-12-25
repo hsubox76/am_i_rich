@@ -35,8 +35,8 @@ const testCountyData = [
 ];
 
 const initialState = {
-  currentState: "0",
-  currentCounty: "0",
+  currentState: {code: "0"},
+  currentCounty: {code: "0"},
   states:
       [{name: "select a state", code: "0"}].concat(STATES),
   counties: [],

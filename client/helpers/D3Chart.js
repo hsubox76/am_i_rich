@@ -1,6 +1,7 @@
 import d3 from 'd3';
 
 const LABEL_PADDING = 5;
+const LABEL_SPACING = 5;
 const LABEL_BORDER_SIZE = 1;
 
 class D3Chart {
@@ -59,13 +60,13 @@ class D3Chart {
     this.graphArea = d3.svg.area()
         .x(function(d) {
           if (d.max === 0) {
-            return this.xRange(1000);
+            return this.xRange(0);
           } else if (d.max) {
             return this.xRange((d.max + d.min)/2);
           }
         })
         .y0(function() {
-          return this.yRange(100);
+          return this.yRange(0);
         })
         .y1(function(d) {
           return this.yRange(d.households);
@@ -74,6 +75,11 @@ class D3Chart {
   }
 
   drawGraph() {
+    this.graphElement = this.plot.append('svg:path')
+        .attr('d', this.graphArea(this.data))
+        .attr('transform', 'translate(' + (0) + ',' + -(this.margins.bottom - this.margins.top) + ')')
+        .attr('class', 'graph-area');
+
     this.plot.append('svg:g')
         .attr('class', 'x-axis')
         .attr('transform', 'translate(0,' + (this.height - this.margins.bottom) + ')')
@@ -96,14 +102,14 @@ class D3Chart {
         .attr("y", -40)
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
-
-    this.plot.append('svg:path')
-        .attr('d', this.graphArea(this.data))
-        .attr('transform', 'translate(' + (0) + ',' + -(this.margins.bottom - this.margins.top) + ')')
-        .attr('class', 'graph-area');
   }
 
-  drawMarkerLine(xValue, color, labelText, offset = 0) {
+  updateGraph(data) {
+    this.data = data;
+    this.graphElement.attr('d', this.graphArea(this.data));
+  }
+
+  drawMarkerLine(xValue, color, title, percentile, offset = 0) {
     const xPos= this.xRange(xValue);
     const g = this.plot.append('g');
     const line = g.append('svg:line')
@@ -117,24 +123,37 @@ class D3Chart {
         .attr('y', 0)
         .attr('stroke', 'none')
         .attr('fill', color);
-    const text = g.append('text')
+    const labelText = g.append('g')
+        .attr ('transform', 'translate(' + (LABEL_PADDING + LABEL_BORDER_SIZE) + ', '
+            + (this.margins.top + 32 + LABEL_PADDING + LABEL_BORDER_SIZE) + ')');
+    const labelTitle = labelText.append('text')
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
         .attr('fill', 'white')
-        .attr ('transform', 'translate(' + (LABEL_PADDING + LABEL_BORDER_SIZE) + ', '
-            + (this.margins.top + 32 + LABEL_PADDING + LABEL_BORDER_SIZE) + ')')
-        .text(labelText);
-    const textBBox = text[0][0].getBBox();
-    const labelHeight = textBBox.height + LABEL_PADDING * 2;
+        .text(title);
+    const labelIncome = labelText.append('text')
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'middle')
+        .attr('fill', 'white')
+        .text('$' + Math.round(xValue).toLocaleString());
+    const labelPercentile = labelText.append('text')
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'middle')
+        .attr('fill', 'white')
+        .text(percentile + '%');
+    const textBBox = labelTitle[0][0].getBBox();
+    const labelHeight = textBBox.height * 2 + LABEL_PADDING * 4;
     const labelWidth = textBBox.width + LABEL_PADDING * 2;
     const textX = labelWidth / 2;
-    const textY = (labelHeight / 2) + this.margins.top + 32 + (labelHeight * offset);
+    const textY = (labelHeight / 2) + this.margins.top + 32 + ((labelHeight + LABEL_SPACING) * offset);
+    labelTitle.attr('transform', 'translate(0, ' + (-textBBox.height) + ')');
+    labelPercentile.attr('transform', 'translate(0, ' + (textBBox.height) + ')');
     box.attr('width', labelWidth)
         .attr('height', labelHeight)
-        .attr ('transform', 'translate(0, ' + ((labelHeight * offset)
+        .attr ('transform', 'translate(0, ' + (((labelHeight + LABEL_SPACING) * offset)
             + this.margins.top + 32) + ')');
-    text.attr('transform', 'translate(' + textX + ',' + textY + ')');
-    line.attr('y1', (labelHeight * offset) + this.margins.top + 32)
+    labelText.attr('transform', 'translate(' + textX + ',' + textY + ')');
+    line.attr('y1', ((labelHeight + LABEL_SPACING) * offset) + this.margins.top + 32);
     g.attr('transform', 'translate(' + xPos + ', 0)');
   }
 

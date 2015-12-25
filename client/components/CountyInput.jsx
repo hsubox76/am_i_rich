@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import * as AmIRichActions from '../actions/actions.jsx';
 
 const propTypes = {
-  currentCounty: React.PropTypes.string,
+  currentCounty: React.PropTypes.object,
   counties: React.PropTypes.array,
   setCurrentCounty: React.PropTypes.func
 };
@@ -30,7 +30,9 @@ class CountyInput extends React.Component {
     this.onCountySelect = this.onCountySelect.bind(this);
   }
   onCountySelect (event) {
-    this.props.actions.setCurrentCounty(event.target.value, this.props.currentState);
+    const countyInfo = event.target.value.split('-');
+    this.props.actions.setCurrentCounty(countyInfo[0], countyInfo[1]);
+    this.props.actions.requestCountyData(countyInfo[0], this.props.currentState.code);
   }
 
   render () {
@@ -38,7 +40,7 @@ class CountyInput extends React.Component {
       return (
           <option
               key={'county-'+county.countyCode}
-              value={county.countyCode}>{county.name}
+              value={county.countyCode + '-' + county.name}>{county.name}
           </option>
       )
     });
@@ -46,7 +48,8 @@ class CountyInput extends React.Component {
         <div className="form-group">
           <label className="control-label label-county">County:</label>
           <select
-              value={this.props.currentCounty}
+              value={this.props.currentCounty.code + '-' +
+               this.props.currentCounty.name}
               className="form-control select-county"
               onChange={this.onCountySelect}>
             {listItems}
