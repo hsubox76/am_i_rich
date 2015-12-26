@@ -40,7 +40,12 @@ class UserInfoBox extends React.Component {
     const props = this.props;
     return (
             <div className="box box-user-info">
-              {props.currentCounty.name + ', ' + props.currentState.name}
+              <div className="user-info-location">
+                {props.currentCounty.name + ', ' + props.currentState.name}
+              </div>
+              <div className="user-info-income">
+                {'$' + Math.round(props.userIncome).toLocaleString()}
+              </div>
             </div>
     );
   }

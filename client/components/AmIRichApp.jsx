@@ -43,27 +43,29 @@ class AmIRichApp extends React.Component {
         ? null
         : (
         <ChartBox />);
-    const incomeBox = _.isUndefined(props.incomeData)
-        ? null
-        : <IncomeBox />;
-    const percentileBox = _.isUndefined(props.userIncome)
-        ? null
-        : <PercentileBox />;
-    const userInfoBox = _.isUndefined(props.incomeData)
+    const incomeBox = (!_.isUndefined(props.incomeData) && _.isUndefined(props.guessedPercentile))
+        ? <IncomeBox />
+        : null;
+    const percentileBox = (!_.isUndefined(props.userIncome) && _.isUndefined(props.guessedPercentile))
+        ? <PercentileBox />
+        : null;
+    const userInfoBox = _.isUndefined(props.guessedPercentile)
         ? null
         : <UserInfoBox />;
-    const locationBox = _.isUndefined(props.incomeData)
+    const locationBox = _.isUndefined(props.guessedPercentile)
         ? <LocationBox />
         : null;
     return (
       <div className="main-page container">
         <div className="row">
-          <div className="box-container col-md-8 col-md-offset-2">
-            {userInfoBox}
-            {locationBox}
-            {incomeBox}
-            {percentileBox}
-            {d3Chart}
+          <div className="col-md-8 col-md-offset-2">
+            <div className="box-container">
+              {userInfoBox}
+              {locationBox}
+              {incomeBox}
+              {percentileBox}
+              {d3Chart}
+            </div>
           </div>
         </div>
       </div>

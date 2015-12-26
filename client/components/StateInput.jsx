@@ -31,20 +31,20 @@ class StateInput extends React.Component {
   }
 
   onStateSelect(event) {
-    const stateInfo = event.target.value.split('-');
+    const stateInfo = event.target.value.split(':');
     this.props.actions.setCurrentState(stateInfo[0], stateInfo[1]);
     this.props.actions.requestStateData(stateInfo[0]);
   }
 
   render() {
     const listItems = this.props.states.map(function(state) {
-      return <option key={'state-'+state.code} value={state.code + '-' + state.name}>{state.name}</option>
+      return <option key={'state-'+state.code} value={state.code + ':' + state.name}>{state.name}</option>
     });
     return (
         <div className="form-group">
           <label className="control-label label-state">State:</label>
           <select
-              value={this.props.currentState.code + '-' + this.props.currentState.name}
+              value={this.props.currentState.code + ':' + this.props.currentState.name}
               className="form-control select-state"
               onChange={this.onStateSelect}>
             {listItems}

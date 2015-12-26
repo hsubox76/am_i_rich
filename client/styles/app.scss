@@ -15,10 +15,10 @@ body {
   background-color: #fff;
 }
 .d3-container {
-  background-color: $color-primary-2;
+  background-color: #fff;
   padding: 15px $number-box-height;
-  margin: 5px 0;
-  box-shadow: 0 0 10px 2px #ccc;
+  //margin: 5px 0;
+  //box-shadow: 0 0 10px 2px #ccc;
 }
 .x-axis,
 .y-axis {
@@ -26,10 +26,14 @@ body {
     fill: $color-primary-3;
   }
   path.domain {
-    fill: none;
-    stroke-width: 2;
-    stroke: $color-primary-3;
+    fill: $color-primary-0;
   }
+}
+.label-text {
+  fill: #fff;
+}
+.label-box {
+  fill: rgba(50, 50, 50, 0.5);
 }
 .graph-line {
   stroke-width: 6;
@@ -37,17 +41,19 @@ body {
 }
 .graph-area {
   fill: $color-primary-1;
+  opacity: 0.8;
 }
-.row {
+.box-container {
+  border: 1px solid #ccc;
 }
 .box {
   min-height: 60px;
   width: 100%;
   display: flex;
   background-color: #fff;
-  //border-bottom: 1px solid #eee;
-  margin: 5px 0;
-  box-shadow: 0 0 10px 2px #ccc;
+  border-bottom: 1px solid #eee;
+  margin: 0px 0;
+  //box-shadow: 0 0 10px 2px #ccc;
   .box-body {
     padding: 10px 0 0 20px;
     flex: 1 1 auto;
@@ -147,7 +153,22 @@ body {
   }
 }
 .box-user-info {
-  padding: 10px;
+  min-height: 10px;
+  //padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  .user-info-location {
+    flex: 1 1 200px;
+    font-size: 18px;
+    padding: 10px;
+    color: $color-primary-0;
+  }
+  .user-info-income {
+    flex: 1 1 200px;
+    font-size: 20px;
+    padding: 10px;
+    color: $color-primary-0;
+  }
 }
 .box-location {
   //background-color: $color-primary-1;

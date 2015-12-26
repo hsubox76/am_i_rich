@@ -1,8 +1,8 @@
 import d3 from 'd3';
 
-const LABEL_PADDING = 5;
+const LABEL_PADDING = 8;
 const LABEL_SPACING = 5;
-const LABEL_BORDER_SIZE = 1;
+const LABEL_BORDER_SIZE = 4;
 
 class D3Chart {
   constructor(options, data) {
@@ -75,6 +75,22 @@ class D3Chart {
   }
 
   drawGraph() {
+    const self = this;
+    this.plot.selectAll("line.horizontalGrid").data(this.yRange.ticks(8).slice(1)).enter()
+      .append("line")
+      .attr(
+          {
+            "class":"horizontalGrid",
+            "x1" : 0,
+            "x2" : self.width - self.margins.right - self.margins.left,
+            "y1" : function(d){ return self.yRange(d);},
+            "y2" : function(d){ return self.yRange(d);},
+            "fill" : "none",
+            "shape-rendering" : "crispEdges",
+            "stroke" : "grey",
+            "stroke-width" : "1px"
+          })
+        .attr('transform', 'translate(' + (self.margins.left) + ',' + -(self.margins.bottom - self.margins.top) + ')');
     this.graphElement = this.plot.append('svg:path')
         .attr('d', this.graphArea(this.data))
         .attr('transform', 'translate(' + (0) + ',' + -(this.margins.bottom - this.margins.top) + ')')
@@ -116,30 +132,31 @@ class D3Chart {
         .attr('x1', 0)
         .attr('x2', 0)
         .attr('y2', this.height - this.margins.bottom)
-        .attr('stroke-width', 3)
+        .attr('stroke-width', LABEL_BORDER_SIZE)
         .attr('stroke', color);
     const box = g.append('rect')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('stroke', 'none')
-        .attr('fill', color);
+        .attr('stroke', color)
+        .attr('stroke-width', LABEL_BORDER_SIZE)
+        .attr('class', 'label-box');
     const labelText = g.append('g')
         .attr ('transform', 'translate(' + (LABEL_PADDING + LABEL_BORDER_SIZE) + ', '
             + (this.margins.top + 32 + LABEL_PADDING + LABEL_BORDER_SIZE) + ')');
     const labelTitle = labelText.append('text')
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
-        .attr('fill', 'white')
+        .attr('class', 'label-text')
         .text(title);
     const labelIncome = labelText.append('text')
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
-        .attr('fill', 'white')
+        .attr('class', 'label-text')
         .text('$' + Math.round(xValue).toLocaleString());
     const labelPercentile = labelText.append('text')
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
-        .attr('fill', 'white')
+        .attr('class', 'label-text')
         .text(percentile + '%');
     const textBBox = labelTitle[0][0].getBBox();
     const labelHeight = textBBox.height * 2 + LABEL_PADDING * 4;
