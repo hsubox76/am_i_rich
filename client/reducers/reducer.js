@@ -59,7 +59,7 @@ export default function mainReducer(state, action) {
       return Object.assign({}, state, {chartWidth: action.width});
     case 'RECEIVE_STATE_DATA':
       return Object.assign({}, state, {
-        //currentState: action.state,
+        loadingCountyList: 'loaded',
         counties: [{name: "select a county", countyCode: "0"}]
             .concat(
                 action.countyData.map(function(county) {
@@ -85,7 +85,7 @@ export default function mainReducer(state, action) {
     case 'SET_CURRENT_STATE':
       return Object.assign({}, state, {
         currentState: action.state,
-        loadingCountyList: true
+        loadingCountyList: 'loading'
       });
     case 'CREATE_CHART':
       return Object.assign({}, state, {

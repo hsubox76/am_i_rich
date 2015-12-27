@@ -67,6 +67,9 @@ body {
         flex-wrap: wrap;
         display: flex;
       }
+      > div.loading-bar {
+        flex: 1 1 50%;
+      }
       label {
         color: $color-primary-0;
         margin: auto 5px auto 0;

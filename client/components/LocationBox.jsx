@@ -16,7 +16,7 @@ function mapStateToProps(state) {
 
 class LocationBox extends React.Component {
   render () {
-    const countyInput = this.props.currentState === "0"
+    const countyInput = this.props.currentState.code === "0"
         ? null
         : (<CountyInput />);
     return (

@@ -14,7 +14,8 @@ function mapStateToProps(state) {
   return {
     currentState: state.currentState,
     currentCounty: state.currentCounty,
-    counties: state.counties
+    counties: state.counties,
+    loadingCountyList: state.loadingCountyList
   }
 }
 
@@ -44,7 +45,7 @@ class CountyInput extends React.Component {
           </option>
       )
     });
-    return (
+    const selectBox = (
         <div className="form-group">
           <label className="control-label label-county">County:</label>
           <select
@@ -56,6 +57,9 @@ class CountyInput extends React.Component {
           </select>
         </div>
     );
+    return (this.props.loadingCountyList === 'loading'
+        ? (<div className="loading-bar">loading...</div>)
+        : selectBox);
   }
 }
 
