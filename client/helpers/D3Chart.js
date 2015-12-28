@@ -90,7 +90,24 @@ class D3Chart {
             "stroke" : "grey",
             "stroke-width" : "1px"
           })
-        .attr('transform', 'translate(' + (self.margins.left) + ',' + -(self.margins.bottom - self.margins.top) + ')');
+        .attr('transform', 'translate(' + (self.margins.left) + ','
+            + -(self.margins.bottom - self.margins.top) + ')');
+    this.plot.selectAll("line.verticalGrid").data(this.xRange.ticks(8)).enter()
+        .append("line")
+        .attr(
+            {
+              "class":"verticalGrid",
+              "y1" : self.margins.top,
+              "y2" : self.height - self.margins.bottom,
+              "x1" : function(d){ return self.xRange(d);},
+              "x2" : function(d){ return self.xRange(d);},
+              "fill" : "none",
+              "shape-rendering" : "crispEdges",
+              "stroke" : "grey",
+              "stroke-width" : "1px"
+            })
+        .attr('transform', 'translate(' + (0) + ','
+            + 0 + ')');
     this.graphElement = this.plot.append('svg:path')
         .attr('d', this.graphArea(this.data))
         .attr('transform', 'translate(' + (0) + ',' + -(this.margins.bottom - this.margins.top) + ')')
