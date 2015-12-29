@@ -1,5 +1,6 @@
 "use strict";
 import React from 'react';
+import $ from 'jquery';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import d3 from 'd3';
@@ -20,7 +21,8 @@ const NUMBER_BOX_HEIGHT = 60;
 const TYPES = React.PropTypes;
 
 const propTypes = {
-  data: TYPES.array,
+  countyData: TYPES.array,
+  stateData: TYPES.array,
   chartWidth: TYPES.number,
   chart: TYPES.object,
   userIncome: TYPES.number,
@@ -32,7 +34,9 @@ const propTypes = {
 
 function mapStateToProps(state) {
   return {
-    data: state.incomeData,
+    countyData: state.countyIncomeData,
+    stateData: state.stateIncomeData,
+    locationLevel: state.locationLevel,
     chartWidth: state.chartWidth,
     chart: state.chart,
     userIncome: state.userIncome,
@@ -54,22 +58,38 @@ class ChartBox extends React.Component {
     this.props.actions.setChartWidth(chartWidth);
   }
 
+  componentWillUpdate(nextProps) {
+    if (this.props.chart && nextProps.locationLevel !== this.props.locationLevel) {
+      $('#d3-element').empty();
+    }
+  }
+
   componentDidUpdate() {
     // draw d3 chart after initial div has rendered and container width has been determined
-    if (this.props.chartWidth && !this.props.chart) {
+    console.dir($('#d3-element'));
+    if (this.props.chartWidth && $('#d3-element').children().length === 0) {
+      let data;
+      switch (this.props.locationLevel) {
+        case 'county':
+          data = this.props.countyData;
+          break;
+        case 'state':
+          data = this.props.stateData;
+          break;
+        default:
+          data = this.props.countyData;
+      }
       const chart = new D3Chart({
             margins: MARGINS,
             width: this.props.chartWidth,
             elementId: 'd3-element'
           },
-          this.props.data
+          data
       );
       this.props.actions.createChart(chart);
       const offsets = this.props.userIncome > this.props.guessedIncome ? [1, 0] : [0, 1];
       chart.drawMarkerLine(this.props.userIncome, 'steelblue', 'your income', this.props.userPercentile, offsets[0]);
       chart.drawMarkerLine(this.props.guessedIncome, 'grey', 'your guess', this.props.guessedPercentile, offsets[1]);
-    } else if (this.props.chart) {
-      this.props.chart.updateGraph(this.props.data);
     }
   }
 
@@ -77,7 +97,7 @@ class ChartBox extends React.Component {
     const svgElement = this.props.chartWidth ? (
         <svg
             id="d3-element"
-            width={this.props.chartWidth} height={this.props.chartWidth * 0.66} />
+            width={this.props.chartWidth} height={this.props.chartWidth * 0.5} />
     ) : null;
     return (
             <div

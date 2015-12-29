@@ -91,7 +91,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           flatten: true,
-          src: ['bower_components/bootstrap/fonts/*.*'],
+          src: ['bower_components/bootstrap/fonts/*.*', 'node_modules/font-awesome/fonts/*.*'],
           dest: 'public/fonts/'
         }]
       }
@@ -152,7 +152,8 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         files: {
-          'public/styles/app.css': 'client/styles/app.scss'
+          'public/styles/app.css': 'client/styles/app.scss',
+          'public/styles/font-awesome.css': 'node_modules/font-awesome/scss/font-awesome.scss'
         }
       }
     },

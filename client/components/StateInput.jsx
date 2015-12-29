@@ -33,7 +33,7 @@ class StateInput extends React.Component {
   onStateSelect(event) {
     const stateInfo = event.target.value.split(':');
     this.props.actions.setCurrentState(stateInfo[0], stateInfo[1]);
-    this.props.actions.requestStateData(stateInfo[0]);
+    this.props.actions.requestCountyList(stateInfo[0], stateInfo[1]);
   }
 
   render() {

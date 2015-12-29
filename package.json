@@ -37,6 +37,7 @@
     "shell": "^0.3.2"
   },
   "dependencies": {
+    "font-awesome": "^4.5.0",
     "lodash": "^3.10.1"
   }
 }

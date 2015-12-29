@@ -58,7 +58,7 @@ class CountyInput extends React.Component {
         </div>
     );
     return (this.props.loadingCountyList === 'loading'
-        ? (<div className="loading-bar">loading...</div>)
+        ? (<div className="loading-bar"><span className="fa fa-spinner fa-spin"></span></div>)
         : selectBox);
   }
 }

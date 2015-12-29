@@ -10,7 +10,7 @@ class D3Chart {
     this.margins = options.margins;
     this.width = options.width;
     this.data = data;
-    this.height = Math.round(this.width * 0.66);
+    this.height = Math.round(this.width * 0.5);
     this.elementId = options.elementId;
     this.plot = d3.select('#' + this.elementId);
     this.initRanges();

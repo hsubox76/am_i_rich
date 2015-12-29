@@ -1,8 +1,7 @@
 import _ from 'lodash';
 
 
-function getPercentileMap(state) {
-  const incomeData = state.incomeData;
+function getPercentileMap(incomeData) {
   const totalHouseholds =_.sum(incomeData, "households");
   const percentileMap = [0];
   _.forEach(_.range(0,100), function(percentile) {
@@ -24,9 +23,9 @@ function getPercentileMap(state) {
   return percentileMap;
 }
 
-function findPercentileAtIncome(state, income) {
+function findPercentileAtIncome(incomeData, income) {
   // TODO: special cases at extremes, error checking for neg or 0
-  const percentileMap = getPercentileMap(state);
+  const percentileMap = getPercentileMap(incomeData);
   const samples = percentileMap.length;
   let i = Math.round(samples / 2);
   let top = samples;
@@ -59,22 +58,27 @@ export default function mainReducer(state, action) {
       return Object.assign({}, state, {chartWidth: action.width});
     case 'RECEIVE_STATE_DATA':
       return Object.assign({}, state, {
+        stateIncomeData: action.incomeData,
+        loadingIncomeData: false
+      });
+    case 'RECEIVE_COUNTY_LIST':
+      return Object.assign({}, state, {
         loadingCountyList: 'loaded',
         counties: [{name: "select a county", countyCode: "0"}]
             .concat(
                 action.countyData.map(function(county) {
-                return {
-                  name: county[0].split(',')[0],
-                  stateCode: county[1],
-                  countyCode: county[2],
-                  loadingCountyList: false
-                }
-              })
+                  return {
+                    name: county[0].split(',')[0],
+                    stateCode: county[1],
+                    countyCode: county[2],
+                    loadingCountyList: false
+                  }
+                })
             )
       });
     case 'RECEIVE_COUNTY_DATA':
       return Object.assign({}, state, {
-        incomeData: action.incomeData,
+        countyIncomeData: action.incomeData,
         loadingIncomeData: false
       });
     case 'SET_CURRENT_COUNTY':
@@ -92,14 +96,19 @@ export default function mainReducer(state, action) {
         chart: action.chart
       });
     case 'SET_INCOME':
-      const userPercentile = findPercentileAtIncome(state, action.userIncome);
+      const userPercentile = findPercentileAtIncome(state.countyIncomeData, action.userIncome);
       return Object.assign({}, state, {userIncome: parseInt(action.userIncome), userPercentile});
     case 'SET_PERCENTILE':
-      const guessedIncome = getPercentileMap(state)[action.guessedPercentile];
+      const guessedIncome = getPercentileMap(state.countyIncomeData)[action.guessedPercentile];
       return Object.assign({}, state, {
         guessedPercentile: parseInt(action.guessedPercentile),
         guessedIncome
       });
+    case 'SET_SELECTING_LOCATION_LEVEL':
+      return Object.assign({}, state, {selectingLocationLevel: !state.selectingLocationLevel});
+    case 'SET_LOCATION_LEVEL': {
+      return Object.assign({}, state, {locationLevel: action.level});
+    }
     default:
       return state;
   }

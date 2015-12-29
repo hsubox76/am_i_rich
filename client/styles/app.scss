@@ -69,6 +69,8 @@ body {
       }
       > div.loading-bar {
         flex: 1 1 50%;
+        text-align: center;
+        font-size: 25px;
       }
       label {
         color: $color-primary-0;
@@ -161,16 +163,53 @@ body {
   display: flex;
   flex-wrap: wrap;
   .user-info-location {
-    flex: 1 1 200px;
-    font-size: 18px;
-    padding: 10px;
-    color: $color-primary-0;
+    flex: 0 1 auto;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid $color-primary-0;
+    margin: 10px;
+    position: relative;
+    .user-info-location-text {
+      padding: 10px 10px;
+      color: $color-primary-2;
+      &:hover, &:active {
+        color: $color-primary-1;
+      }
+    }
+    span.fa {
+      width: 32px;
+      background-color: $color-primary-2;
+      color: white;
+      padding: 10px 10px;
+      border-left: 1px solid #ddd;
+      &:hover, &:active {
+        background-color: $color-primary-1;
+      }
+    }
+  }
+  .user-info-location-select {
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    .location-item {
+      border: 1px solid $color-primary-0;
+      color: #666;
+      padding: 5px 10px;
+      &:last-child {
+        border-top: none;
+      }
+      &:hover, &:active {
+        background-color: $color-primary-1;
+        color: white;
+      }
+    }
   }
   .user-info-income {
     flex: 1 1 200px;
     font-size: 20px;
     padding: 10px;
-    color: $color-primary-0;
+    margin: 5px;
+    color: $color-primary-1;
   }
 }
 .box-location {

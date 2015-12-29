@@ -17,7 +17,8 @@ import UserInfoBox from './UserInfoBox';
 
 function mapStateToProps(state) {
   return {
-    incomeData: state.incomeData,
+    countyIncomeData: state.countyIncomeData,
+    stateIncomeData: state.stateIncomeData,
     userIncome: state.userIncome,
     guessedPercentile: state.guessedPercentile
   }
@@ -28,7 +29,8 @@ const propTypes = {
   currentCounty: React.PropTypes.string,
   states: React.PropTypes.array,
   counties: React.PropTypes.array,
-  incomeData: React.PropTypes.array,
+  countyIncomeData: React.PropTypes.array,
+  stateIncomeData: React.PropTypes.array,
   userIncome: React.PropTypes.number,
   userPercentile: React.PropTypes.number,
   guessedIncome: React.PropTypes.number,
@@ -43,7 +45,8 @@ class AmIRichApp extends React.Component {
         ? null
         : (
         <ChartBox />);
-    const incomeBox = (!_.isUndefined(props.incomeData) && _.isUndefined(props.guessedPercentile))
+    const incomeBox = (!_.isUndefined(props.countyIncomeData)
+    && _.isUndefined(props.guessedPercentile))
         ? <IncomeBox />
         : null;
     const percentileBox = (!_.isUndefined(props.userIncome) && _.isUndefined(props.guessedPercentile))
