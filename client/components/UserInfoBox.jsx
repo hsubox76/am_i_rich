@@ -54,11 +54,12 @@ class UserInfoBox extends React.Component {
       {mode: 'county', text: props.currentCounty.name + ', ' + props.currentState.name},
       {mode: 'state', text: props.currentState.name},
       {mode: 'us', text: 'United States'}];
-    const locationItems = locationLevels.map(function(level) {
+    const locationItems = locationLevels.map(function(level, index) {
       if (level.mode !== props.locationLevel) {
         return (
             <div
                 className="location-item"
+                key={index}
                 onClick={props.actions.setLocationLevel.bind(null, level.mode)}>
               {level.text.split(',')[0]}
             </div>

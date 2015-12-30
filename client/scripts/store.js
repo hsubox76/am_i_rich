@@ -53,12 +53,12 @@ const initialState = {
       [{name: "select a state", code: "0"}].concat(STATES),
   counties: [],
   locationLevel: 'county',
-  countyIncomeData: testIncomeData,
-  stateIncomeData: testIncomeData2,
-  guessedPercentile: 25,
-  guessedIncome: 50000,
-  userIncome: 100000,
-  userPercentile: 50
+  //countyIncomeData: testIncomeData,
+  //stateIncomeData: testIncomeData2,
+  //guessedPercentile: 25,
+  //guessedIncome: 50000,
+  //userIncome: 100000,
+  //userPercentile: 50
 };
 // create a store that has redux-thunk middleware enabled
 const createStoreWithMiddleware = applyMiddleware(

@@ -66,7 +66,6 @@ class ChartBox extends React.Component {
 
   componentDidUpdate() {
     // draw d3 chart after initial div has rendered and container width has been determined
-    console.dir($('#d3-element'));
     if (this.props.chartWidth && $('#d3-element').children().length === 0) {
       let data;
       switch (this.props.locationLevel) {
