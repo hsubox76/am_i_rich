@@ -1,4 +1,6 @@
 /*global module:false*/
+var envify = require('envify/custom');
+
 module.exports = function(grunt) {
   // load all grunt tasks
   require('load-grunt-tasks')(grunt);
@@ -124,6 +126,7 @@ module.exports = function(grunt) {
             "redux-thunk"],
           browserifyOptions: {
             extensions: [".js", ".jsx"],
+            debug: true,
             transform: [
               ["babelify", {
                 presets: ["es2015"]
@@ -146,7 +149,11 @@ module.exports = function(grunt) {
             transform: [
               ["babelify", {
                 presets: ["es2015", "react"]
-              }]
+              }],
+                  ["envify", {
+                NODE_ENV: 'development'
+              }
+                  ]
             ]
           }
         }
