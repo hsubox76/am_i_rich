@@ -118,6 +118,9 @@ module.exports = function(grunt) {
             "lodash",
             "redux",
             "react-redux",
+            "redux-devtools",
+            "redux-devtools-log-monitor",
+            "redux-devtools-dock-monitor",
             "redux-thunk"],
           browserifyOptions: {
             extensions: [".js", ".jsx"],

@@ -1,4 +1,5 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import DevTools from '../components/DevTools';
 import thunk from 'redux-thunk';
 import STATES from '../data/state-codes.js';
 import mainReducer from '../reducers/reducer';
@@ -61,10 +62,24 @@ const initialState = {
   //userPercentile: 50
 };
 // create a store that has redux-thunk middleware enabled
-const createStoreWithMiddleware = applyMiddleware(
-    thunk
+//const createStoreWithMiddleware = applyMiddleware(
+//    thunk
+//)(createStore);
+
+const finalCreateStore = compose(
+    // Middleware you want to use in development:
+    applyMiddleware(thunk),
+    // Required! Enable Redux DevTools with the monitors you chose
+    DevTools.instrument()
 )(createStore);
 
-let store = createStoreWithMiddleware(mainReducer, initialState);
+const store = finalCreateStore(mainReducer, initialState);
+
+// Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
+//if (module.hot) {
+//  module.hot.accept('../reducers', () =>
+//      store.replaceReducer(require('../reducers')/*.default if you use Babel 6+ */)
+//  );
+//}
 
 export default store;
