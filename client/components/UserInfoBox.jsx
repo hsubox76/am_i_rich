@@ -75,15 +75,15 @@ class UserInfoBox extends React.Component {
     ) : null;
     return (
             <div className="box box-user-info">
+              <div className="user-info-income">
+                {'$' + Math.round(props.userIncome).toLocaleString()} in
+              </div>
               <div className="user-info-location" onClick={this.onLocationDropdownClick}>
                 <span className="user-info-location-text">
                   {_.result(_.find(locationLevels, {'mode': props.locationLevel}), 'text')}
                 </span>
                 <span className="fa fa-caret-down"></span>
                 {locationLevelSelector}
-              </div>
-              <div className="user-info-income">
-                {'$' + Math.round(props.userIncome).toLocaleString()}
               </div>
             </div>
     );

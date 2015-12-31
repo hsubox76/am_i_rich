@@ -161,15 +161,16 @@ body {
   min-height: 10px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   .user-info-location {
     flex: 0 1 auto;
     font-size: 16px;
     cursor: pointer;
     //border: 1px solid $color-primary-0;
-    margin: 10px;
+    margin: 10px 10px 10px 0;
     position: relative;
     .user-info-location-text {
-      padding: 10px 5px;
+      padding: 10px 5px 10px 0;
       color: $color-primary-2;
       &:hover, &:active {
         color: $color-primary-1;
@@ -204,11 +205,11 @@ body {
     }
   }
   .user-info-income {
-    flex: 1 1 200px;
-    font-size: 20px;
-    padding: 10px;
+    flex: 0 0 auto;
+    font-size: 16px;
+    padding: 11px 0 11px 10px;
     margin: 5px;
-    color: $color-primary-1;
+    color: $color-primary-2;
   }
 }
 .box-location {
