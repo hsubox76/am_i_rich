@@ -1,8 +1,19 @@
 import _ from 'lodash';
-import { LOADING_STATES } from '../data/types.js';
+import { LOCATION_LEVELS, LOADING_STATES } from '../data/types.js';
 
+function getCurrentDataSet(state) {
+  switch(state.locationLevel) {
+    case LOCATION_LEVELS.COUNTY:
+      return state.countyIncomeData;
+    case LOCATION_LEVELS.STATE:
+      return state.stateIncomeData;
+    default:
+      return state.countyIncomeData;
+  }
+}
 
-function getPercentileMap(incomeData) {
+function getPercentileMap(state) {
+  const incomeData = getCurrentDataSet(state);
   const totalHouseholds =_.sum(incomeData, "households");
   const percentileMap = [0];
   _.forEach(_.range(0,100), function(percentile) {
@@ -24,9 +35,10 @@ function getPercentileMap(incomeData) {
   return percentileMap;
 }
 
-function findPercentileAtIncome(incomeData, income) {
+function findPercentileAtIncome(state, income) {
+  const incomeData = getCurrentDataSet(state);
   // TODO: special cases at extremes, error checking for neg or 0
-  const percentileMap = getPercentileMap(incomeData);
+  const percentileMap = getPercentileMap(state);
   const samples = percentileMap.length;
   let i = Math.round(samples / 2);
   let top = samples;
@@ -98,12 +110,14 @@ export default function mainReducer(state, action) {
         chart: action.chart
       });
     case 'SET_INCOME':
-      const userPercentile = findPercentileAtIncome(state.countyIncomeData, action.userIncome);
-      return Object.assign({}, state, {userIncome: parseInt(action.userIncome), userPercentile});
+      const userIncome = action.userIncome || state.userIncome;
+      const userPercentile = findPercentileAtIncome(state, userIncome);
+      return Object.assign({}, state, {userIncome: parseInt(userIncome), userPercentile});
     case 'SET_PERCENTILE':
-      const guessedIncome = getPercentileMap(state.countyIncomeData)[action.guessedPercentile];
+      const guessedPercentile = action.guessedPercentile || state.guessedPercentile;
+      const guessedIncome = getPercentileMap(state)[guessedPercentile];
       return Object.assign({}, state, {
-        guessedPercentile: parseInt(action.guessedPercentile),
+        guessedPercentile: parseInt(guessedPercentile),
         guessedIncome
       });
     case 'SET_SELECTING_LOCATION_LEVEL':

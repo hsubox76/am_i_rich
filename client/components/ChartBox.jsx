@@ -62,6 +62,8 @@ class ChartBox extends React.Component {
   componentWillUpdate(nextProps) {
     if (this.props.chart && nextProps.locationLevel !== this.props.locationLevel) {
       $('#d3-element').empty();
+      this.props.actions.setIncome();
+      this.props.actions.setPercentile();
     }
   }
 
