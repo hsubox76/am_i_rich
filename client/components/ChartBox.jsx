@@ -7,7 +7,8 @@ import d3 from 'd3';
 
 import D3Chart from '../helpers/D3Chart';
 
-import * as AmIRichActions from '../actions/actions.jsx';
+import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
+import * as AmIRichActions from '../actions/actions';
 
 const MARGINS = {
   top: 20,
@@ -69,10 +70,10 @@ class ChartBox extends React.Component {
     if (this.props.chartWidth && $('#d3-element').children().length === 0) {
       let data;
       switch (this.props.locationLevel) {
-        case 'county':
+        case LOCATION_LEVELS.COUNTY:
           data = this.props.countyData;
           break;
-        case 'state':
+        case LOCATION_LEVELS.STATE:
           data = this.props.stateData;
           break;
         default:

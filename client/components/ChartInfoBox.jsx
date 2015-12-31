@@ -2,8 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
 
-import * as AmIRichActions from '../actions/actions.jsx';
+import * as AmIRichActions from '../actions/actions';
 
 const propTypes = {
   locationLevel: React.PropTypes.string,
@@ -51,9 +52,9 @@ class UserInfoBox extends React.Component {
   render() {
     const props = this.props;
     const locationLevels = [
-      {mode: 'county', text: props.currentCounty.name + ', ' + props.currentState.name},
-      {mode: 'state', text: props.currentState.name},
-      {mode: 'us', text: 'United States'}];
+      {mode: LOCATION_LEVELS.COUNTY, text: props.currentCounty.name + ', ' + props.currentState.name},
+      {mode: LOCATION_LEVELS.STATE, text: props.currentState.name},
+      {mode: LOCATION_LEVELS.US, text: 'United States'}];
     const locationItems = locationLevels.map(function(level, index) {
       if (level.mode !== props.locationLevel) {
         return (

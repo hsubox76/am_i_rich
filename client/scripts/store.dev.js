@@ -3,6 +3,7 @@ import DevTools from '../components/DevTools';
 import thunk from 'redux-thunk';
 import STATES from '../data/state-codes.js';
 import mainReducer from '../reducers/reducer';
+import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
 
 const testIncomeData = [{"min":0,"max":0,"households":4657 * 0.25},
   {"code":"DP03_0052E","min":0,"max":9999,"households":4657 * 0.75},
@@ -47,13 +48,16 @@ const testCountyData = [
   ]
 ];
 
+
+
 const initialState = {
   currentState: {code: "0", name: "TestState"},
   currentCounty: {code: "0", name: "TestCounty"},
   states:
       [{name: "select a state", code: "0"}].concat(STATES),
   counties: [],
-  locationLevel: 'county',
+  locationLevel: LOCATION_LEVELS.COUNTY,
+  householdType: HOUSEHOLD_TYPES.FAMILY
   //countyIncomeData: testIncomeData,
   //stateIncomeData: testIncomeData2,
   //guessedPercentile: 25,

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { LOADING_STATES } from '../data/types.js';
 
 
 function getPercentileMap(incomeData) {
@@ -59,11 +60,11 @@ export default function mainReducer(state, action) {
     case 'RECEIVE_STATE_DATA':
       return Object.assign({}, state, {
         stateIncomeData: action.incomeData,
-        loadingIncomeData: false
+        loadingStateIncomeData: LOADING_STATES.LOADED
       });
     case 'RECEIVE_COUNTY_LIST':
       return Object.assign({}, state, {
-        loadingCountyList: 'loaded',
+        loadingCountyList: LOADING_STATES.LOADED,
         counties: [{name: "select a county", countyCode: "0"}]
             .concat(
                 action.countyData.map(function(county) {
@@ -71,7 +72,7 @@ export default function mainReducer(state, action) {
                     name: county[0].split(',')[0],
                     stateCode: county[1],
                     countyCode: county[2],
-                    loadingCountyList: false
+                    loadingCountyList: LOADING_STATES.LOADED
                   }
                 })
             )
@@ -79,17 +80,18 @@ export default function mainReducer(state, action) {
     case 'RECEIVE_COUNTY_DATA':
       return Object.assign({}, state, {
         countyIncomeData: action.incomeData,
-        loadingIncomeData: false
+        loadingCountyIncomeData: LOADING_STATES.LOADED
       });
     case 'SET_CURRENT_COUNTY':
       return Object.assign({}, state, {
         currentCounty: action.county,
-        loadingIncomeData: true
+        loadingCountyIncomeData: LOADING_STATES.LOADING
       });
     case 'SET_CURRENT_STATE':
       return Object.assign({}, state, {
         currentState: action.state,
-        loadingCountyList: 'loading'
+        loadingCountyList: LOADING_STATES.LOADING,
+        loadingStateIncomeData: LOADING_STATES.LOADING
       });
     case 'CREATE_CHART':
       return Object.assign({}, state, {
@@ -106,8 +108,12 @@ export default function mainReducer(state, action) {
       });
     case 'SET_SELECTING_LOCATION_LEVEL':
       return Object.assign({}, state, {selectingLocationLevel: !state.selectingLocationLevel});
-    case 'SET_LOCATION_LEVEL': {
+    case 'SET_LOCATION_LEVEL':
       return Object.assign({}, state, {locationLevel: action.level});
+    case 'SET_SELECTING_HOUSEHOLD_TYPE':
+      return Object.assign({}, state, {selectingHouseholdType: !state.selectingHouseholdType});
+    case 'SET_HOUSEHOLD_TYPE': {
+      return Object.assign({}, state, {householdType: action.type});
     }
     default:
       return state;
