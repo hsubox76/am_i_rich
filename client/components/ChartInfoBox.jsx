@@ -11,7 +11,8 @@ const propTypes = {
   selectingLocationLevel: React.PropTypes.bool,
   setLocationLevel: React.PropTypes.func,
   setSelectingLocationLevel: React.PropTypes.func,
-  setPercentile: React.PropTypes.func
+  householdType: React.PropTypes.string,
+  selectingHouseholdType: React.PropTypes.bool
 };
 
 function mapStateToProps(state) {
@@ -23,7 +24,9 @@ function mapStateToProps(state) {
     userPercentile: state.userPercentile,
     guessedPercentile: state.guessedPercentile,
     selectingLocationLevel: state.selectingLocationLevel,
-    locationLevel: state.locationLevel
+    locationLevel: state.locationLevel,
+    householdType: state.householdType,
+    selectingHouseholdType: state.selectingHouseholdType
   }
 }
 
@@ -36,21 +39,11 @@ function mapDispatchToProps(dispatch) {
 class UserInfoBox extends React.Component {
   constructor() {
     super();
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onLocationDropdownClick = this.onLocationDropdownClick.bind(this);
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-    this.props.actions.setPercentile(this.refs.percentile.value);
-  }
-
-  onLocationDropdownClick() {
-    this.props.actions.setSelectingLocationLevel();
   }
 
   render() {
     const props = this.props;
+    const actions = this.props.actions;
     const locationLevels = [
       {mode: LOCATION_LEVELS.COUNTY, text: props.currentCounty.name + ', ' + props.currentState.name},
       {mode: LOCATION_LEVELS.STATE, text: props.currentState.name},
@@ -79,12 +72,19 @@ class UserInfoBox extends React.Component {
               <div className="user-info-income">
                 {'$' + Math.round(props.userIncome).toLocaleString()} in
               </div>
-              <div className="user-info-location" onClick={this.onLocationDropdownClick}>
+              <div className="user-info-location" onClick={actions.setSelectingLocationLevel}>
                 <span className="user-info-location-text">
                   {_.result(_.find(locationLevels, {'mode': props.locationLevel}), 'text')}
                 </span>
                 <span className="fa fa-caret-down"></span>
                 {locationLevelSelector}
+              </div>
+              <div className="user-info-location" onClick={actions.setSelectingHouseholdType}>
+                <span className="user-info-location-text">
+                  for a {props.householdType}
+                </span>
+                <span className="fa fa-caret-down"></span>
+                -- select box goes here --
               </div>
             </div>
     );

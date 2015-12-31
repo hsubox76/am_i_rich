@@ -36,7 +36,6 @@ function getPercentileMap(state) {
 }
 
 function findPercentileAtIncome(state, income) {
-  const incomeData = getCurrentDataSet(state);
   // TODO: special cases at extremes, error checking for neg or 0
   const percentileMap = getPercentileMap(state);
   const samples = percentileMap.length;
