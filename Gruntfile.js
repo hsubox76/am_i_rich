@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 
     concurrent: {
       dev: {
-        tasks: ['shell:nodemon', 'watch', 'browserify:client'],
+        tasks: ['shell:nodemon', 'watch', 'browserify:client-dev'],
         options: {
           logConcurrentOutput: true
         }
@@ -135,14 +135,13 @@ module.exports = function(grunt) {
           }
         }
       },
-      client: {
+      "client-dev": {
         src: ['client/scripts/index.jsx'],
         dest: 'public/scripts/app.build.js',
         options: {
           external: ["node_modules/**/*.js"],
           debug: true,
           watch: true,
-          keepAlive: true,
           browserifyOptions: {
             extensions: [".js", ".jsx"],
             debug: true,
@@ -154,6 +153,25 @@ module.exports = function(grunt) {
                 NODE_ENV: 'development'
               }
                   ]
+            ]
+          }
+        }
+      },
+      "client-prod": {
+        src: ['client/scripts/index.jsx'],
+        dest: 'public/scripts/app.build.js',
+        options: {
+          external: ["node_modules/**/*.js"],
+          browserifyOptions: {
+            extensions: [".js", ".jsx"],
+            transform: [
+              ["babelify", {
+                presets: ["es2015", "react"]
+              }],
+              ["envify", {
+                NODE_ENV: 'production'
+              }
+              ]
             ]
           }
         }
@@ -184,7 +202,13 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('check', ['eslint']);
-  grunt.registerTask('default', ['clean', 'check', 'copy', 'sass', 'browserify']);
-  grunt.registerTask('serve', ['concurrent:dev']);
+  grunt.registerTask('serve-dev', ['concurrent:dev']);
+  grunt.registerTask('default', ['clean', 'check', 'copy', 'sass', 'browserify:vendor',
+    'browserify:client-dev']);
+  grunt.registerTask('build-dev', ['clean', 'check', 'copy', 'sass', 'browserify:vendor',
+    'browserify:client-dev']);
+  grunt.registerTask('dev', ['build-dev', 'serve-dev']);
+  grunt.registerTask('prod', ['clean', 'check', 'copy', 'sass', 'browserify:vendor',
+    'browserify:client-prod', 'shell:nodemon']);
 
 };
