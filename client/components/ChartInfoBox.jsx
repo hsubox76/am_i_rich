@@ -52,7 +52,7 @@ class UserInfoBox extends React.Component {
       if (level.mode !== props.locationLevel) {
         return (
             <div
-                className="location-item"
+                className="user-info-item"
                 key={index}
                 onClick={props.actions.setLocationLevel.bind(null, level.mode)}>
               {level.text.split(',')[0]}
@@ -63,8 +63,18 @@ class UserInfoBox extends React.Component {
       }
     });
     const locationLevelSelector = props.selectingLocationLevel ? (
-        <div className="user-info-location-select">
+        <div className="user-info-select">
           {locationItems}
+        </div>
+    ) : null;
+    const otherHouseholdType = _.find(HOUSEHOLD_TYPES, function(type) {
+      return type !== props.householdType
+    });
+    const householdTypeSelector = props.selectingHouseholdType ? (
+        <div className="user-info-select">
+          <div
+              onClick={props.actions.setHouseholdType.bind(null, otherHouseholdType)}
+              className="user-info-item">{otherHouseholdType}</div>
         </div>
     ) : null;
     return (
@@ -72,19 +82,19 @@ class UserInfoBox extends React.Component {
               <div className="user-info-income">
                 {'$' + Math.round(props.userIncome).toLocaleString()} in
               </div>
-              <div className="user-info-location" onClick={actions.setSelectingLocationLevel}>
-                <span className="user-info-location-text">
+              <div className="user-info" onClick={actions.setSelectingLocationLevel}>
+                <span className="user-info-text">
                   {_.result(_.find(locationLevels, {'mode': props.locationLevel}), 'text')}
                 </span>
                 <span className="fa fa-caret-down"></span>
                 {locationLevelSelector}
               </div>
-              <div className="user-info-location" onClick={actions.setSelectingHouseholdType}>
-                <span className="user-info-location-text">
+              <div className="user-info" onClick={actions.setSelectingHouseholdType}>
+                <span className="user-info-text">
                   for a {props.householdType}
                 </span>
                 <span className="fa fa-caret-down"></span>
-                -- select box goes here --
+                {householdTypeSelector}
               </div>
             </div>
     );

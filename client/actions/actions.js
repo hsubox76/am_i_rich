@@ -73,6 +73,6 @@ export function setLocationLevel(level) {
 export function setSelectingHouseholdType() {
   return { type: 'SET_SELECTING_HOUSEHOLD_TYPE'}
 }
-export function setHouseholdType(type) {
-  return { type: 'SET_HOUSEHOLD_TYPE', type }
+export function setHouseholdType(householdType) {
+  return { type: 'SET_HOUSEHOLD_TYPE', householdType }
 }

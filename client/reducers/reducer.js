@@ -126,7 +126,7 @@ export default function mainReducer(state, action) {
     case 'SET_SELECTING_HOUSEHOLD_TYPE':
       return Object.assign({}, state, {selectingHouseholdType: !state.selectingHouseholdType});
     case 'SET_HOUSEHOLD_TYPE': {
-      return Object.assign({}, state, {householdType: action.type});
+      return Object.assign({}, state, {householdType: action.householdType});
     }
     default:
       return state;
