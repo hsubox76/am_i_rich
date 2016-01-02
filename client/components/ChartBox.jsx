@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import d3 from 'd3';
 
 import D3Chart from '../helpers/D3Chart';
+import { getCurrentDataSet } from '../helpers/helpers.js';
 
 import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
 import * as AmIRichActions from '../actions/actions';
@@ -22,11 +23,13 @@ const NUMBER_BOX_HEIGHT = 60;
 const TYPES = React.PropTypes;
 
 const propTypes = {
-  countyData: TYPES.array,
-  stateData: TYPES.array,
+  countyIncomeData: TYPES.object,
+  stateIncomeData: TYPES.object,
   chartWidth: TYPES.number,
   chart: TYPES.object,
   userIncome: TYPES.number,
+  locationLevel: TYPES.string,
+  householdType: TYPES.string,
   userPercentile: TYPES.number,
   guessedIncome: TYPES.number,
   guessedPercentile: TYPES.number,
@@ -35,9 +38,10 @@ const propTypes = {
 
 function mapStateToProps(state) {
   return {
-    countyData: state.countyIncomeData,
-    stateData: state.stateIncomeData,
+    countyIncomeData: state.countyIncomeData,
+    stateIncomeData: state.stateIncomeData,
     locationLevel: state.locationLevel,
+    householdType: state.householdType,
     chartWidth: state.chartWidth,
     chart: state.chart,
     userIncome: state.userIncome,
@@ -60,27 +64,18 @@ class ChartBox extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.chart && nextProps.locationLevel !== this.props.locationLevel) {
+    if (this.props.chart &&
+        ((nextProps.locationLevel !== this.props.locationLevel)
+        || (nextProps.householdType !== this.props.householdType))){
       $('#d3-element').empty();
-      this.props.actions.setIncome();
-      this.props.actions.setPercentile();
+      this.props.actions.calculatePercentileAndIncome(nextProps);
     }
   }
 
   componentDidUpdate() {
     // draw d3 chart after initial div has rendered and container width has been determined
     if (this.props.chartWidth && $('#d3-element').children().length === 0) {
-      let data;
-      switch (this.props.locationLevel) {
-        case LOCATION_LEVELS.COUNTY:
-          data = this.props.countyData;
-          break;
-        case LOCATION_LEVELS.STATE:
-          data = this.props.stateData;
-          break;
-        default:
-          data = this.props.countyData;
-      }
+      const data = getCurrentDataSet(this.props);
       const chart = new D3Chart({
             margins: MARGINS,
             width: this.props.chartWidth,

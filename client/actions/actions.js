@@ -61,6 +61,9 @@ export function setIncome(userIncome) {
 export function setPercentile(guessedPercentile) {
   return { type: 'SET_PERCENTILE', guessedPercentile }
 }
+export function calculatePercentileAndIncome(props) {
+  return { type: 'CALCULATE_PERCENTILE_AND_INCOME', props }
+}
 export function createChart(chart) {
   return { type: 'CREATE_CHART', chart}
 }

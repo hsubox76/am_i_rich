@@ -70,60 +70,89 @@ function getIncomeDataFromAPI(stateCode, countyCode, res) {
           'for': 'state:' + stateCode,
           'key': APIkey
         };
-  const allBrackets = _.cloneDeep(codes.ALL_HOUSEHOLDS);
+  const allBrackets = codes.ALL_HOUSEHOLDS.concat(codes.FAMILIES);
+  const codeHashMap = _.reduce(allBrackets, function(obj, item) {
+    obj[item.code] = 0;
+    return obj;
+  }, {});
+  //const allBrackets = _.indexBy(codes.ALL_HOUSEHOLDS.concat(codes.FAMILIES), 'code');
+  //const totalBrackets = allBrackets.length;
   const totalBrackets = allBrackets.length;
   let bracketsSoFar = 0;
-  _.forEach(allBrackets, function(bracket, index) {
+  _.forEach(codeHashMap, function(code, key) {
     request({
       url: 'http://api.census.gov/data/2013/acs1/profile',
-      qs: _.extend({}, queryString, {'get': (bracket.code + ',NAME')}),
+      qs: _.extend({}, queryString, {'get': (key + ',NAME')}),
       json: true
     }, function (error, response) {
       bracketsSoFar++;
       if (error) {
         console.error(error);
-        allBrackets[index].error = error;
+        codeHashMap[key].error = error;
         if (bracketsSoFar === totalBrackets) {
-          res.send(allBrackets);
+          res.send(codeHashMap);
         }
       } else if (response.statusCode !== 200) {
         console.error(response);
-        allBrackets[index].error = response;
+        codeHashMap[key].error = response;
         if (bracketsSoFar === totalBrackets) {
-          res.send(allBrackets);
+          res.send(codeHashMap);
         }
       } else {
-        allBrackets[index].households = parseInt(response.body[1][0]);
+        codeHashMap[key] = parseInt(response.body[1][0]);
         if (bracketsSoFar === totalBrackets) {
+          const allHouseholds = _.map(codes.ALL_HOUSEHOLDS, function(item) {
+            return _.extend({}, item, {households: codeHashMap[item.code]});
+          });
+          const familyHouseholds = _.map(codes.FAMILIES, function(item) {
+            return _.extend({}, item, {households: codeHashMap[item.code]});
+          });
+          const nonFamilyHouseholds = _.map(codes.NONFAMILIES, function(item) {
+            return _.extend({}, item, {households: codeHashMap[item.code1]
+            - codeHashMap[item.code2]});
+          });
           // Split first point into 2 points to smooth out beginning and have it start at 0
           //const zeroBracket = [{min: 0, max: 0, households: allBrackets[0].households * 0.25}];
           //allBrackets[0].households *= 0.75;
-          const formattedBrackets = addTails(allBrackets);
           if (countyCode) {
             County.create({
               stateCode: stateCode,
               countyCode: countyCode,
               name: response.body[1][1].split(',')[0],
-              incomeData: formattedBrackets
+              incomeDataAll: addTails(allHouseholds),
+              incomeDataFamilies: addTails(familyHouseholds),
+              incomeDataNonFamilies: addTails(nonFamilyHouseholds)
             }, function(err, newCounty) {
               if (err) {
                 console.error(err);
               } else {
-                res.send(JSON.stringify(newCounty.incomeData));
+                const incomeData = {
+                  all: newCounty.incomeDataAll,
+                  family: newCounty.incomeDataFamilies,
+                  nonfamily: newCounty.incomeDataNonFamilies
+                };
+                res.send(JSON.stringify(incomeData));
               }
             });
           } else {
             State.findOneAndUpdate({stateCode: stateCode}, {
-              $set: {incomeData: formattedBrackets}
+              $set: {
+                incomeDataAll: addTails(allHouseholds),
+                incomeDataFamilies: addTails(familyHouseholds),
+                incomeDataNonFamilies: addTails(nonFamilyHouseholds)
+              }
             }, {
               new: true
             }, function(err, newState) {
-              console.log(err);
-              console.log(newState.incomeData);
               if (err) {
                 console.error(err);
               } else {
-                res.send(JSON.stringify(newState.incomeData));
+                const incomeData = {
+                  all: newState.incomeDataAll,
+                  family: newState.incomeDataFamilies,
+                  nonfamily: newState.incomeDataNonFamilies
+                };
+                res.send(JSON.stringify(incomeData));
               }
             });
           }
@@ -169,7 +198,12 @@ app.get('/incomes', function (req, res) {
           } else if (results.length === 0) { // not found in DB
             getCountyIncomeDataFromAPI(state, county, res);
           } else { // found in DB
-            res.send(JSON.stringify(results[0].incomeData));
+            const incomeData = {
+              all: results[0].incomeDataAll,
+              family: results[0].incomeDataFamilies,
+              nonfamily: results[0].incomeDataNonFamilies
+            };
+            res.send(JSON.stringify(incomeData));
           }
         });
   } else {
@@ -177,10 +211,15 @@ app.get('/incomes', function (req, res) {
       .exec(function(error, results) {
         if (error) {
           console.error(error);
-        } else if (results.length === 0 || results[0].incomeData.length === 0) {
+        } else if (results.length === 0 || results[0].incomeDataAll.length === 0) {
           getStateIncomeDataFromAPI(state, res);
         } else {
-          res.send(JSON.stringify(results[0].incomeData));
+          const incomeData = {
+            all: results[0].incomeDataAll,
+            family: results[0].incomeDataFamilies,
+            nonfamily: results[0].incomeDataNonFamilies
+          };
+          res.send(JSON.stringify(incomeData));
         }
       })
   }

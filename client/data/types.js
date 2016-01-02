@@ -1,6 +1,7 @@
 export const HOUSEHOLD_TYPES = {
   FAMILY: 'family',
-  NONFAMILY: 'nonfamily'
+  NONFAMILY: 'nonfamily',
+  ALL: 'all'
 };
 
 export const LOCATION_LEVELS = {

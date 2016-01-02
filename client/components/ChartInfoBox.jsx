@@ -62,19 +62,26 @@ class UserInfoBox extends React.Component {
         return null;
       }
     });
+    const householdItems = _.map(HOUSEHOLD_TYPES, function(type, index) {
+      if (type !== props.householdType) {
+        return (
+            <div
+                className="user-info-item"
+                key={index}
+                onClick={props.actions.setHouseholdType.bind(null, type)}>
+              {type} households
+            </div>
+        );
+      }
+    });
     const locationLevelSelector = props.selectingLocationLevel ? (
         <div className="user-info-select">
           {locationItems}
         </div>
     ) : null;
-    const otherHouseholdType = _.find(HOUSEHOLD_TYPES, function(type) {
-      return type !== props.householdType
-    });
     const householdTypeSelector = props.selectingHouseholdType ? (
         <div className="user-info-select">
-          <div
-              onClick={props.actions.setHouseholdType.bind(null, otherHouseholdType)}
-              className="user-info-item">{otherHouseholdType}</div>
+          {householdItems}
         </div>
     ) : null;
     return (
@@ -91,7 +98,7 @@ class UserInfoBox extends React.Component {
               </div>
               <div className="user-info" onClick={actions.setSelectingHouseholdType}>
                 <span className="user-info-text">
-                  for a {props.householdType}
+                  for {props.householdType} households
                 </span>
                 <span className="fa fa-caret-down"></span>
                 {householdTypeSelector}

@@ -10,14 +10,18 @@ const countySchema = new Schema({
   countyCode: String,
   name: String,
   stateCode: String,
-  incomeData: Array
+  incomeDataAll: Array,
+  incomeDataFamilies: Array,
+  incomeDataNonFamilies: Array
 });
 
 const stateSchema = new Schema({
   stateCode: String,
   name: String,
   counties: Array,
-  incomeData: Array
+  incomeDataAll: Array,
+  incomeDataFamilies: Array,
+  incomeDataNonFamilies: Array
 });
 
 const County = mongoose.model('County', countySchema);

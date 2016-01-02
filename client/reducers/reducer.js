@@ -1,16 +1,7 @@
 import _ from 'lodash';
 import { LOCATION_LEVELS, LOADING_STATES } from '../data/types.js';
+import { getCurrentDataSet } from '../helpers/helpers.js';
 
-function getCurrentDataSet(state) {
-  switch(state.locationLevel) {
-    case LOCATION_LEVELS.COUNTY:
-      return state.countyIncomeData;
-    case LOCATION_LEVELS.STATE:
-      return state.stateIncomeData;
-    default:
-      return state.countyIncomeData;
-  }
-}
 
 function getPercentileMap(state) {
   const incomeData = getCurrentDataSet(state);
@@ -110,13 +101,19 @@ export default function mainReducer(state, action) {
       });
     case 'SET_INCOME':
       const userIncome = action.userIncome || state.userIncome;
-      const userPercentile = findPercentileAtIncome(state, userIncome);
-      return Object.assign({}, state, {userIncome: parseInt(userIncome), userPercentile});
+      //const userPercentile = findPercentileAtIncome(state, userIncome);
+      return Object.assign({}, state, {userIncome: parseInt(userIncome)});
     case 'SET_PERCENTILE':
       const guessedPercentile = action.guessedPercentile || state.guessedPercentile;
-      const guessedIncome = getPercentileMap(state)[guessedPercentile];
+      //const guessedIncome = getPercentileMap(state)[guessedPercentile];
       return Object.assign({}, state, {
-        guessedPercentile: parseInt(guessedPercentile),
+        guessedPercentile: parseInt(guessedPercentile)
+      });
+    case 'CALCULATE_PERCENTILE_AND_INCOME':
+      const userPercentile = findPercentileAtIncome(action.props, action.props.userIncome);
+      const guessedIncome = getPercentileMap(action.props)[action.props.guessedPercentile];
+      return Object.assign({}, state, {
+        userPercentile,
         guessedIncome
       });
     case 'SET_SELECTING_LOCATION_LEVEL':

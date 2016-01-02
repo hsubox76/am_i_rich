@@ -20,10 +20,18 @@ import { LOADING_STATES } from '../data/types.js';
 function mapStateToProps(state) {
   return {
     loadingCountyIncomeData: state.loadingCountyIncomeData,
+    loadingStateIncomeData: state.loadingStateIncomeData,
     countyIncomeData: state.countyIncomeData,
     stateIncomeData: state.stateIncomeData,
     userIncome: state.userIncome,
-    guessedPercentile: state.guessedPercentile
+    guessedPercentile: state.guessedPercentile,
+    guessedIncome: state.guessedIncome
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AmIRichActions, dispatch)
   }
 }
 
@@ -33,16 +41,26 @@ const propTypes = {
   states: React.PropTypes.array,
   counties: React.PropTypes.array,
   loadingCountyIncomeData: React.PropTypes.string,
-  countyIncomeData: React.PropTypes.array,
-  stateIncomeData: React.PropTypes.array,
+  loadingStateIncomeData: React.PropTypes.string,
+  countyIncomeData: React.PropTypes.object,
+  stateIncomeData: React.PropTypes.object,
   userIncome: React.PropTypes.number,
   userPercentile: React.PropTypes.number,
   guessedIncome: React.PropTypes.number,
-  guessedPercentile: React.PropTypes.number
+  guessedPercentile: React.PropTypes.number,
 };
 
 // Main AmIRichApp component
 class AmIRichApp extends React.Component {
+  componentWillUpdate(nextProps) {
+    if (nextProps.loadingCountyIncomeData === 'loaded'
+        && nextProps.loadingStateIncomeData === 'loaded'
+        && !_.isUndefined(nextProps.userIncome)
+        && !_.isUndefined(nextProps.guessedPercentile) ) {
+      this.props.actions.calculatePercentileAndIncome(nextProps);
+    }
+  }
+
   render() {
     const props = this.props;
     const locationBox = _.isUndefined(props.guessedPercentile)
@@ -55,10 +73,10 @@ class AmIRichApp extends React.Component {
     const percentileBox = (!_.isUndefined(props.userIncome) && _.isUndefined(props.guessedPercentile))
         ? <PercentileBox />
         : null;
-    const chartInfoBox = _.isUndefined(props.guessedPercentile)
+    const chartInfoBox = _.isUndefined(props.guessedIncome)
         ? null
         : <ChartInfoBox />;
-    const d3Chart = _.isUndefined(props.guessedPercentile)
+    const chartBox = (_.isUndefined(props.guessedIncome))
         ? null
         : (
         <ChartBox />);
@@ -71,7 +89,7 @@ class AmIRichApp extends React.Component {
               {locationBox}
               {incomeBox}
               {percentileBox}
-              {d3Chart}
+              {chartBox}
             </div>
           </div>
         </div>
@@ -82,4 +100,4 @@ class AmIRichApp extends React.Component {
 
 AmIRichApp.propTypes = propTypes;
 
-export default connect(mapStateToProps)(AmIRichApp);
+export default connect(mapStateToProps, mapDispatchToProps)(AmIRichApp);
