@@ -69,7 +69,7 @@ class UserInfoBox extends React.Component {
                 className="user-info-item"
                 key={index}
                 onClick={props.actions.setHouseholdType.bind(null, type)}>
-              {type} households
+              {type}
             </div>
         );
       }
@@ -86,22 +86,25 @@ class UserInfoBox extends React.Component {
     ) : null;
     return (
             <div className="box box-user-info">
-              <div className="user-info-income">
-                {'$' + Math.round(props.userIncome).toLocaleString()} in
+              <div className="user-info-text">
+                {'$' + Math.round(props.userIncome).toLocaleString()} among
+              </div>
+              <div className="user-info" onClick={actions.setSelectingHouseholdType}>
+                <span className="user-info-select-display">
+                  {props.householdType}
+                </span>
+                <span className="fa fa-caret-down"></span>
+                {householdTypeSelector}
+              </div>
+              <div className="user-info-text">
+                  households in
               </div>
               <div className="user-info" onClick={actions.setSelectingLocationLevel}>
-                <span className="user-info-text">
+                <span className="user-info-select-display">
                   {_.result(_.find(locationLevels, {'mode': props.locationLevel}), 'text')}
                 </span>
                 <span className="fa fa-caret-down"></span>
                 {locationLevelSelector}
-              </div>
-              <div className="user-info" onClick={actions.setSelectingHouseholdType}>
-                <span className="user-info-text">
-                  for {props.householdType} households
-                </span>
-                <span className="fa fa-caret-down"></span>
-                {householdTypeSelector}
               </div>
             </div>
     );

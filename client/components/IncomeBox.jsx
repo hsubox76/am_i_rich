@@ -1,15 +1,20 @@
 import React from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { HOUSEHOLD_TYPES } from '../data/types';
 
 import * as AmIRichActions from '../actions/actions';
 
 const propTypes = {
+  householdType: React.PropTypes.string,
+  setHouseholdType: React.PropTypes.func,
   setIncome: React.PropTypes.func
 };
 
-function mapStateToProps() {
+function mapStateToProps(state) {
   return {
+    householdType: state.householdType
   }
 }
 
@@ -32,6 +37,24 @@ class IncomeBox extends React.Component {
   }
 
   render() {
+    const props = this.props;
+    const householdTypeButtons = _.map(HOUSEHOLD_TYPES, function(type, key) {
+      const btnClass = props.householdType === type ? 'btn-info' : 'btn-secondary';
+      return (
+          <button
+              type="button"
+              key={key}
+              onClick={props.actions.setHouseholdType.bind(null, type)}
+              className={"btn " + btnClass}>
+            {type}
+          </button>
+      );
+    });
+    const householdTypeButtonGroup = (
+        <div className="btn-group button-group-income">
+          {householdTypeButtons}
+        </div>
+    );
     return (
             <div className="box box-income">
               <div className="box-title box-title-income">
@@ -54,6 +77,7 @@ class IncomeBox extends React.Component {
                         aria-label="Amount (to the nearest dollar)" />
                     <span className="input-group-addon">.00</span>
                   </div>
+                  {householdTypeButtonGroup}
                   <button className="button-next">
                   <span
                       className="glyphicon glyphicon-circle-arrow-down"

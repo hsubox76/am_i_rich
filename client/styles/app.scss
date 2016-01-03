@@ -3,9 +3,10 @@
 $number-box-height: 60px;
 $number-circle-height: 50px;
 $number-circle-border-width: 2px;
+$grey-text: #777;
 
 body {
-  background-color: #cccf;
+  background-color: #ccc;
 }
 .main-page {
   //width: 720px;
@@ -113,6 +114,10 @@ body {
           width: auto;
         }
       }
+      .button-group-income {
+        flex: 0 1 auto;
+        margin-left: 5px;
+      }
       .input-percentile {
         flex: 1 1 100px;
         input {
@@ -162,23 +167,23 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  padding: 15px 10px;
   .user-info {
     flex: 0 1 auto;
     font-size: 16px;
     cursor: pointer;
     //border: 1px solid $color-primary-0;
-    margin: 10px 10px 10px 0;
+    margin-right: 10px;
     position: relative;
-    .user-info-text {
-      padding: 10px 5px 10px 0;
+    .user-info-select-display {
+      margin-right: 5px;
       color: $color-primary-2;
       &:hover, &:active {
         color: $color-primary-1;
       }
     }
     span.fa {
-      padding: 10px 5px;
-      width: 32px;
+      width: auto;
       color: $color-primary-0;
       &:hover, &:active {
         color: $color-primary-1;
@@ -189,7 +194,7 @@ body {
     //min-width: 250px;
     white-space: nowrap;
     position: absolute;
-    right: 15px;
+    right: 5px;
     width: auto;
     background-color: white;
     border-top: 1px solid $color-primary-0;
@@ -204,12 +209,11 @@ body {
       }
     }
   }
-  .user-info-income {
-    flex: 0 0 auto;
+  .user-info-text {
+    flex: 0 1 auto;
+    margin-right: 5px;
     font-size: 16px;
-    padding: 11px 0 11px 10px;
-    margin: 5px;
-    color: $color-primary-2;
+    color: $grey-text;
   }
 }
 .box-location {
