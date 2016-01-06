@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import STATES from '../data/state-codes';
 import mainReducer from '../reducers/reducer';
+import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
 
 const initialState = {
   currentState: {code: "0", name: "TestState"},
@@ -9,7 +10,8 @@ const initialState = {
   states:
       [{name: "select a state", code: "0"}].concat(STATES),
   counties: [],
-  locationLevel: 'county'
+  locationLevel: LOCATION_LEVELS.COUNTY,
+  householdType: HOUSEHOLD_TYPES.FAMILY
 };
 
 const finalCreateStore = compose(
