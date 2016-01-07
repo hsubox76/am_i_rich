@@ -79,3 +79,6 @@ export function setSelectingHouseholdType() {
 export function setHouseholdType(householdType) {
   return { type: 'SET_HOUSEHOLD_TYPE', householdType }
 }
+export function resetApp() {
+  return { type: 'RESET' }
+}

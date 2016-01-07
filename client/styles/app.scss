@@ -6,11 +6,13 @@ $number-circle-border-width: 2px;
 $grey-text: #777;
 
 body {
-  background-color: #ccc;
+  background-color: #fff;
 }
 .main-page {
   //width: 720px;
   margin: 25px auto 0 auto;
+  width: 80%;
+  max-width: 900px;
 }
 #d3-element {
   background-color: #fff;
@@ -30,12 +32,13 @@ body {
     fill: $color-primary-0;
   }
 }
-.label-text {
-  fill: #fff;
+.horizontalGrid,
+.verticalGrid {
+  stroke: #aaa;
 }
-.label-box {
-  fill: rgba(50, 50, 50, 0.5);
-}
+//.label-box {
+//  fill: rgba(50, 50, 50, 0.5);
+//}
 .graph-line {
   stroke-width: 6;
   stroke: $color-primary-2;
@@ -43,6 +46,35 @@ body {
 .graph-area {
   fill: $color-primary-1;
   opacity: 0.8;
+}
+.graph-label {
+  .label-box {
+    stroke-width: 4;
+  }
+  .label-line {
+    stroke-width: 4;
+  }
+  &.user-guess-label {
+    .label-box {
+      stroke: $color-primary-0;
+      fill: $color-primary-0;
+    }
+    .label-line {
+      stroke: $color-primary-0;
+    }
+  }
+  &.user-income-label {
+    .label-box {
+      stroke: $color-secondary-1-0;
+      fill: $color-secondary-1-0;
+    }
+    .label-line {
+      stroke: $color-secondary-1-0;
+    }
+  }
+  .label-text {
+    fill: #fff;
+  }
 }
 .box-container {
   border: 1px solid #ccc;
@@ -56,7 +88,7 @@ body {
   margin: 0px 0;
   //box-shadow: 0 0 10px 2px #ccc;
   .box-body {
-    padding: 10px 0 0 20px;
+    padding-left: 20px;
     flex: 1 1 auto;
     flex-wrap: wrap;
     height: 100%;
@@ -64,14 +96,22 @@ body {
       display: flex;
       flex-wrap: wrap;
       > div.form-group {
+        margin: 10px 0;
         flex: 1 1 auto;
-        flex-wrap: wrap;
+        display: flex;
+      }
+      > div.rigid-form-group {
+        margin: 10px 0;
+        flex: 0 1 auto;
         display: flex;
       }
       > div.loading-bar {
         flex: 1 1 50%;
         text-align: center;
         font-size: 25px;
+      }
+      > button {
+        flex: 0 1 auto;
       }
       label {
         color: $color-primary-0;
@@ -86,12 +126,15 @@ body {
       .label-income {
         flex: 0 0 auto;
       }
+      .label-percentile {
+        flex: 0 0 auto;
+      }
       select {
         margin-right: 15px;
         min-width: 200px;
       }
       .select-state {
-        flex: 1 1 200px;
+        flex: 1 1 250px;
       }
       .select-county {
         flex: 1 1 250px;
@@ -107,6 +150,7 @@ body {
       }
       .input-income {
         flex: 0 1 150px;
+        margin-right: 10px;
         input {
           width: 100px;
         }
@@ -116,10 +160,10 @@ body {
       }
       .button-group-income {
         flex: 0 1 auto;
-        margin-left: 5px;
       }
       .input-percentile {
-        flex: 1 1 100px;
+        flex: 0 1 100px;
+        margin-right: 10px;
         input {
           width: 55px;
         }
@@ -129,7 +173,7 @@ body {
       }
       .button-next {
         font-size: 2em;
-        color: $color-primary-3;
+        color: $color-primary-2;
         vertical-align: middle;
         padding: 0;
         margin: 0 0 0 10px;
@@ -137,7 +181,7 @@ body {
         background-color: transparent;
         &:hover,
         &:active {
-          color: $color-primary-2;
+          color: $color-primary-0;
         }
       }
     }
@@ -168,6 +212,7 @@ body {
   flex-wrap: wrap;
   justify-content: flex-start;
   padding: 15px 10px;
+  position: relative;
   .user-info {
     flex: 0 1 auto;
     font-size: 16px;
@@ -224,5 +269,28 @@ body {
   //color: #fff;
 }
 .box-body-location {
+
+}
+
+.btn-selected {
+  color: #fff;
+  background-color: $color-primary-2;
+  border-color: $color-primary-0;
+  &:focus {
+    color: #fff;
+    background-color: $color-primary-2;
+    border-color: $color-primary-0;
+  }
+  &:hover, &:active {
+    color: #fff;
+    background-color: $color-primary-0;
+    border-color: $color-primary-3;
+  }
+}
+
+.start-over-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 
 }

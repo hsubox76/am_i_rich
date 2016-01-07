@@ -82,8 +82,6 @@ class AmIRichApp extends React.Component {
         <ChartBox />);
     return (
       <div className="main-page container">
-        <div className="row">
-          <div className="col-md-8 col-md-offset-2">
             <div className="box-container">
               {chartInfoBox}
               {locationBox}
@@ -91,8 +89,6 @@ class AmIRichApp extends React.Component {
               {percentileBox}
               {chartBox}
             </div>
-          </div>
-        </div>
       </div>
     );
   }

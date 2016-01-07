@@ -1,6 +1,6 @@
 export const HOUSEHOLD_TYPES = {
-  FAMILY: 'family',
   NONFAMILY: 'nonfamily',
+  FAMILY: 'family',
   ALL: 'all'
 };
 

@@ -87,7 +87,6 @@ class D3Chart {
             "y2" : function(d){ return self.yRange(d);},
             "fill" : "none",
             "shape-rendering" : "crispEdges",
-            "stroke" : "grey",
             "stroke-width" : "1px"
           })
         .attr('transform', 'translate(' + (self.margins.left) + ','
@@ -103,7 +102,6 @@ class D3Chart {
               "x2" : function(d){ return self.xRange(d);},
               "fill" : "none",
               "shape-rendering" : "crispEdges",
-              "stroke" : "grey",
               "stroke-width" : "1px"
             })
         .attr('transform', 'translate(' + (0) + ','
@@ -142,20 +140,24 @@ class D3Chart {
     this.graphElement.attr('d', this.graphArea(this.data));
   }
 
-  drawMarkerLine(xValue, color, title, percentile, offset = 0) {
-    const xPos= this.xRange(xValue);
-    const g = this.plot.append('g');
+  drawMarkerLine(xValue, className, title, percentile, offset = 0) {
+    let xPos = this.xRange(xValue);
+    if (xPos > this.width - this.margins.right) {
+      xPos = (this.width - this.margins.right);
+      percentile = '99+';
+    }
+    const g = this.plot.append('g').attr('class', 'graph-label ' + className);
     const line = g.append('svg:line')
         .attr('x1', 0)
         .attr('x2', 0)
         .attr('y2', this.height - this.margins.bottom)
-        .attr('stroke-width', LABEL_BORDER_SIZE)
-        .attr('stroke', color);
+        .attr('class', 'label-line')
+        .attr('stroke-width', LABEL_BORDER_SIZE);
     const box = g.append('rect')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('stroke', color)
         .attr('stroke-width', LABEL_BORDER_SIZE)
+        .attr('fill-opacity', 0.75)
         .attr('class', 'label-box');
     const labelText = g.append('g')
         .attr ('transform', 'translate(' + (LABEL_PADDING + LABEL_BORDER_SIZE) + ', '
@@ -182,11 +184,16 @@ class D3Chart {
     const textY = (labelHeight / 2) + this.margins.top + 32 + ((labelHeight + LABEL_SPACING) * offset);
     labelTitle.attr('transform', 'translate(0, ' + (-textBBox.height) + ')');
     labelPercentile.attr('transform', 'translate(0, ' + (textBBox.height) + ')');
+    let boxOffset = 0;
+    if (xPos > this.width - labelWidth - this.margins.right) {
+      // if flag will fall off right edge, flip flag to left side
+      boxOffset = -labelWidth;
+    }
     box.attr('width', labelWidth)
         .attr('height', labelHeight)
-        .attr ('transform', 'translate(0, ' + (((labelHeight + LABEL_SPACING) * offset)
+        .attr ('transform', 'translate(' + boxOffset + ', ' + (((labelHeight + LABEL_SPACING) * offset)
             + this.margins.top + 32) + ')');
-    labelText.attr('transform', 'translate(' + textX + ',' + textY + ')');
+    labelText.attr('transform', 'translate(' + (textX + boxOffset) + ',' + textY + ')');
     line.attr('y1', ((labelHeight + LABEL_SPACING) * offset) + this.margins.top + 32);
     g.attr('transform', 'translate(' + xPos + ', 0)');
   }

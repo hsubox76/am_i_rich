@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import AmIRichApp from '../components/AmIRichApp';
 import DevTools from '../components/DevTools';
-import store from './store';
+import configureStore from './store';
+
+const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>

@@ -1,9 +1,8 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import DevTools from '../components/DevTools';
 import thunk from 'redux-thunk';
-import STATES from '../data/state-codes.js';
 import mainReducer from '../reducers/reducer';
-import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
+import {initialState} from '../data/initial-state.js';
 
 const testIncomeData = [{"min":0,"max":0,"households":4657 * 0.25},
   {"code":"DP03_0052E","min":0,"max":9999,"households":4657 * 0.75},
@@ -48,23 +47,18 @@ const testCountyData = [
   ]
 ];
 
+console.log(initialState);
 
 
-const initialState = {
-  currentState: {code: "0", name: "TestState"},
-  currentCounty: {code: "0", name: "TestCounty"},
-  states:
-      [{name: "select a state", code: "0"}].concat(STATES),
-  counties: [],
-  locationLevel: LOCATION_LEVELS.COUNTY,
-  householdType: HOUSEHOLD_TYPES.FAMILY
+const devInitialState = Object.assign(initialState, {
   //countyIncomeData: testIncomeData,
   //stateIncomeData: testIncomeData2,
   //guessedPercentile: 25,
   //guessedIncome: 50000,
   //userIncome: 100000,
   //userPercentile: 50
-};
+});
+
 // create a store that has redux-thunk middleware enabled
 //const createStoreWithMiddleware = applyMiddleware(
 //    thunk
@@ -77,13 +71,19 @@ const finalCreateStore = compose(
     DevTools.instrument()
 )(createStore);
 
-const store = finalCreateStore(mainReducer, initialState);
+export default function configureStore() {
+  const store = finalCreateStore(mainReducer, devInitialState);
 
-// Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
-//if (module.hot) {
-//  module.hot.accept('../reducers', () =>
-//      store.replaceReducer(require('../reducers')/*.default if you use Babel 6+ */)
-//  );
-//}
+  if (module.onReload) {
+    module.onReload(() => {
+      const nextReducer = require('../reducers/reducer');
+      store.replaceReducer(nextReducer.default || nextReducer);
 
-export default store;
+      // return true to indicate that this module is accepted and
+      // there is no need to reload its parent modules
+      return true
+    });
+  }
+
+  return store;
+}

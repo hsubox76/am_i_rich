@@ -85,8 +85,8 @@ class ChartBox extends React.Component {
       );
       this.props.actions.createChart(chart);
       const offsets = this.props.userIncome > this.props.guessedIncome ? [1, 0] : [0, 1];
-      chart.drawMarkerLine(this.props.userIncome, 'steelblue', 'your income', this.props.userPercentile, offsets[0]);
-      chart.drawMarkerLine(this.props.guessedIncome, 'grey', 'your guess', this.props.guessedPercentile, offsets[1]);
+      chart.drawMarkerLine(this.props.userIncome, 'user-income-label', 'your income', this.props.userPercentile, offsets[0]);
+      chart.drawMarkerLine(this.props.guessedIncome, 'user-guess-label', 'your guess', this.props.guessedPercentile, offsets[1]);
     }
   }
 

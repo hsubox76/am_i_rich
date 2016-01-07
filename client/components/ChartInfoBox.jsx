@@ -106,6 +106,9 @@ class UserInfoBox extends React.Component {
                 <span className="fa fa-caret-down"></span>
                 {locationLevelSelector}
               </div>
+              <button
+                  className="btn btn-selected start-over-button"
+                  onClick={actions.resetApp}>Start Over</button>
             </div>
     );
   }

@@ -123,6 +123,7 @@ module.exports = function(grunt) {
             "redux-devtools",
             "redux-devtools-log-monitor",
             "redux-devtools-dock-monitor",
+            "livereactload/babel-transform",
             "redux-thunk"],
           browserifyOptions: {
             extensions: [".js", ".jsx"],
@@ -139,21 +140,20 @@ module.exports = function(grunt) {
         src: ['client/scripts/index.jsx'],
         dest: 'public/scripts/app.build.js',
         options: {
-          external: ["node_modules/**/*.js"],
           debug: true,
           watch: true,
+          keepAlive: true,
           browserifyOptions: {
             extensions: [".js", ".jsx"],
             debug: true,
             transform: [
-              ["babelify", {
-                presets: ["es2015", "react"]
-              }],
-                  ["envify", {
-                NODE_ENV: 'development'
-              }
-                  ]
-            ]
+              "babelify",
+              ["envify", {
+                  NODE_ENV: 'development'
+                }
+              ]
+            ],
+            plugin: ["livereactload"]
           }
         }
       },
@@ -161,7 +161,6 @@ module.exports = function(grunt) {
         src: ['client/scripts/index.jsx'],
         dest: 'public/scripts/app.build.js',
         options: {
-          external: ["node_modules/**/*.js"],
           browserifyOptions: {
             extensions: [".js", ".jsx"],
             transform: [
@@ -186,29 +185,34 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      options: {
-        livereload: true
-      },
       //scripts: {
       //  files: ['client/**/*.jsx', 'client/**/*.js'],
       //  tasks: ['eslint', 'browserify:client']
       //},
-      css: {
+      sass: {
         files: ['client/styles/*.scss'],
         tasks: ['sass']
-      }
+      },
+      css: {
+        files: [
+          'public/styles/**/*.css',
+        ],
+        tasks: [],
+        options: {
+          livereload: true
+        },
+      },
     }
   });
 
   // Default task.
   grunt.registerTask('check', ['eslint']);
-  grunt.registerTask('serve-dev', ['concurrent:dev']);
-  grunt.registerTask('default', ['clean', 'check', 'copy', 'sass', 'browserify:vendor',
+  grunt.registerTask('default', ['clean', 'check', 'copy', 'sass',
     'browserify:client-dev']);
-  grunt.registerTask('build-dev', ['clean', 'check', 'copy', 'sass', 'browserify:vendor',
+  grunt.registerTask('build-dev', ['clean', 'check', 'copy', 'sass',
     'browserify:client-dev']);
-  grunt.registerTask('dev', ['build-dev', 'serve-dev']);
-  grunt.registerTask('prod', ['clean', 'check', 'copy', 'sass', 'browserify:vendor',
+  grunt.registerTask('dev', ['clean', 'check', 'copy', 'sass', 'concurrent:dev']);
+  grunt.registerTask('prod', ['clean', 'check', 'copy', 'sass',
     'browserify:client-prod', 'shell:nodemon']);
 
 };

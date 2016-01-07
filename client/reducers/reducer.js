@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { LOCATION_LEVELS, LOADING_STATES } from '../data/types.js';
 import { getCurrentDataSet } from '../helpers/helpers.js';
+import {initialState} from '../data/initial-state.js';
 
 
 function getPercentileMap(state) {
@@ -57,6 +58,8 @@ function findPercentileAtIncome(state, income) {
 
 export default function mainReducer(state, action) {
   switch (action.type) {
+    case 'RESET':
+      return initialState;
     case 'SET_CHART_WIDTH':
       return Object.assign({}, state, {chartWidth: action.width});
     case 'RECEIVE_STATE_DATA':
