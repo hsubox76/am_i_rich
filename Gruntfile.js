@@ -101,7 +101,10 @@ module.exports = function(grunt) {
 
     shell: {
       nodemon: {
-          command: 'nodemon --harmony server/index.js'
+          command: './node_modules/nodemon/bin/nodemon.js --harmony server/index.js'
+      },
+      forever: {
+        command: './node_modules/forever/bin/forever start -c "node --harmony" server/index.js'
       }
     },
 
@@ -213,6 +216,6 @@ module.exports = function(grunt) {
     'browserify:client-dev']);
   grunt.registerTask('dev', ['clean', 'check', 'copy', 'sass', 'concurrent:dev']);
   grunt.registerTask('prod', ['clean', 'check', 'copy', 'sass',
-    'browserify:client-prod', 'shell:nodemon']);
+    'browserify:client-prod', 'shell:forever']);
 
 };
