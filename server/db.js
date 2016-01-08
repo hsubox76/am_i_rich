@@ -5,6 +5,13 @@ mongoose.connect('mongodb://localhost/census2014');
 
 const Schema = mongoose.Schema;
 
+const countrySchema = new Schema({
+  name: String,
+  incomeDataAll: Array,
+  incomeDataFamilies: Array,
+  incomeDataNonFamilies: Array
+});
+
 const countySchema = new Schema({
   countyCode: String,
   name: String,
@@ -25,6 +32,8 @@ const stateSchema = new Schema({
 
 const County = mongoose.model('County', countySchema);
 const State = mongoose.model('State', stateSchema);
+const Country = mongoose.model('Country', countrySchema);
 
 exports.County = County;
 exports.State = State;
+exports.Country = Country;

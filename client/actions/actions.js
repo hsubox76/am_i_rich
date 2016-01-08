@@ -1,4 +1,4 @@
-import {getCountyData, getCountyList, getStateData} from '../helpers/api.js';
+import {getCountyData, getCountyList, getStateData, getCountryData} from '../helpers/api.js';
 
 function receiveCountyData(data, countyCode) {
   return {
@@ -24,6 +24,13 @@ function receiveStateData(data, stateCode) {
   }
 }
 
+function receiveCountryData(data) {
+  return {
+    type: 'RECEIVE_COUNTRY_DATA',
+    incomeData: data
+  }
+}
+
 export function setChartWidth(width) {
   return {type: 'SET_CHART_WIDTH', width};
 }
@@ -42,6 +49,13 @@ export function requestStateData(stateCode) {
   return dispatch => {
     getStateData(stateCode, data => {
       dispatch(receiveStateData(data, stateCode))
+    })
+  };
+}
+export function requestCountryData() {
+  return dispatch => {
+    getCountryData(data => {
+      dispatch(receiveCountryData(data))
     })
   };
 }

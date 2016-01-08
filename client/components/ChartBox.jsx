@@ -25,6 +25,7 @@ const TYPES = React.PropTypes;
 const propTypes = {
   countyIncomeData: TYPES.object,
   stateIncomeData: TYPES.object,
+  countryIncomeData: TYPES.object,
   chartWidth: TYPES.number,
   chart: TYPES.object,
   userIncome: TYPES.number,
@@ -39,6 +40,7 @@ const propTypes = {
 function mapStateToProps(state) {
   return {
     countyIncomeData: state.countyIncomeData,
+    countryIncomeData: state.countryIncomeData,
     stateIncomeData: state.stateIncomeData,
     locationLevel: state.locationLevel,
     householdType: state.householdType,

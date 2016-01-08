@@ -7,6 +7,7 @@ const codes = require('./lookup_codes');
 
 const State = db.State;
 const County = db.County;
+const Country = db.Country;
 const app = express();
 
 const APIkey = process.env.API_KEY || require('./apikey_local');
@@ -51,6 +52,10 @@ function getCountiesFromAPI(stateCode, stateName, res) {
   });
 }
 
+function getCountryIncomeDataFromAPI(res) {
+  getIncomeDataFromAPI(null, null, res);
+}
+
 function getStateIncomeDataFromAPI(stateCode, res) {
   getIncomeDataFromAPI(stateCode, null, res);
 }
@@ -60,16 +65,24 @@ function getCountyIncomeDataFromAPI(stateCode, countyCode, res) {
 }
 
 function getIncomeDataFromAPI(stateCode, countyCode, res) {
-  const queryString = countyCode
-      ? {
-          'for': 'county:' + countyCode,
-          'in': 'state:' + stateCode,
-          'key': APIkey
-        }
-      : {
-          'for': 'state:' + stateCode,
-          'key': APIkey
-        };
+  let queryString;
+  if (countyCode) {
+    queryString = {
+      'for': 'county:' + countyCode,
+      'in': 'state:' + stateCode,
+      'key': APIkey
+    };
+  } else if (stateCode) {
+    queryString = {
+      'for': 'state:' + stateCode,
+      'key': APIkey
+    };
+  } else {
+    queryString = {
+      'for': 'us:*',
+      'key': APIkey
+    }
+  }
   const allBrackets = codes.ALL_HOUSEHOLDS.concat(codes.FAMILIES);
   const codeHashMap = _.reduce(allBrackets, function(obj, item) {
     obj[item.code] = 0;
@@ -134,7 +147,7 @@ function getIncomeDataFromAPI(stateCode, countyCode, res) {
                 res.send(JSON.stringify(incomeData));
               }
             });
-          } else {
+          } else if (stateCode) {
             State.findOneAndUpdate({stateCode: stateCode}, {
               $set: {
                 incomeDataAll: addTails(allHouseholds),
@@ -151,6 +164,26 @@ function getIncomeDataFromAPI(stateCode, countyCode, res) {
                   all: newState.incomeDataAll,
                   family: newState.incomeDataFamilies,
                   nonfamily: newState.incomeDataNonFamilies
+                };
+                res.send(JSON.stringify(incomeData));
+              }
+            });
+          } else {
+            Country.create({
+                name: 'United States',
+                incomeDataAll: addTails(allHouseholds),
+                incomeDataFamilies: addTails(familyHouseholds),
+                incomeDataNonFamilies: addTails(nonFamilyHouseholds)
+            }, {
+              new: true
+            }, function(err, newCountry) {
+              if (err) {
+                console.error(err);
+              } else {
+                const incomeData = {
+                  all: newCountry.incomeDataAll,
+                  family: newCountry.incomeDataFamilies,
+                  nonfamily: newCountry.incomeDataNonFamilies
                 };
                 res.send(JSON.stringify(incomeData));
               }
@@ -206,7 +239,7 @@ app.get('/incomes', function (req, res) {
             res.send(JSON.stringify(incomeData));
           }
         });
-  } else {
+  } else if (state) {
     State.find({stateCode: req.query.state})
       .exec(function(error, results) {
         if (error) {
@@ -222,6 +255,22 @@ app.get('/incomes', function (req, res) {
           res.send(JSON.stringify(incomeData));
         }
       })
+  } else {
+    Country.find({name: 'United States'})
+        .exec(function(error, results) {
+          if (error) {
+            console.error(error);
+          } else if (results.length === 0 || results[0].incomeDataAll.length === 0) {
+            getCountryIncomeDataFromAPI(res);
+          } else {
+            const incomeData = {
+              all: results[0].incomeDataAll,
+              family: results[0].incomeDataFamilies,
+              nonfamily: results[0].incomeDataNonFamilies
+            };
+            res.send(JSON.stringify(incomeData));
+          }
+        })
   }
 });
 

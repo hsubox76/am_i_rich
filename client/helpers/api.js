@@ -35,3 +35,14 @@ export function getStateData(stateCode, cb) {
     }.bind(this)
   });
 }
+
+export function getCountryData(cb) {
+  $.ajax({
+    url: 'incomes',
+    dataType: 'json',
+    type: 'GET',
+    success: function(data) {
+      cb(data);
+    }.bind(this)
+  });
+}

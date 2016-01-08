@@ -6,7 +6,9 @@ export function getCurrentDataSet(state) {
       return state.countyIncomeData[state.householdType];
     case LOCATION_LEVELS.STATE:
       return state.stateIncomeData[state.householdType];
+    case LOCATION_LEVELS.US:
+      return state.countryIncomeData[state.householdType];
     default:
-      return state.countyIncomeData.all;
+      return state.countryIncomeData[state.householdType];
   }
 }

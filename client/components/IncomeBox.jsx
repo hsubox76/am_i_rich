@@ -8,7 +8,7 @@ const propTypes = {
   setIncome: React.PropTypes.func
 };
 
-function mapStateToProps(state) {
+function mapStateToProps() {
   return {
   }
 }

@@ -21,11 +21,14 @@ function mapStateToProps(state) {
   return {
     loadingCountyIncomeData: state.loadingCountyIncomeData,
     loadingStateIncomeData: state.loadingStateIncomeData,
+    countryIncomeData: state.countryIncomeData,
     countyIncomeData: state.countyIncomeData,
     stateIncomeData: state.stateIncomeData,
     userIncome: state.userIncome,
+    householdType: state.householdType,
     guessedPercentile: state.guessedPercentile,
-    guessedIncome: state.guessedIncome
+    guessedIncome: state.guessedIncome,
+    locationLevel: state.locationLevel
   }
 }
 
@@ -43,20 +46,28 @@ const propTypes = {
   loadingCountyIncomeData: React.PropTypes.string,
   loadingStateIncomeData: React.PropTypes.string,
   countyIncomeData: React.PropTypes.object,
+  countryIncomeData: React.PropTypes.object,
   stateIncomeData: React.PropTypes.object,
   userIncome: React.PropTypes.number,
   userPercentile: React.PropTypes.number,
   guessedIncome: React.PropTypes.number,
   guessedPercentile: React.PropTypes.number,
+  locationLevel: React.PropTypes.string
 };
 
 // Main AmIRichApp component
 class AmIRichApp extends React.Component {
+
+  componentWillMount() {
+    this.props.actions.requestCountryData();
+  }
+
   componentWillUpdate(nextProps) {
     if (nextProps.loadingCountyIncomeData === 'loaded'
         && nextProps.loadingStateIncomeData === 'loaded'
         && !_.isUndefined(nextProps.userIncome)
         && !_.isUndefined(nextProps.guessedPercentile) ) {
+      console.log(nextProps);
       this.props.actions.calculatePercentileAndIncome(nextProps);
     }
   }

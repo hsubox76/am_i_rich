@@ -59,9 +59,14 @@ function findPercentileAtIncome(state, income) {
 export default function mainReducer(state, action) {
   switch (action.type) {
     case 'RESET':
-      return initialState;
+      return Object.assign({}, initialState, {countryIncomeData: state.countryIncomeData});
     case 'SET_CHART_WIDTH':
       return Object.assign({}, state, {chartWidth: action.width});
+    case 'RECEIVE_COUNTRY_DATA':
+      return Object.assign({}, state, {
+        countryIncomeData: action.incomeData,
+        loadingCountryIncomeData: LOADING_STATES.LOADED
+      });
     case 'RECEIVE_STATE_DATA':
       return Object.assign({}, state, {
         stateIncomeData: action.incomeData,
