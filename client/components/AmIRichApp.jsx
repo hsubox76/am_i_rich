@@ -95,6 +95,7 @@ class AmIRichApp extends React.Component {
     return (
       <div className="main-page row">
             <div className="box-container col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+              <h1>Are You Middle-Class?</h1>
               {chartInfoBox}
               {locationBox}
               {incomeBox}
