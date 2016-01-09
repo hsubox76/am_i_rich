@@ -55,7 +55,7 @@ class PercentileBox extends React.Component {
         </div>
     );
     return (
-            <div className="box box-income">
+            <div className="box box-form row">
               <div className="box-title box-title-percentile col-xs-12">
                 <div className="number-circle">Guess Your Percentile</div>
               </div>

@@ -89,8 +89,11 @@ h1 {
 .box {
   width: 100%;
   background-color: #fff;
-  border-bottom: 1px solid #eee;
-  margin: 0px 0;
+  &.box-form {
+    border: 1px solid #ddd;
+    border-top: none;
+  }
+  margin: 5px 0;
   //box-shadow: 0 0 10px 2px #ccc;
   .box-body {
     padding-left: 20px;

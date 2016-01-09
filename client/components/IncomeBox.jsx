@@ -33,7 +33,7 @@ class IncomeBox extends React.Component {
 
   render() {
     return (
-            <div className="box box-income">
+            <div className="box box-form row">
               <div className="box-title box-title-income col-xs-12">
                 <div className="number-circle">How Much You Make</div>
               </div>
