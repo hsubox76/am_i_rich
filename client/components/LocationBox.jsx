@@ -20,12 +20,12 @@ class LocationBox extends React.Component {
         ? null
         : (<CountyInput />);
     return (
-            <div className="box box-location">
-              <div className="box-title box-title-location">
-                <div className="number-circle">1</div>
+            <div className="box box-location row">
+              <div className="box-title box-title-location col-xs-12">
+                Where You Work
               </div>
-              <div className="box-body box-body-location">
-                <form className="form-flex">
+              <div className="box-body box-body-location col-xs-12">
+                <form className="row">
                   <StateInput />
                   {countyInput}
                 </form>

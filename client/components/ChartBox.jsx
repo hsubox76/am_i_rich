@@ -1,6 +1,7 @@
 "use strict";
 import React from 'react';
 import $ from 'jquery';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import d3 from 'd3';
@@ -18,7 +19,7 @@ const MARGINS = {
   left: 60
 };
 
-const NUMBER_BOX_HEIGHT = 60;
+const PAD = 20;
 
 const TYPES = React.PropTypes;
 
@@ -60,16 +61,60 @@ function mapDispatchToProps(dispatch) {
 }
 
 class ChartBox extends React.Component {
+  constructor() {
+    super();
+    this.resizeChart = this.resizeChart.bind(this);
+    this.drawChart = this.drawChart.bind(this);
+  }
+
+  removeChart() {
+    $('#d3-element').empty();
+  }
+
+  drawChart() {
+    const data = getCurrentDataSet(this.props);
+    const chart = new D3Chart({
+          margins: _.extend({},  MARGINS, {
+            left: this.props.chartWidth / 9,
+            bottom: this.props.chartWidth / 10
+          }),
+          width: this.props.chartWidth,
+          elementId: 'd3-element'
+        },
+        data
+    );
+    this.props.actions.createChart(chart);
+    const offsets = this.props.userIncome > this.props.guessedIncome ? [1, 0] : [0, 1];
+    chart.drawMarkerLine(this.props.userIncome, 'user-income-label', 'your income', this.props.userPercentile, offsets[0]);
+    chart.drawMarkerLine(this.props.guessedIncome, 'user-guess-label', 'your guess', this.props.guessedPercentile, offsets[1]);
+  }
+
+  resizeChart() {
+    const self = this;
+    return _.debounce(function () {
+      const chartWidth = this.refs.container.offsetWidth - PAD * 2;
+      this.props.actions.setChartWidth(chartWidth);
+      this.removeChart();
+      this.drawChart();
+    }.bind(self), 500);
+  }
+
   componentDidMount() {
-    const chartWidth = this.refs.container.offsetWidth - 2 * NUMBER_BOX_HEIGHT;
+    const chartWidth = this.refs.container.offsetWidth - PAD * 2;
     this.props.actions.setChartWidth(chartWidth);
+    this.props.actions.calculatePercentileAndIncome(this.props);
+    window.addEventListener('resize', this.resizeChart());
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeChart());
   }
 
   componentWillUpdate(nextProps) {
     if (this.props.chart &&
         ((nextProps.locationLevel !== this.props.locationLevel)
         || (nextProps.householdType !== this.props.householdType))){
-      $('#d3-element').empty();
+      this.removeChart();
       this.props.actions.calculatePercentileAndIncome(nextProps);
     }
   }
@@ -77,18 +122,7 @@ class ChartBox extends React.Component {
   componentDidUpdate() {
     // draw d3 chart after initial div has rendered and container width has been determined
     if (this.props.chartWidth && $('#d3-element').children().length === 0) {
-      const data = getCurrentDataSet(this.props);
-      const chart = new D3Chart({
-            margins: MARGINS,
-            width: this.props.chartWidth,
-            elementId: 'd3-element'
-          },
-          data
-      );
-      this.props.actions.createChart(chart);
-      const offsets = this.props.userIncome > this.props.guessedIncome ? [1, 0] : [0, 1];
-      chart.drawMarkerLine(this.props.userIncome, 'user-income-label', 'your income', this.props.userPercentile, offsets[0]);
-      chart.drawMarkerLine(this.props.guessedIncome, 'user-guess-label', 'your guess', this.props.guessedPercentile, offsets[1]);
+      this.drawChart();
     }
   }
 
@@ -96,7 +130,7 @@ class ChartBox extends React.Component {
     const svgElement = this.props.chartWidth ? (
         <svg
             id="d3-element"
-            width={this.props.chartWidth} height={this.props.chartWidth * 0.5} />
+            width={Math.min(900, this.props.chartWidth)} height={Math.max(200, this.props.chartWidth * 0.5)} />
     ) : null;
     return (
             <div

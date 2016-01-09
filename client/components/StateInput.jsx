@@ -41,8 +41,8 @@ class StateInput extends React.Component {
       return <option key={'state-'+state.code} value={state.code + ':' + state.name}>{state.name}</option>
     });
     return (
-        <div className="form-group">
-          <label className="control-label label-state">State:</label>
+        <div className="form-row col-md-6 col-xs-12">
+          <label className="control-label sr-only">State:</label>
           <select
               value={this.props.currentState.code + ':' + this.props.currentState.name}
               className="form-control select-state"

@@ -50,44 +50,49 @@ class PercentileBox extends React.Component {
       );
     });
     const householdTypeButtonGroup = (
-        <div className="btn-group button-group-income">
+        <div className="btn-group button-group-household">
           {householdTypeButtons}
         </div>
     );
     return (
             <div className="box box-income">
-              <div className="box-title box-title-percentile">
-                <div className="number-circle">3</div>
+              <div className="box-title box-title-percentile col-xs-12">
+                <div className="number-circle">Guess Your Percentile</div>
               </div>
-              <div className="box-body box-body-percentile">
+              <div className="box-body box-body-percentile col-xs-12">
                 <form
                     className="form-flex"
                     onSubmit={this.onSubmit}
                     ref="form">
-                  <div className="rigid-form-group">
-                    <label className="control-label label-percentile">Guess Your Percentile:</label>
-                    <div className="input-group input-percentile">
-                      <input
-                          type="number"
-                          min="0"
-                          max="99"
-                          className="form-control"
-                          required
-                          ref="percentile"
-                          aria-label="Guess your percentile" />
-                      <span className="input-group-addon">%</span>
+                  <div className="row">
+                    <div className="form-row col-md-4 col-xs-12">
+                      <div className="form-inline">
+                        <label className="control-label">Your Guess</label>
+                        <div className="input-group input-percentile">
+                          <input
+                              type="number"
+                              min="0"
+                              max="99"
+                              className="form-control"
+                              required
+                              ref="percentile"
+                              aria-label="Guess your percentile" />
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="form-row col-md-8 col-xs-12">
+                      <div className="form-inline">
+                        <label className="control-label">Compare To Household Type</label>
+                        {householdTypeButtonGroup}
+                        <button className="btn-next btn">
+                          <span
+                              className="glyphicon glyphicon-circle-arrow-down"
+                          />
+                        </button>
+                      </div>
                     </div>
                   </div>
-
-                  <div className="rigid-form-group">
-                  <label className="control-label label-income">Household Type</label>
-                  {householdTypeButtonGroup}
-                  <button className="button-next">
-                  <span
-                      className="glyphicon glyphicon-circle-arrow-down"
-                  />
-                  </button>
-                    </div>
                 </form>
               </div>
             </div>

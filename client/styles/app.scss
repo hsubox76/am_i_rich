@@ -9,22 +9,26 @@ body {
   background-color: #fff;
 }
 .main-page {
-  //width: 720px;
-  margin: 25px auto 0 auto;
-  width: 80%;
-  max-width: 900px;
+  background-color: #fff;
 }
 #d3-element {
   background-color: #fff;
+  font-size: 18px;
+  font-weight: 300;
+  @media(max-width: 1200px) {
+    font-size: 1.5vw;
+  }
+  @media(max-width: 768px) {
+    font-size: 1.75vw;
+  }
 }
 .d3-container {
   background-color: #fff;
-  padding: 15px $number-box-height;
-  //margin: 5px 0;
-  //box-shadow: 0 0 10px 2px #ccc;
+  padding: 15px 20px;
 }
 .x-axis,
 .y-axis {
+  fill: #666;
   .tick {
     fill: $color-primary-3;
   }
@@ -36,9 +40,6 @@ body {
 .verticalGrid {
   stroke: #aaa;
 }
-//.label-box {
-//  fill: rgba(50, 50, 50, 0.5);
-//}
 .graph-line {
   stroke-width: 6;
   stroke: $color-primary-2;
@@ -49,10 +50,10 @@ body {
 }
 .graph-label {
   .label-box {
-    stroke-width: 4;
+    stroke-width: 1vw;
   }
   .label-line {
-    stroke-width: 4;
+    stroke-width: 1vw;
   }
   &.user-guess-label {
     .label-box {
@@ -80,147 +81,104 @@ body {
   border: 1px solid #ccc;
 }
 .box {
-  min-height: 60px;
   width: 100%;
-  display: flex;
   background-color: #fff;
   border-bottom: 1px solid #eee;
   margin: 0px 0;
   //box-shadow: 0 0 10px 2px #ccc;
   .box-body {
     padding-left: 20px;
-    flex: 1 1 auto;
-    flex-wrap: wrap;
     height: 100%;
-    .form-flex {
+    .form-row {
+      margin: 5px 0;
+    }
+    > div.form-group {
+      margin: 10px 0;
       display: flex;
-      flex-wrap: wrap;
-      > div.form-group {
-        margin: 10px 0;
-        flex: 1 1 auto;
-        display: flex;
+    }
+    > div.loading-bar {
+      text-align: center;
+      font-size: 25px;
+    }
+    label {
+      color: $color-primary-0;
+      margin: auto 15px auto 0;
+      font-weight: 300;
+    }
+    select {
+      margin-right: 15px;
+    }
+    /* Remove controls from Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .input-income {
+      margin-right: 10px;
+      max-width: 200px;
+      input {
+        text-align: right;
       }
-      > div.rigid-form-group {
-        margin: 10px 0;
-        flex: 0 1 auto;
-        display: flex;
+    }
+    .button-group-household {
+      display: table;
+      margin-right: 10px;
+      @media(min-width: 768px) {
+        display: inline-table;
       }
-      > div.loading-bar {
-        flex: 1 1 50%;
-        text-align: center;
-        font-size: 25px;
-      }
-      > button {
-        flex: 0 1 auto;
-      }
-      label {
-        color: $color-primary-0;
-        margin: auto 5px auto 0;
-      }
-      .label-state {
-        flex: 0 0 55px;
-      }
-      .label-county {
-        flex: 0 0 55px;
-      }
-      .label-income {
-        flex: 0 0 auto;
-      }
-      .label-percentile {
-        flex: 0 0 auto;
-      }
-      select {
-        margin-right: 15px;
-        min-width: 200px;
-      }
-      .select-state {
-        flex: 1 1 250px;
-      }
-      .select-county {
-        flex: 1 1 250px;
-      }
-      /* Remove controls from Firefox */
-      input[type=number] {
-        -moz-appearance: textfield;
-      }
-      input[type=number]::-webkit-inner-spin-button,
-      input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      .input-income {
-        flex: 0 1 150px;
-        margin-right: 10px;
-        input {
-          width: 100px;
-        }
-        span {
-          width: auto;
-        }
-      }
-      .button-group-income {
-        flex: 0 1 auto;
-      }
-      .input-percentile {
-        flex: 0 1 100px;
-        margin-right: 10px;
-        input {
-          width: 55px;
-        }
-        span {
-          width: auto;
-        }
-      }
-      .button-next {
-        font-size: 2em;
-        color: $color-primary-2;
-        vertical-align: middle;
-        padding: 0;
-        margin: 0 0 0 10px;
-        border: none;
-        background-color: transparent;
-        &:hover,
-        &:active {
-          color: $color-primary-0;
-        }
+    }
+    .input-percentile {
+      margin-right: 10px;
+      input {
+        text-align: right;
       }
     }
   }
+
   .box-title {
-    flex: 0 0 60px;
     font-size: 20px;
-    display: inline-block;
+    font-weight: 300;
     height: 100%;
+    color: #fff;
     float: left;
-    padding: 5px;
+    padding: 5px 0 5px 10px;
     background-color: $color-primary-2;
-    .number-circle {
-      text-align: center;
-      vertical-align: middle;
-      line-height: $number-circle-height - 2 * $number-circle-border-width;
-      width: $number-circle-height;
-      height: $number-circle-height;
-      color: white;
-      border: $number-circle-border-width solid white;
-      border-radius: 50%;
-    }
   }
 }
 .box-user-info {
-  min-height: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  padding: 15px 10px;
-  position: relative;
+  padding-top: 15px;
+  .user-info-header {
+    min-height: 45px;
+    color: #fff;
+    background-color: $color-primary-2;
+    position: relative;
+    span {
+      font-size: 24px;
+      font-weight: 300;
+      position: absolute;
+      bottom: 5px;
+    }
+  }
+  .user-info-container {
+    padding: 10px 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    position: relative;
+    font-size: 16px;
+    border: 1px solid grey;
+  }
   .user-info {
     flex: 0 1 auto;
-    font-size: 16px;
     cursor: pointer;
-    //border: 1px solid $color-primary-0;
-    margin-right: 10px;
     position: relative;
     .user-info-select-display {
+      position: relative;
+      z-index: 0;
       margin-right: 5px;
       color: $color-primary-2;
       &:hover, &:active {
@@ -228,7 +186,10 @@ body {
       }
     }
     span.fa {
+      position: relative;
+      z-index: 0;
       width: auto;
+      margin-right: 5px;
       color: $color-primary-0;
       &:hover, &:active {
         color: $color-primary-1;
@@ -236,12 +197,12 @@ body {
     }
   }
   .user-info-select {
-    //min-width: 250px;
     white-space: nowrap;
     position: absolute;
     right: 5px;
     width: auto;
     background-color: white;
+    z-index: 100;
     border-top: 1px solid $color-primary-0;
     .user-info-item {
       border: 1px solid $color-primary-0;
@@ -257,19 +218,48 @@ body {
   .user-info-text {
     flex: 0 1 auto;
     margin-right: 5px;
-    font-size: 16px;
     color: $grey-text;
   }
 }
-.box-location {
-  //background-color: $color-primary-1;
-}
-.box-title-location {
-  //background-color: $color-primary-3;
-  //color: #fff;
-}
-.box-body-location {
 
+.btn-next {
+  font-size: 2em;
+  padding: 0;
+  margin: 10px 0 5px 0;
+  width: 100px;
+  background-color: $color-primary-2;
+  border-color: $color-primary-0;
+  color: #fff;
+  span {
+    position: relative;
+    top: 3px;
+  }
+  @media(min-width: 768px) {
+    padding: 0;
+    margin: 0 0 0 5px;
+    width: 35px;
+    color: $color-primary-2;
+    background-color: transparent;
+    border: none;
+  }
+  &:focus {
+    color: #fff;
+    background-color: $color-primary-2;
+    border-color: $color-primary-0;
+    @media(min-width: 768px) {
+      color: $color-primary-1;
+    }
+  }
+  &:hover, &:active {
+    color: #fff;
+    background-color: $color-primary-0;
+    border-color: $color-primary-3;
+    @media(min-width: 768px) {
+      color: $color-primary-0;
+      background-color: transparent;
+      border: none;
+    }
+  }
 }
 
 .btn-selected {
@@ -288,9 +278,21 @@ body {
   }
 }
 
-.start-over-button {
+.btn-start-over {
   position: absolute;
-  top: 10px;
+  bottom: 5px;
   right: 10px;
-
+  color: #fff;
+  background-color: $color-primary-2;
+  border-color: $color-primary-1;
+  &:focus {
+    color: #fff;
+    background-color: $color-primary-2;
+    border-color: $color-primary-1;
+  }
+  &:hover, &:active {
+    color: #fff;
+    background-color: $color-primary-0;
+    border-color: $color-primary-1;
+  }
 }

@@ -85,30 +85,36 @@ class UserInfoBox extends React.Component {
         </div>
     ) : null;
     return (
-            <div className="box box-user-info">
-              <div className="user-info-text">
-                {'$' + Math.round(props.userIncome).toLocaleString()} among
+            <div className="box box-user-info row">
+              <div className="user-info-header col-xs-12">
+                <span>Your Results</span>
+                <button
+                    className="btn btn-start-over"
+                    onClick={actions.resetApp}>Start Over
+                </button>
               </div>
-              <div className="user-info" onClick={actions.setSelectingHouseholdType}>
-                <span className="user-info-select-display">
-                  {props.householdType}
-                </span>
-                <span className="fa fa-caret-down"></span>
-                {householdTypeSelector}
+              <div className="user-info-container col-xs-12">
+                <div className="user-info-text">
+                  {'$' + Math.round(props.userIncome).toLocaleString()} among
+                </div>
+                <div className="user-info" onClick={actions.setSelectingHouseholdType}>
+                  <span className="user-info-select-display">
+                    {props.householdType}
+                  </span>
+                  <span className="fa fa-caret-down"></span>
+                  {householdTypeSelector}
+                </div>
+                <div className="user-info-text">
+                    households in
+                </div>
+                <div className="user-info" onClick={actions.setSelectingLocationLevel}>
+                  <span className="user-info-select-display">
+                    {_.result(_.find(locationLevels, {'mode': props.locationLevel}), 'text')}
+                  </span>
+                  <span className="fa fa-caret-down"></span>
+                  {locationLevelSelector}
+                </div>
               </div>
-              <div className="user-info-text">
-                  households in
-              </div>
-              <div className="user-info" onClick={actions.setSelectingLocationLevel}>
-                <span className="user-info-select-display">
-                  {_.result(_.find(locationLevels, {'mode': props.locationLevel}), 'text')}
-                </span>
-                <span className="fa fa-caret-down"></span>
-                {locationLevelSelector}
-              </div>
-              <button
-                  className="btn btn-selected start-over-button"
-                  onClick={actions.resetApp}>Start Over</button>
             </div>
     );
   }

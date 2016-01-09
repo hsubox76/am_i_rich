@@ -46,8 +46,8 @@ class CountyInput extends React.Component {
       )
     });
     const selectBox = (
-        <div className="form-group">
-          <label className="control-label label-county">County:</label>
+        <div className="form-row col-md-6 col-xs-12">
+          <label className="control-label  sr-only">County:</label>
           <select
               value={this.props.currentCounty.code + ':' +
                this.props.currentCounty.name}

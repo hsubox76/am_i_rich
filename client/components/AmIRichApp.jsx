@@ -66,9 +66,10 @@ class AmIRichApp extends React.Component {
     if (nextProps.loadingCountyIncomeData === 'loaded'
         && nextProps.loadingStateIncomeData === 'loaded'
         && !_.isUndefined(nextProps.userIncome)
-        && !_.isUndefined(nextProps.guessedPercentile) ) {
-      console.log(nextProps);
-      this.props.actions.calculatePercentileAndIncome(nextProps);
+        && !_.isUndefined(nextProps.guessedPercentile)
+        && _.isUndefined(nextProps.guessedIncome)
+        && _.isUndefined(nextProps.userPercentile)
+    ) {
     }
   }
 
@@ -84,16 +85,16 @@ class AmIRichApp extends React.Component {
     const percentileBox = (!_.isUndefined(props.userIncome) && _.isUndefined(props.guessedPercentile))
         ? <PercentileBox />
         : null;
-    const chartInfoBox = _.isUndefined(props.guessedIncome)
+    const chartInfoBox = _.isUndefined(props.guessedPercentile)
         ? null
         : <ChartInfoBox />;
-    const chartBox = (_.isUndefined(props.guessedIncome))
+    const chartBox = (_.isUndefined(props.guessedPercentile))
         ? null
         : (
         <ChartBox />);
     return (
-      <div className="main-page container">
-            <div className="box-container">
+      <div className="main-page row">
+            <div className="box-container col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
               {chartInfoBox}
               {locationBox}
               {incomeBox}

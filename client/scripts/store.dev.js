@@ -45,9 +45,7 @@ const testCountyData = [
     "02",
     "170"
   ]
-];
-
-console.log(initialState);
+];gi
 
 
 const devInitialState = Object.assign(initialState, {

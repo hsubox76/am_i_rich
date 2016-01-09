@@ -1,16 +1,12 @@
 import d3 from 'd3';
 
-const LABEL_PADDING = 8;
-const LABEL_SPACING = 5;
-const LABEL_BORDER_SIZE = 4;
-
 class D3Chart {
   constructor(options, data) {
     this.options = options;
     this.margins = options.margins;
-    this.width = options.width;
+    this.width = Math.min(900, options.width);
     this.data = data;
-    this.height = Math.round(this.width * 0.5);
+    this.height = Math.max(200, Math.round(this.width * 0.5));
     this.elementId = options.elementId;
     this.plot = d3.select('#' + this.elementId);
     this.initRanges();
@@ -119,7 +115,7 @@ class D3Chart {
         .attr("class", "x-label")
         .attr("text-anchor", "middle")
         .attr("x", this.width / 2)
-        .attr("y", 35)
+        .attr("y", this.height / 8)
         .text("income per household (dollars)");
 
     this.plot.append('svg:g')
@@ -130,7 +126,7 @@ class D3Chart {
         .attr("class", "y-label")
         .attr("text-anchor", "middle")
         .attr("x", -this.height / 2)
-        .attr("y", -40)
+        .attr("y", -this.width / 13)
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
   }
@@ -141,6 +137,9 @@ class D3Chart {
   }
 
   drawMarkerLine(xValue, className, title, percentile, offset = 0) {
+    const LABEL_PADDING = this.width / 75;
+    const LABEL_SPACING = this.width / 100;
+    const LABEL_BORDER_SIZE = this.width / 150;
     let xPos = this.xRange(xValue);
     if (xPos > this.width - this.margins.right) {
       xPos = (this.width - this.margins.right);
@@ -180,15 +179,15 @@ class D3Chart {
     const textBBox = labelTitle[0][0].getBBox();
     const labelHeight = textBBox.height * 2 + LABEL_PADDING * 4;
     const labelWidth = textBBox.width + LABEL_PADDING * 2;
-    const textX = labelWidth / 2;
-    const textY = (labelHeight / 2) + this.margins.top + 32 + ((labelHeight + LABEL_SPACING) * offset);
-    labelTitle.attr('transform', 'translate(0, ' + (-textBBox.height) + ')');
-    labelPercentile.attr('transform', 'translate(0, ' + (textBBox.height) + ')');
     let boxOffset = 0;
     if (xPos > this.width - labelWidth - this.margins.right) {
       // if flag will fall off right edge, flip flag to left side
       boxOffset = -labelWidth;
     }
+    const textX = labelWidth / 2;
+    const textY = (labelHeight / 2) + this.margins.top + 32 + ((labelHeight + LABEL_SPACING) * offset);
+    labelTitle.attr('transform', 'translate(0, ' + (-textBBox.height) + ')');
+    labelPercentile.attr('transform', 'translate(0, ' + (textBBox.height) + ')');
     box.attr('width', labelWidth)
         .attr('height', labelHeight)
         .attr ('transform', 'translate(' + boxOffset + ', ' + (((labelHeight + LABEL_SPACING) * offset)
