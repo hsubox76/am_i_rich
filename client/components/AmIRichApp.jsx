@@ -14,6 +14,7 @@ import IncomeBox from './IncomeBox';
 import PercentileBox from './PercentileBox';
 import ChartBox from './ChartBox';
 import ChartInfoBox from './ChartInfoBox';
+import ChartBottomControls from './ChartBottomControls';
 
 import { LOADING_STATES } from '../data/types.js';
 
@@ -92,15 +93,19 @@ class AmIRichApp extends React.Component {
         ? null
         : (
         <ChartBox />);
+    const chartBottomControls = (_.isUndefined(props.guessedPercentile))
+        ? null
+        : (
+        <ChartBottomControls />);
     return (
       <div className="main-page row">
-            <div className="box-container col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
-              <h1>Are You Middle-Class?</h1>
+            <div className="box-container col-md-10 col-md-offset-1 col-sm-12">
               {chartInfoBox}
               {locationBox}
               {incomeBox}
               {percentileBox}
               {chartBox}
+              {chartBottomControls}
             </div>
       </div>
     );

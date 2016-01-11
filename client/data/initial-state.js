@@ -8,5 +8,6 @@ export const initialState = {
       [{name: "select a state", code: "0"}].concat(STATES),
   counties: [],
   locationLevel: LOCATION_LEVELS.COUNTY,
-  householdType: HOUSEHOLD_TYPES.NONFAMILY
+  householdType: HOUSEHOLD_TYPES.NONFAMILY,
+  chart: null
 };

@@ -27,9 +27,10 @@ function getPercentileMap(state) {
   return percentileMap;
 }
 
-function findPercentileAtIncome(state, income) {
+function findPercentileAtIncome(state) {
   // TODO: special cases at extremes, error checking for neg or 0
   const percentileMap = getPercentileMap(state);
+  const income = state.userIncome;
   const samples = percentileMap.length;
   let i = Math.round(samples / 2);
   let top = samples;
@@ -105,7 +106,11 @@ export default function mainReducer(state, action) {
       });
     case 'CREATE_CHART':
       return Object.assign({}, state, {
-        chart: action.chart
+        chartData: action.chartData
+      });
+    case 'EMPTY_CHART':
+      return Object.assign({}, state, {
+        chartData: null
       });
     case 'SET_INCOME':
       const userIncome = action.userIncome || state.userIncome;
@@ -118,8 +123,8 @@ export default function mainReducer(state, action) {
         guessedPercentile: parseInt(guessedPercentile)
       });
     case 'CALCULATE_PERCENTILE_AND_INCOME':
-      const userPercentile = findPercentileAtIncome(action.props, action.props.userIncome);
-      const guessedIncome = getPercentileMap(action.props)[action.props.guessedPercentile];
+      const userPercentile = findPercentileAtIncome(state);
+      const guessedIncome = getPercentileMap(state)[state.guessedPercentile];
       return Object.assign({}, state, {
         userPercentile,
         guessedIncome

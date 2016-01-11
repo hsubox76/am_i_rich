@@ -1,5 +1,9 @@
 import d3 from 'd3';
 
+export function drawChart() {
+
+};
+
 class D3Chart {
   constructor(options, data) {
     this.options = options;
@@ -137,7 +141,7 @@ class D3Chart {
   }
 
   drawMarkerLine(xValue, className, title, percentile, offset = 0) {
-    const LABEL_PADDING = this.width / 75;
+    const LABEL_PADDING = this.width / 150;
     const LABEL_SPACING = this.width / 100;
     const LABEL_BORDER_SIZE = this.width / 150;
     let xPos = this.xRange(xValue);

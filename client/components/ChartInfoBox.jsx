@@ -36,9 +36,16 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-class UserInfoBox extends React.Component {
+class ChartInfoBox extends React.Component {
   constructor() {
     super();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if ((nextProps.locationLevel !== this.props.locationLevel)
+        || (nextProps.householdType !== this.props.householdType)) {
+      this.props.actions.calculatePercentileAndIncome(nextProps);
+    }
   }
 
   render() {
@@ -86,13 +93,6 @@ class UserInfoBox extends React.Component {
     ) : null;
     return (
             <div className="box box-user-info row">
-              <div className="user-info-header col-xs-12">
-                <span>Your Results</span>
-                <button
-                    className="btn btn-start-over"
-                    onClick={actions.resetApp}>Start Over
-                </button>
-              </div>
               <div className="user-info-container col-xs-12">
                 <div className="user-info-text">
                   {'$' + Math.round(props.userIncome).toLocaleString()} among
@@ -120,6 +120,6 @@ class UserInfoBox extends React.Component {
   }
 }
 
-UserInfoBox.propTypes = propTypes;
+ChartInfoBox.propTypes = propTypes;
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserInfoBox);
+export default connect(mapStateToProps, mapDispatchToProps)(ChartInfoBox);

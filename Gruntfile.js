@@ -81,6 +81,14 @@ module.exports = function(grunt) {
           dest: 'public/'
         }]
       },
+      scripts: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['bower_components/**/bootstrap.min.js', 'bower_components/**/jquery.min.js'],
+          dest: 'public/scripts/'
+        }]
+      },
       css: {
         files: [{
           expand: true,

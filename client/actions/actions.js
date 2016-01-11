@@ -1,4 +1,5 @@
 import {getCountyData, getCountyList, getStateData, getCountryData} from '../helpers/api.js';
+import D3Chart from '../helpers/D3Chart';
 
 function receiveCountyData(data, countyCode) {
   return {
@@ -78,8 +79,11 @@ export function setPercentile(guessedPercentile) {
 export function calculatePercentileAndIncome(props) {
   return { type: 'CALCULATE_PERCENTILE_AND_INCOME', props }
 }
-export function createChart(chart) {
-  return { type: 'CREATE_CHART', chart}
+export function createChart(chartData) {
+  return { type: 'CREATE_CHART', chartData}
+}
+export function emptyChart() {
+  return { type: 'EMPTY_CHART' }
 }
 export function setSelectingLocationLevel() {
   return { type: 'SET_SELECTING_LOCATION_LEVEL'}
