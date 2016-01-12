@@ -1,5 +1,6 @@
 "use strict";
 import React from 'react';
+import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -66,12 +67,27 @@ function mapDispatchToProps(dispatch) {
 class ChartBox extends React.Component {
   constructor() {
     super();
+    this.resizeChart = this.resizeChart.bind(this);
+  }
+
+  resizeChart() {
+    const self = this;
+    return _.debounce(function () {
+      const chartWidth = ReactDOM.findDOMNode(this).offsetWidth - PAD * 2;
+      this.props.actions.setChartWidth(chartWidth);
+      //this.removeChart();
+      //this.calculateChartVars();
+    }.bind(self), 500);
   }
 
   componentDidMount() {
     const chartWidth = this.refs.container.offsetWidth - PAD * 2;
     this.props.actions.setChartWidth(chartWidth);
-    this.props.actions.calculatePercentileAndIncome(this.props);
+    window.addEventListener('resize', this.resizeChart());
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeChart());
   }
 
   componentDidUpdate() {

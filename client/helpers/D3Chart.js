@@ -1,4 +1,5 @@
 import d3 from 'd3';
+import ReactDOM from 'react-dom';
 
 export function drawChart() {
 
