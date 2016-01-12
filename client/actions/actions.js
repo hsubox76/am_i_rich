@@ -1,5 +1,5 @@
 import {getCountyData, getCountyList, getStateData, getCountryData} from '../helpers/api.js';
-import D3Chart from '../helpers/D3Chart';
+import { LOCATION_LEVELS } from '../data/types.js';
 
 function receiveCountyData(data, countyCode) {
   return {
@@ -99,4 +99,7 @@ export function setHouseholdType(householdType) {
 }
 export function resetApp() {
   return { type: 'RESET' }
+}
+export function setCurrentDataSet(locationLevel, householdType) {
+  return { type: 'SET_DATA_SET' };
 }

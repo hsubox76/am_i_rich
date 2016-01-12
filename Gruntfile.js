@@ -210,7 +210,7 @@ module.exports = function(grunt) {
         ],
         tasks: [],
         options: {
-          livereload: true
+          livereload: 12345
         },
       },
     }

@@ -1,14 +1,14 @@
 import { LOCATION_LEVELS } from '../data/types.js';
 
-export function getCurrentDataSet(state) {
-  switch(state.locationLevel) {
+export function getCurrentDataSet(locationLevel, householdType) {
+  switch(locationLevel) {
     case LOCATION_LEVELS.COUNTY:
-      return state.countyIncomeData[state.householdType];
+      return state.countyIncomeData[householdType];
     case LOCATION_LEVELS.STATE:
-      return state.stateIncomeData[state.householdType];
+      return state.stateIncomeData[householdType];
     case LOCATION_LEVELS.US:
-      return state.countryIncomeData[state.householdType];
+      return state.countryIncomeData[householdType];
     default:
-      return state.countryIncomeData[state.householdType];
+      return state.countryIncomeData[householdType];
   }
 }

@@ -40,6 +40,7 @@ const propTypes = {
 
 function mapStateToProps(state) {
   return {
+    incomeData: state.currentIncomeData,
     chartWidth: state.chartWidth,
     chartData: state.chartData,
     chartElementID: state.chartElementID,
@@ -66,6 +67,7 @@ class Chart extends React.Component {
     this.removeChart = this.removeChart.bind(this);
     this.resizeChart = this.resizeChart.bind(this);
     this.drawChart = this.drawChart.bind(this);
+    this.drawMarker = this.drawMarker.bind(this);
     this.calculateChartVars = this.calculateChartVars.bind(this);
     this.renderGraphArea = this.renderGraphArea.bind(this);
     this.renderGrid = this.renderGrid.bind(this);
@@ -78,10 +80,12 @@ class Chart extends React.Component {
     $('#bg-grid').empty();
     $('#x-axis').empty();
     $('#y-axis').empty();
+    $('g.graph-label').remove();
   }
 
   calculateChartVars() {
     const data = this.props.incomeData;
+    // larger area includes axes
     const svgWidth = Math.min(900, this.props.chartWidth);
     const svgHeight = Math.max(200, Math.round(svgWidth * 0.5));
     const width = svgWidth * 0.8;
@@ -173,18 +177,101 @@ class Chart extends React.Component {
       markers
     });
   }
+  intersectRect(r1, r2) {
+    console.log(r1);
+    var r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
+    var r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
 
-  drawChart() {
-    const chart = d3.select('#d3-element');
+    //CHECK IF THE TWO BOUNDING BOXES OVERLAP
+    return !(r2.left > r1.right ||
+    r2.right < r1.left ||
+    r2.top > r1.bottom ||
+    r2.bottom < r1.top);
+  }
+
+  drawMarker(marker, index) {
+    const self = this;
+    const gridContainer = d3.select('#grid-container');
     const chartData = this.props.chartData;
-    let xPos = chartData.xRange(chartData.xValue);
-    if (xPos > chartData.width - chartData.margins.right) {
-      xPos = (chartData.width - chartData.margins.right);
-      chartData.percentile = '99+';
-    }
+    let percentile = marker.percentile;
+    const xValue = marker.xValue;
+    const title = marker.title;
+    const className = marker.className;
+
     const LABEL_PADDING = chartData.width / 150;
     const LABEL_SPACING = chartData.width / 100;
     const LABEL_BORDER_SIZE = chartData.width / 150;
+    let xPos = chartData.xRange(xValue);
+    console.log(xValue);
+    if (xPos > chartData.width - chartData.margins.right) {
+      xPos = (chartData.width - chartData.margins.right);
+      percentile = '99+';
+    }
+    const g = gridContainer.append('g').attr('class', 'graph-label ' + className);
+    const line = g.append('svg:line')
+        .attr('x1', 0)
+        .attr('x2', 0)
+        .attr('y2', chartData.height)
+        .attr('class', 'label-line')
+        .attr('stroke-width', LABEL_BORDER_SIZE);
+    const box = g.append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('stroke-width', LABEL_BORDER_SIZE)
+        .attr('fill-opacity', 0.75)
+        .attr('class', 'label-box');
+    const labelText = g.append('g')
+        .attr('class', 'label-text-group')
+        .attr ('transform', 'translate(' + (LABEL_PADDING + LABEL_BORDER_SIZE) + ', '
+            + (chartData.margins.top + 32 + LABEL_PADDING + LABEL_BORDER_SIZE) + ')');
+    const labelTitle = labelText.append('text')
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'middle')
+        .attr('class', 'label-text')
+        .text(title);
+    const labelIncome = labelText.append('text')
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'middle')
+        .attr('class', 'label-text')
+        .text('$' + Math.round(xValue).toLocaleString());
+    const labelPercentile = labelText.append('text')
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'middle')
+        .attr('class', 'label-text')
+        .text(percentile + '%');
+    const textBBox = labelTitle[0][0].getBBox();
+    const labelHeight = textBBox.height * 2 + LABEL_PADDING * 4;
+    const labelWidth = textBBox.width + LABEL_PADDING * 2;
+    let boxOffset = 0;
+    let orientation = 'right';
+    if (xPos > chartData.width - labelWidth - chartData.margins.right) {
+      // if flag will fall off right edge, flip flag to left side
+      boxOffset = -labelWidth;
+      orientation = 'left';
+    }
+    const offset = 0; // set this programmatically
+    const textX = labelWidth / 2;
+    const textY = (labelHeight / 2) + chartData.margins.top + 32 + ((labelHeight + LABEL_SPACING) * offset);
+    labelTitle.attr('transform', 'translate(0, ' + (-textBBox.height) + ')');
+    labelPercentile.attr('transform', 'translate(0, ' + (textBBox.height) + ')');
+    box.attr('width', labelWidth)
+        .attr('height', labelHeight)
+        .attr ('transform', 'translate(' + boxOffset + ', ' + (((labelHeight + LABEL_SPACING) * offset)
+            + chartData.margins.top + 32) + ')');
+    labelText.attr('transform', 'translate(' + (textX + boxOffset) + ',' + textY + ')');
+    line.attr('y1', ((labelHeight + LABEL_SPACING) * offset) + chartData.margins.top + 32);
+    g.attr('transform', 'translate(' + xPos + ', 0)');
+
+    return {
+      element: g[0][0],
+      orientation,
+      xPos
+    };
+  }
+
+  drawChart() {
+    const self = this;
+    const chartData = this.props.chartData;
 
     const gridEl = d3.select("#bg-grid");
 
@@ -201,8 +288,7 @@ class Chart extends React.Component {
               "shape-rendering" : "crispEdges",
               "stroke-width" : "1px"
             });
-        //.attr('transform', 'translate(' + (chartData.margins.left) + ','
-        //    + -(chartData.margins.bottom - chartData.margins.top) + ')');
+
     gridEl.selectAll("line.verticalGrid").data(chartData.xRange.ticks(8)).enter()
         .append("line")
         .attr(
@@ -216,16 +302,7 @@ class Chart extends React.Component {
               "shape-rendering" : "crispEdges",
               "stroke-width" : "1px"
             });
-        //.attr('transform', 'translate(' + (0) + ','
-        //    + chartData.margins.top + ')');
-    //this.graphElement = chart.append('svg:path')
-    //    .attr('d', chartData.graphArea(chartData.data))
-    //    .attr('transform', 'translate(' + (0) + ',' + -(chartData.margins.bottom - chartData.margins.top) + ')')
-    //    .attr('class', 'graph-area');
 
-    //chart.append('svg:g')
-    //    .attr('class', 'x-axis')
-    //    .attr('transform', 'translate(0,' + (chartData.height - chartData.margins.bottom) + ')')
     d3.select("#x-axis").call(chartData.xAxis)
         .append("text")
         .attr("class", "x-label")
@@ -234,9 +311,6 @@ class Chart extends React.Component {
         .attr("y", chartData.height / 8)
         .text("income per household (dollars)");
 
-    //chart.append('svg:g')
-    //    .attr('class', 'y-axis')
-    //    .attr('transform', 'translate(' + (chartData.margins.left) + ',' + -(chartData.margins.bottom - chartData.margins.top) + ')')
     d3.select("#y-axis").call(chartData.yAxis)
         .append("text")
         .attr("class", "y-label")
@@ -245,6 +319,81 @@ class Chart extends React.Component {
         .attr("y", -chartData.width / 13)
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
+
+    const markerElements = _.map(chartData.markers, function(marker, index) {
+      return self.drawMarker(marker, index);
+    });
+
+    _.forEach(markerElements, function(markerElement, markerIndex) {
+      _.forEach(markerElements, function(otherElement, otherIndex) {
+        if (self.intersectRect($(markerElement.element).find('rect')[0], $(otherElement.element).find('rect')[0]) ) {
+          let topElement = null;
+          let bottomElement = null;
+          if (otherElement.xPos > markerElement.xPos) {
+            if (markerElement.orientation === 'right'
+                && otherElement.orientation === 'right') {
+              topElement = markerElement.element;
+              bottomElement = otherElement.element;
+            } else if (markerElement.orientation === 'left'
+                && otherElement.orientation === 'left') {
+              bottomElement = markerElement.element;
+              topElement = otherElement.element;
+            } else if (markerElement.orientation === 'right'
+                && otherElement.orientation === 'left') {
+              // really should flip markerElement flag in this case
+              // but just put the front one on top for now
+              if (markerIndex > otherIndex) {
+                bottomElement = markerElement.element;
+                topElement = otherElement.element;
+              } else {
+                topElement = markerElement.element;
+                bottomElement = otherElement.element;
+              }
+              $(bottomElement).find('rect').attr('fill-opacity', 0.9);
+            }
+          }
+          if (otherElement.xPos < markerElement.xPos) {
+            if (markerElement.orientation === 'right'
+                && otherElement.orientation === 'right') {
+              bottomElement = markerElement.element;
+              topElement = otherElement.element;
+            } else if (markerElement.orientation === 'left'
+                && otherElement.orientation === 'left') {
+              topElement = markerElement.element;
+              bottomElement = otherElement.element;
+            } else if (markerElement.orientation === 'right'
+                && otherElement.orientation === 'left') {
+              // really should flip otherElement flag in this case
+              // but just put the front one on top for now
+              if (markerIndex > otherIndex) {
+                topElement = markerElement.element;
+                bottomElement = otherElement.element;
+              } else {
+                bottomElement = markerElement.element;
+                topElement = otherElement.element;
+              }
+              $(bottomElement).find('rect').attr('fill-opacity', 0.9);
+            }
+          }
+
+          if (topElement && bottomElement) {
+            const topElementHeight = $(topElement).find('rect')[0].getBBox().height;
+            const $bottomElementText = $(bottomElement).find('.label-text-group');
+            const $bottomElementFlag = $(bottomElement).find('rect');
+            const $bottomElementLine = $(bottomElement).find('line');
+            const bottomLineOriginalY1 = parseInt($bottomElementLine.attr('y1'));
+            console.log('bottomLineOriginalY1: ' + bottomLineOriginalY1);
+            const bottomFlagOriginalX = $bottomElementFlag[0].transform.baseVal.getItem(0).matrix.e;
+            const bottomFlagOriginalY = $bottomElementFlag[0].transform.baseVal.getItem(0).matrix.f;
+            const bottomTextOriginalX = $bottomElementText[0].transform.baseVal.getItem(0).matrix.e;
+            const bottomTextOriginalY = $bottomElementText[0].transform.baseVal.getItem(0).matrix.f;
+            $bottomElementLine.attr('y1', bottomLineOriginalY1 + topElementHeight + 10);
+            $bottomElementFlag.attr("transform", "translate(" + bottomFlagOriginalX + ", " + (bottomFlagOriginalY + topElementHeight + 10) + ")");
+            $bottomElementText.attr("transform", "translate(" + bottomTextOriginalX + ", " + (bottomTextOriginalY + topElementHeight + 10) + ")");
+          }
+        }
+      });
+    });
 
   }
 
@@ -259,28 +408,21 @@ class Chart extends React.Component {
   }
 
   componentDidMount() {
-    this.props.actions.calculatePercentileAndIncome(this.props);
-
-    this.calculateChartVars();
+    this.props.actions.calculatePercentileAndIncome();
+    //this.calculateChartVars();
   }
 
-  componentWillUnmount() {
-  }
-
-  componentWillReceiveProps(nextProps) {
-    //if (nextProps.chartWidth !== this.props.chartWidth) {
-    //  console.log('WILL RECEIVE PROPS');
-    //  this.removeChart();
-    //  this.calculateChartVars();
-    //}
-  }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.chartWidth !== this.props.chartWidth) {
+    if (
+        prevProps.chartWidth !== this.props.chartWidth
+        || prevProps.guessedIncome !== this.props.guessedIncome
+        || !_.isEqual(prevProps.incomeData, this.props.incomeData)
+    ) {
       console.log('--DID UPDATE--');
       this.removeChart();
+      this.props.actions.calculatePercentileAndIncome();
       this.calculateChartVars();
-      //this.drawChart();
     }
     // draw d3 chart after initial div has rendered and container width has been determined
     // or if width has changed
@@ -296,6 +438,7 @@ class Chart extends React.Component {
     }
   }
 
+  // currently not being called anywhere...
   updateChart() {
     d3.select('.graph-area').attr('d', this.props.chartData.graphArea(this.props.data));
     d3.select('#bg-grid.verticalGrid').attr(
@@ -351,12 +494,6 @@ class Chart extends React.Component {
     //transform={'translate(' + (chartData.margins.left) + ',' + -chartData.margins.bottom + ')'}
     const chartData = this.props.chartData;
     if (chartData) {
-      console.log('width: ' + chartData.width);
-      console.log('height: ' + chartData.height);
-      console.log('margin-left: ' + chartData.margins.left);
-      console.log('margin-bottom: ' + chartData.margins.bottom);
-      console.log('maxY: ' + chartData.maxY);
-      console.log('maxX: ' + chartData.maxX);
       return (
           <svg
               id={"d3-element"}

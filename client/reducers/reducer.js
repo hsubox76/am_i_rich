@@ -1,11 +1,23 @@
 import _ from 'lodash';
 import { LOCATION_LEVELS, LOADING_STATES } from '../data/types.js';
-import { getCurrentDataSet } from '../helpers/helpers.js';
+//import { getCurrentDataSet } from '../helpers/helpers.js';
 import {initialState} from '../data/initial-state.js';
 
+export function getCurrentDataSet(state, locationLevel, householdType) {
+  switch(locationLevel) {
+    case LOCATION_LEVELS.COUNTY:
+      return state.countyIncomeData[householdType];
+    case LOCATION_LEVELS.STATE:
+      return state.stateIncomeData[householdType];
+    case LOCATION_LEVELS.US:
+      return state.countryIncomeData[householdType];
+    default:
+      return state.countryIncomeData[householdType];
+  }
+}
 
 function getPercentileMap(state) {
-  const incomeData = getCurrentDataSet(state);
+  const incomeData = getCurrentDataSet(state, state.locationLevel, state.householdType);
   const totalHouseholds =_.sum(incomeData, "households");
   const percentileMap = [0];
   _.forEach(_.range(0,100), function(percentile) {
@@ -91,7 +103,13 @@ export default function mainReducer(state, action) {
     case 'RECEIVE_COUNTY_DATA':
       return Object.assign({}, state, {
         countyIncomeData: action.incomeData,
-        loadingCountyIncomeData: LOADING_STATES.LOADED
+        loadingCountyIncomeData: LOADING_STATES.LOADED,
+        currentIncomeData: getCurrentDataSet(
+            Object.assign({}, state, {
+              countyIncomeData: action.incomeData
+            }),
+            state.locationLevel,
+            state.householdType)
       });
     case 'SET_CURRENT_COUNTY':
       return Object.assign({}, state, {
@@ -132,12 +150,21 @@ export default function mainReducer(state, action) {
     case 'SET_SELECTING_LOCATION_LEVEL':
       return Object.assign({}, state, {selectingLocationLevel: !state.selectingLocationLevel});
     case 'SET_LOCATION_LEVEL':
-      return Object.assign({}, state, {locationLevel: action.level});
+      return Object.assign({}, state, {
+        locationLevel: action.level,
+        currentIncomeData: getCurrentDataSet(state, action.level, state.householdType)
+      });
     case 'SET_SELECTING_HOUSEHOLD_TYPE':
       return Object.assign({}, state, {selectingHouseholdType: !state.selectingHouseholdType});
-    case 'SET_HOUSEHOLD_TYPE': {
-      return Object.assign({}, state, {householdType: action.householdType});
-    }
+    case 'SET_HOUSEHOLD_TYPE':
+      return Object.assign({}, state, {
+        householdType: action.householdType,
+        currentIncomeData: getCurrentDataSet(state, state.locationLevel, action.householdType)
+      });
+    case 'SET_DATA_SET':
+      return Object.assign({}, state, {
+        currentIncomeData: getCurrentDataSet(state, state.locationLevel, state.householdType)
+      });
     default:
       return state;
   }

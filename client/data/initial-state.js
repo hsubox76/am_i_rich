@@ -9,5 +9,6 @@ export const initialState = {
   counties: [],
   locationLevel: LOCATION_LEVELS.COUNTY,
   householdType: HOUSEHOLD_TYPES.NONFAMILY,
+  currentIncomeData: null,
   chartData: null
 };

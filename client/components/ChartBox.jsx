@@ -98,10 +98,9 @@ class ChartBox extends React.Component {
   }
 
   render() {
-    const chart = this.props.chartWidth && this.props.loadingCountyIncomeData === 'loaded' ? (
+    const chart = this.props.chartWidth && this.props.loadingCountyIncomeData === 'loaded' && this.props.guessedPercentile ? (
         <Chart
             chartElementID="d3-element"
-            incomeData={getCurrentDataSet(this.props)}
         />
     ) : null;
     return (
