@@ -177,8 +177,8 @@ class Chart extends React.Component {
       markers
     });
   }
+
   intersectRect(r1, r2) {
-    console.log(r1);
     var r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
     var r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
 
@@ -198,11 +198,18 @@ class Chart extends React.Component {
     const title = marker.title;
     const className = marker.className;
 
-    const LABEL_PADDING = chartData.width / 150;
-    const LABEL_SPACING = chartData.width / 100;
-    const LABEL_BORDER_SIZE = chartData.width / 150;
+    if (title === 'your income') {
+      d3.select("#lower-clip-shape").attr("width", chartData.xRange(xValue));
+      d3.select("#higher-clip-shape")
+          .attr("x", chartData.xRange(xValue))
+          .attr("width", chartData.xRange(chartData.maxX) - chartData.xRange(xValue));
+    }
+
+    const LABEL_PADDING = chartData.width * 0.01;
+    const LABEL_SPACING = chartData.width * 0.01;
+    const LABEL_BORDER_SIZE = chartData.width * 0.005;
+    const LABEL_FONT_SIZE = (chartData.width * 0.02) + 'px';
     let xPos = chartData.xRange(xValue);
-    console.log(xValue);
     if (xPos > chartData.width - chartData.margins.right) {
       xPos = (chartData.width - chartData.margins.right);
       percentile = '99+';
@@ -227,16 +234,19 @@ class Chart extends React.Component {
     const labelTitle = labelText.append('text')
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
+        .attr('font-size', LABEL_FONT_SIZE)
         .attr('class', 'label-text')
         .text(title);
     const labelIncome = labelText.append('text')
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
+        .attr('font-size', LABEL_FONT_SIZE)
         .attr('class', 'label-text')
         .text('$' + Math.round(xValue).toLocaleString());
     const labelPercentile = labelText.append('text')
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
+        .attr('font-size', LABEL_FONT_SIZE)
         .attr('class', 'label-text')
         .text(percentile + '%');
     const textBBox = labelTitle[0][0].getBBox();
@@ -251,15 +261,15 @@ class Chart extends React.Component {
     }
     const offset = 0; // set this programmatically
     const textX = labelWidth / 2;
-    const textY = (labelHeight / 2) + chartData.margins.top + 32 + ((labelHeight + LABEL_SPACING) * offset);
+    const textY = (labelHeight / 2) + chartData.height * 0.05 + ((labelHeight + LABEL_SPACING) * offset);
     labelTitle.attr('transform', 'translate(0, ' + (-textBBox.height) + ')');
     labelPercentile.attr('transform', 'translate(0, ' + (textBBox.height) + ')');
     box.attr('width', labelWidth)
         .attr('height', labelHeight)
         .attr ('transform', 'translate(' + boxOffset + ', ' + (((labelHeight + LABEL_SPACING) * offset)
-            + chartData.margins.top + 32) + ')');
+            + chartData.height * 0.05) + ')');
     labelText.attr('transform', 'translate(' + (textX + boxOffset) + ',' + textY + ')');
-    line.attr('y1', ((labelHeight + LABEL_SPACING) * offset) + chartData.margins.top + 32);
+    line.attr('y1', ((labelHeight + LABEL_SPACING) * offset) + chartData.height * 0.05);
     g.attr('transform', 'translate(' + xPos + ', 0)');
 
     return {
@@ -382,7 +392,6 @@ class Chart extends React.Component {
             const $bottomElementFlag = $(bottomElement).find('rect');
             const $bottomElementLine = $(bottomElement).find('line');
             const bottomLineOriginalY1 = parseInt($bottomElementLine.attr('y1'));
-            console.log('bottomLineOriginalY1: ' + bottomLineOriginalY1);
             const bottomFlagOriginalX = $bottomElementFlag[0].transform.baseVal.getItem(0).matrix.e;
             const bottomFlagOriginalY = $bottomElementFlag[0].transform.baseVal.getItem(0).matrix.f;
             const bottomTextOriginalX = $bottomElementText[0].transform.baseVal.getItem(0).matrix.e;
@@ -465,14 +474,15 @@ class Chart extends React.Component {
             });
   }
 
-  renderGraphArea() {
+  renderGraphArea(clipID) {
     const chartData = this.props.chartData;
     if (chartData) {
       return (
           <path
               d={chartData.graphArea(chartData.data)}
               transform={'translate(' + (0) + ',' + 0 + ')'}
-              className="graph-area other-class"
+              className={"graph-area" + " graph-" + clipID}
+              clipPath={"url(#" + clipID + ")"}
           />
       );
     }
@@ -508,7 +518,16 @@ class Chart extends React.Component {
               <g className="y-axis"
                  id="y-axis"
                  transform={'translate(0,0)'} />
-              {this.renderGraphArea()}
+              <defs>
+                <clipPath id="lower-clip">
+                  <rect id="lower-clip-shape" x="0" y="0" height={this.props.chartData.svgHeight} />
+                </clipPath>
+                <clipPath id="higher-clip">
+                  <rect id="higher-clip-shape" x="0" y="0" height={this.props.chartData.svgHeight} />
+                </clipPath>
+              </defs>
+              {this.renderGraphArea('lower-clip')}
+              {this.renderGraphArea('higher-clip')}
             </g>
           </svg>
       );
