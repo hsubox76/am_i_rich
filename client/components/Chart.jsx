@@ -205,10 +205,10 @@ class Chart extends React.Component {
           .attr("width", chartData.xRange(chartData.maxX) - chartData.xRange(xValue));
     }
 
-    const LABEL_PADDING = chartData.width * 0.01;
+    const LABEL_PADDING = chartData.width * 0.012;
     const LABEL_SPACING = chartData.width * 0.01;
     const LABEL_BORDER_SIZE = chartData.width * 0.005;
-    const LABEL_FONT_SIZE = (chartData.width * 0.02) + 'px';
+    const LABEL_FONT_SIZE = (chartData.width * 0.025) + 'px';
     let xPos = chartData.xRange(xValue);
     if (xPos > chartData.width - chartData.margins.right) {
       xPos = (chartData.width - chartData.margins.right);
@@ -282,6 +282,8 @@ class Chart extends React.Component {
   drawChart() {
     const self = this;
     const chartData = this.props.chartData;
+    const AXIS_TICK_FONT_SIZE = (chartData.width * 0.025) + 'px';
+    const AXIS_LABEL_FONT_SIZE = (chartData.width * 0.03) + 'px';
 
     const gridEl = d3.select("#bg-grid");
 
@@ -314,19 +316,23 @@ class Chart extends React.Component {
             });
 
     d3.select("#x-axis").call(chartData.xAxis)
+        .attr("font-size", AXIS_TICK_FONT_SIZE)
         .append("text")
         .attr("class", "x-label")
         .attr("text-anchor", "middle")
-        .attr("x", chartData.width / 2)
-        .attr("y", chartData.height / 8)
+        .attr("x", chartData.width * 0.5)
+        .attr("y", chartData.height * 0.15)
+        .attr("font-size", AXIS_LABEL_FONT_SIZE)
         .text("income per household (dollars)");
 
     d3.select("#y-axis").call(chartData.yAxis)
+        .attr("font-size", AXIS_TICK_FONT_SIZE)
         .append("text")
         .attr("class", "y-label")
         .attr("text-anchor", "middle")
-        .attr("x", -chartData.height / 2)
-        .attr("y", -chartData.width / 13)
+        .attr("x", -chartData.height * 0.5)
+        .attr("y", -chartData.width * 0.1)
+        .attr("font-size", AXIS_LABEL_FONT_SIZE)
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
 
