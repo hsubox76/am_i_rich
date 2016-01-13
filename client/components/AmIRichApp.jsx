@@ -98,7 +98,8 @@ class AmIRichApp extends React.Component {
         : (
         <ChartBottomControls />);
     return (
-      <div className="main-page row">
+      <div className="main-page container">
+        <div className="row">
             <div className="box-container col-md-10 col-md-offset-1 col-sm-12">
               {chartInfoBox}
               {locationBox}
@@ -107,6 +108,7 @@ class AmIRichApp extends React.Component {
               {chartBox}
               {chartBottomControls}
             </div>
+          </div>
       </div>
     );
   }

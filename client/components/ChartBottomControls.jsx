@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
 
 import * as AmIRichActions from '../actions/actions';
+import {postToFacebook} from '../helpers/helpers';
 
 const propTypes = {
 };
@@ -31,10 +32,12 @@ class ChartBottomControls extends React.Component {
                 className="btn btn-start-over pull-right"
                 onClick={actions.resetApp}>Start Over
             </button>
-            <button
-                className="btn btn-info pull-right">
-              Share
-            </button>
+            <div className="share-buttons">
+              Share:
+              <span
+                  onClick={postToFacebook}
+                  className="fa fa-facebook-official"></span>
+            </div>
           </div>
         </div>
     );

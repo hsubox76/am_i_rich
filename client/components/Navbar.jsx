@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 
+import {postToFacebook} from '../helpers/helpers';
 import * as AmIRichActions from '../actions/actions';
 
 
@@ -25,6 +26,7 @@ const propTypes = {
 
 // Main AmIRichApp component
 class Navbar extends React.Component {
+
   render() {
     return (
         <div className="navbar navbar-inverse navbar-static-top">
@@ -42,12 +44,10 @@ class Navbar extends React.Component {
               <ul className="nav navbar-nav navbar-right">
                 <li><a href="#">About</a></li>
                 <li>
-                  <div
-                      className="fb-like"
-                      data-share="true"
-                      data-width="450"
-                      data-show-faces="true">
-                  </div>
+                  <a
+                      onClick={postToFacebook}
+                      href="#"
+                      className="fa fa-facebook-official"></a>
                 </li>
               </ul>
             </div>

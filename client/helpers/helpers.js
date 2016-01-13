@@ -12,3 +12,13 @@ export function getCurrentDataSet(locationLevel, householdType) {
       return state.countryIncomeData[householdType];
   }
 }
+
+export function postToFacebook() {
+  FB.ui({
+    method: 'feed',
+    link: "http://52.25.45.188/",
+    picture: "http://52.25.45.188/images/chart_thumb.png",
+    description: "Find out how rich or poor you really are.",
+    "redirect-uri": "http://localhost:3000/"
+  });
+}

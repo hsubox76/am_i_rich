@@ -104,6 +104,14 @@ module.exports = function(grunt) {
           src: ['bower_components/bootstrap/fonts/*.*', 'node_modules/font-awesome/fonts/*.*'],
           dest: 'public/fonts/'
         }]
+      },
+      images: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['client/images/*.*'],
+          dest: 'public/images/'
+        }]
       }
     },
 
@@ -203,6 +211,10 @@ module.exports = function(grunt) {
       sass: {
         files: ['client/styles/*.scss'],
         tasks: ['sass']
+      },
+      html: {
+        files: ['client/iindex.html'],
+        tasks: ['copy:html']
       },
       css: {
         files: [
