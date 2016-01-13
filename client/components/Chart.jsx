@@ -10,7 +10,7 @@ import d3 from 'd3';
 import D3Chart from '../helpers/D3Chart';
 import { getCurrentDataSet } from '../helpers/helpers.js';
 
-import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
+import { MARKERS, HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
 import * as AmIRichActions from '../actions/actions';
 
 const MARGINS = {
@@ -35,7 +35,8 @@ const propTypes = {
   guessedPercentile: TYPES.number,
   setChartWidth: TYPES.func,
   householdType: TYPES.string,
-  locationLevel: TYPES.string
+  locationLevel: TYPES.string,
+  markerShowState: TYPES.object
 };
 
 function mapStateToProps(state) {
@@ -49,7 +50,8 @@ function mapStateToProps(state) {
     guessedIncome: state.guessedIncome,
     guessedPercentile: state.guessedPercentile,
     householdType: state.householdType,
-    locationLevel: state.locationLevel
+    locationLevel: state.locationLevel,
+    markerShowState: state.markerShowState
   }
 }
 
@@ -144,18 +146,22 @@ class Chart extends React.Component {
     // marker stuff
     const markers = [
       {
-        title: 'your income',
+        title: MARKERS[0].title,
         xValue: this.props.userIncome,
-        className: 'user-income-label',
-        percentile: this.props.userPercentile,
-        show: true
+        className: MARKERS[0].className,
+        percentile: this.props.userPercentile
       },
       {
-        title: 'your guess',
+        title: MARKERS[1].title,
         xValue: this.props.guessedIncome,
-        className: 'user-guess-label',
-        percentile: this.props.guessedPercentile,
-        show: true
+        className: MARKERS[1].className,
+        percentile: this.props.guessedPercentile
+      },
+      {
+        title: MARKERS[2].title,
+        xValue: 1,
+        className: MARKERS[2].className,
+        percentile: 1
       }
     ];
 
@@ -189,8 +195,7 @@ class Chart extends React.Component {
     r2.bottom < r1.top);
   }
 
-  drawMarker(marker, index) {
-    const self = this;
+  drawMarker(marker) {
     const gridContainer = d3.select('#grid-container');
     const chartData = this.props.chartData;
     let percentile = marker.percentile;
@@ -336,9 +341,17 @@ class Chart extends React.Component {
         .attr("transform", "rotate(-90,0,0)")
         .text("# households");
 
-    const markerElements = _.map(chartData.markers, function(marker, index) {
-      return self.drawMarker(marker, index);
-    });
+    const markerElements = _(chartData.markers)
+        .map(function(marker) {
+          if (!self.props.markerShowState[marker.title]) {
+            return null;
+          }
+          return self.drawMarker(marker);
+        })
+        .filter(function(marker) {
+          return marker;
+        })
+        .value();
 
     _.forEach(markerElements, function(markerElement, markerIndex) {
       _.forEach(markerElements, function(otherElement, otherIndex) {
@@ -432,6 +445,7 @@ class Chart extends React.Component {
     if (
         prevProps.chartWidth !== this.props.chartWidth
         || prevProps.guessedIncome !== this.props.guessedIncome
+        || !_.isEqual(prevProps.markerShowState, this.props.markerShowState)
         || !_.isEqual(prevProps.incomeData, this.props.incomeData)
     ) {
       console.log('--DID UPDATE--');

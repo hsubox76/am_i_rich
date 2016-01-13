@@ -14,3 +14,21 @@ export const LOADING_STATES = {
   LOADING: 'loading',
   LOADED: 'loaded'
 };
+
+export const MARKERS = [
+  {
+    title: 'your income',
+    className: 'user-income-label',
+    show: true
+  },
+  {
+    title: 'your guess',
+      className: 'user-guess-label',
+      show: true
+  },
+  {
+    title: 'median',
+    className: 'median-label',
+    show: true
+  }
+];

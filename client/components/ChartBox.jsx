@@ -14,12 +14,11 @@ import { getCurrentDataSet } from '../helpers/helpers.js';
 import { HOUSEHOLD_TYPES, LOCATION_LEVELS } from '../data/types.js';
 import * as AmIRichActions from '../actions/actions';
 
-const MARGINS = {
-  top: 20,
-  right: 20,
-  bottom: 50,
-  left: 60
-};
+const MARKERS = [
+  {name: 'your guess'},
+  {name: 'your income'},
+  {name: 'median'},
+];
 
 const PAD = 20;
 
@@ -31,13 +30,14 @@ const propTypes = {
   stateIncomeData: TYPES.object,
   countryIncomeData: TYPES.object,
   chartWidth: TYPES.number,
-  chart: TYPES.object,
+  chartData: TYPES.object,
   userIncome: TYPES.number,
   locationLevel: TYPES.string,
   householdType: TYPES.string,
   userPercentile: TYPES.number,
   guessedIncome: TYPES.number,
   guessedPercentile: TYPES.number,
+  markerShowState: TYPES.object,
   setChartWidth: TYPES.func
 };
 
@@ -50,7 +50,8 @@ function mapStateToProps(state) {
     locationLevel: state.locationLevel,
     householdType: state.householdType,
     chartWidth: state.chartWidth,
-    chart: state.chart,
+    chartData: state.chartData,
+    markerShowState: state.markerShowState,
     userIncome: state.userIncome,
     userPercentile: state.userPercentile,
     guessedIncome: state.guessedIncome,
@@ -98,7 +99,32 @@ class ChartBox extends React.Component {
   }
 
   render() {
-    const chart = this.props.chartWidth && this.props.loadingCountyIncomeData === 'loaded' && this.props.guessedPercentile ? (
+    const props = this.props;
+    const showChart = this.props.chartWidth
+        && this.props.loadingCountyIncomeData === 'loaded'
+        && this.props.guessedPercentile;
+    const toggles = _.map(MARKERS, function(marker, index) {
+      let selectedClass;
+      if (props.chartData) {
+        selectedClass = _.some(props.chartData.markers, function(shownMarker) {
+          return shownMarker.title === marker.name && props.markerShowState[marker.name];
+        }) ? "btn-selected" : "btn-default";
+      }
+      return (
+          <button
+              key={index}
+              onClick={props.actions.toggleMarker.bind(null, marker.name)}
+              className={"btn " + selectedClass}>{marker.name}</button>);
+    });
+    const togglesBar = showChart ? (
+        <div className="marker-toggles-bar">
+          Show markers:
+          <div className="btn-group">
+          {toggles}
+          </div>
+        </div>
+    ) : null;
+    const chart = showChart ? (
         <Chart
             chartElementID="d3-element"
         />
@@ -107,6 +133,7 @@ class ChartBox extends React.Component {
             <div
                 ref="container"
                 className="d3-container">
+              {togglesBar}
               {chart}
             </div>
     );

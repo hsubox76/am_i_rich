@@ -165,6 +165,12 @@ export default function mainReducer(state, action) {
       return Object.assign({}, state, {
         currentIncomeData: getCurrentDataSet(state, state.locationLevel, state.householdType)
       });
+    case 'TOGGLE_MARKER':
+        const newMarkerShowState = _.clone(state.markerShowState);
+        newMarkerShowState[action.markerName] = !state.markerShowState[action.markerName];
+      return Object.assign({}, state, {
+        markerShowState: newMarkerShowState
+      });
     default:
       return state;
   }

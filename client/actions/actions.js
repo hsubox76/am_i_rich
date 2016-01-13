@@ -103,3 +103,6 @@ export function resetApp() {
 export function setCurrentDataSet(locationLevel, householdType) {
   return { type: 'SET_DATA_SET' };
 }
+export function toggleMarker(markerName) {
+  return { type: 'TOGGLE_MARKER', markerName };
+}
