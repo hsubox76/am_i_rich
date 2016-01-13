@@ -27,13 +27,13 @@ class ChartBottomControls extends React.Component {
     const actions = this.props.actions;
     return (
         <div className="box row">
-          <div className="col-xs-12">
+          <div className="col-xs-12 box-chart-bottom">
             <button
                 className="btn btn-start-over pull-right"
                 onClick={actions.resetApp}>Start Over
             </button>
             <div className="share-buttons">
-              Share:
+              Share on
               <span
                   onClick={postToFacebook}
                   className="fa fa-facebook-official"></span>

@@ -72,8 +72,6 @@ h1 {
   stroke: $color-primary-2;
 }
 .graph-area {
-  //fill: $color-primary-1;
-  //opacity: 0.8;
   &.graph-higher-clip {
     fill: $color-primary-1;
     opacity: 0.8;
@@ -330,5 +328,23 @@ h1 {
     color: #fff;
     background-color: $color-primary-0;
     border-color: $color-primary-1;
+  }
+}
+
+.box-chart-bottom {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.share-buttons {
+  color: #777;
+  display: inline-block;
+  padding: 2px 12px 2px 12px;
+  width: auto;
+  span.fa-facebook-official {
+    cursor: pointer;
+    color: #3b5998;
+    margin-top: 2px;
+    margin-left: 10px;
+    font-size: 24px;
   }
 }

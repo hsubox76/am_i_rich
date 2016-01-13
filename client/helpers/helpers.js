@@ -17,8 +17,8 @@ export function postToFacebook() {
   FB.ui({
     method: 'feed',
     link: "http://52.25.45.188/",
-    picture: "http://52.25.45.188/images/chart_thumb.png",
-    description: "Find out how rich or poor you really are.",
+    picture: "http://52.25.45.188/images/chart-thumb.png",
+    description: "Find out how rich or poor you really are.  (Example results above.)",
     "redirect-uri": "http://localhost:3000/"
   });
 }
