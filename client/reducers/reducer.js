@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { LOCATION_LEVELS, LOADING_STATES } from '../data/types.js';
+import { HOUSEHOLD_TYPES, LOCATION_LEVELS, LOADING_STATES } from '../data/types.js';
 //import { getCurrentDataSet } from '../helpers/helpers.js';
 import {initialState} from '../data/initial-state.js';
 
@@ -13,6 +13,20 @@ export function getCurrentDataSet(state, locationLevel, householdType) {
       return state.countryIncomeData[householdType];
     default:
       return state.countryIncomeData[householdType];
+  }
+}
+
+export function getCurrentMedian(state, locationLevel, householdType) {
+  const key = 'median-' + householdType;
+  switch(locationLevel) {
+    case LOCATION_LEVELS.COUNTY:
+      return state.countyIncomeData[key];
+    case LOCATION_LEVELS.STATE:
+      return state.stateIncomeData[key];
+    case LOCATION_LEVELS.US:
+      return state.countryIncomeData[key];
+    default:
+      return state.countryIncomeData[key];
   }
 }
 
@@ -101,13 +115,17 @@ export default function mainReducer(state, action) {
             )
       });
     case 'RECEIVE_COUNTY_DATA':
+      const stateWithNewData =
+          Object.assign({}, state, {
+            countyIncomeData: action.incomeData
+          });
       return Object.assign({}, state, {
         countyIncomeData: action.incomeData,
         loadingCountyIncomeData: LOADING_STATES.LOADED,
-        currentIncomeData: getCurrentDataSet(
-            Object.assign({}, state, {
-              countyIncomeData: action.incomeData
-            }),
+        currentMedianValue: getCurrentMedian(stateWithNewData,
+            state.locationLevel,
+            state.householdType),
+        currentIncomeData: getCurrentDataSet(stateWithNewData,
             state.locationLevel,
             state.householdType)
       });
@@ -152,6 +170,7 @@ export default function mainReducer(state, action) {
     case 'SET_LOCATION_LEVEL':
       return Object.assign({}, state, {
         locationLevel: action.level,
+        currentMedianValue: getCurrentMedian(state, action.level, state.householdType),
         currentIncomeData: getCurrentDataSet(state, action.level, state.householdType)
       });
     case 'SET_SELECTING_HOUSEHOLD_TYPE':
@@ -159,6 +178,7 @@ export default function mainReducer(state, action) {
     case 'SET_HOUSEHOLD_TYPE':
       return Object.assign({}, state, {
         householdType: action.householdType,
+        currentMedianValue: getCurrentMedian(state, state.locationLevel, action.householdType),
         currentIncomeData: getCurrentDataSet(state, state.locationLevel, action.householdType)
       });
     case 'SET_DATA_SET':

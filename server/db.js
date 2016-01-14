@@ -9,7 +9,10 @@ const countrySchema = new Schema({
   name: String,
   incomeDataAll: Array,
   incomeDataFamilies: Array,
-  incomeDataNonFamilies: Array
+  incomeDataNonFamilies: Array,
+  medianAll: Number,
+  medianFamilies: Number,
+  medianNonFamilies: Number
 });
 
 const countySchema = new Schema({
@@ -18,7 +21,10 @@ const countySchema = new Schema({
   stateCode: String,
   incomeDataAll: Array,
   incomeDataFamilies: Array,
-  incomeDataNonFamilies: Array
+  incomeDataNonFamilies: Array,
+  medianAll: Number,
+  medianFamilies: Number,
+  medianNonFamilies: Number
 });
 
 const stateSchema = new Schema({
@@ -27,7 +33,10 @@ const stateSchema = new Schema({
   counties: Array,
   incomeDataAll: Array,
   incomeDataFamilies: Array,
-  incomeDataNonFamilies: Array
+  incomeDataNonFamilies: Array,
+  medianAll: Number,
+  medianFamilies: Number,
+  medianNonFamilies: Number
 });
 
 const County = mongoose.model('County', countySchema);

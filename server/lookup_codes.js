@@ -34,3 +34,8 @@ exports.NONFAMILIES = [
   {code1: 'DP03_0060E', code2: 'DP03_0084E', min: 150000, max: 199999},
   {code1: 'DP03_0061E', code2: 'DP03_0085E', min: 200000, max: 225000}
 ];
+exports.MEDIAN_CODES = {
+  all: 'DP03_0062E',
+  family: 'DP03_0086E',
+  nonfamily: 'DP03_0090E'
+};

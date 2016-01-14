@@ -82,19 +82,13 @@ h1 {
   }
 }
 .graph-label {
-  .label-box {
-    stroke-width: 1vw;
-  }
-  .label-line {
-    stroke-width: 1vw;
-  }
   &.user-income-label {
     .label-box {
-      stroke: $color-primary-0;
-      fill: $color-primary-0;
+      stroke: $color-primary-3;
+      fill: $color-primary-3;
     }
     .label-line {
-      stroke: $color-primary-0;
+      stroke: $color-primary-3;
     }
   }
   &.user-guess-label {
@@ -104,6 +98,15 @@ h1 {
     }
     .label-line {
       stroke: $color-secondary-1-0;
+    }
+  }
+  &.median-label {
+    .label-box {
+      stroke: $color-secondary-2-3;
+      fill: $color-secondary-2-3;
+    }
+    .label-line {
+      stroke: $color-secondary-2-3;
     }
   }
   .label-text {

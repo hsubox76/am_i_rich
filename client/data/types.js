@@ -29,6 +29,6 @@ export const MARKERS = [
   {
     title: 'median',
     className: 'median-label',
-    show: true
+    show: false
   }
 ];

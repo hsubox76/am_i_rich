@@ -11,9 +11,10 @@ export const initialState = {
   locationLevel: LOCATION_LEVELS.COUNTY,
   householdType: HOUSEHOLD_TYPES.NONFAMILY,
   currentIncomeData: null,
+  currentMedianValue: null,
   chartData: null,
   markerShowState: _.reduce(MARKERS, function(obj, marker) {
-    obj[marker.title] = true;
+    obj[marker.title] = marker.show;
     return obj;
   }, {})
 };

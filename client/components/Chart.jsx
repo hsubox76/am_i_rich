@@ -36,12 +36,14 @@ const propTypes = {
   setChartWidth: TYPES.func,
   householdType: TYPES.string,
   locationLevel: TYPES.string,
-  markerShowState: TYPES.object
+  markerShowState: TYPES.object,
+  currentMedianValue: TYPES.number
 };
 
 function mapStateToProps(state) {
   return {
     incomeData: state.currentIncomeData,
+    currentMedianValue: state.currentMedianValue,
     chartWidth: state.chartWidth,
     chartData: state.chartData,
     chartElementID: state.chartElementID,
@@ -159,9 +161,9 @@ class Chart extends React.Component {
       },
       {
         title: MARKERS[2].title,
-        xValue: 1,
+        xValue: this.props.currentMedianValue,
         className: MARKERS[2].className,
-        percentile: 1
+        percentile: 50
       }
     ];
 
