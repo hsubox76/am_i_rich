@@ -12,6 +12,7 @@ export const initialState = {
   householdType: HOUSEHOLD_TYPES.NONFAMILY,
   currentIncomeData: null,
   currentMedianValue: null,
+  currentPage: 'app',
   chartData: null,
   markerShowState: _.reduce(MARKERS, function(obj, marker) {
     obj[marker.title] = marker.show;

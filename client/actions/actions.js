@@ -106,3 +106,6 @@ export function setCurrentDataSet(locationLevel, householdType) {
 export function toggleMarker(markerName) {
   return { type: 'TOGGLE_MARKER', markerName };
 }
+export function setCurrentPage(pageName) {
+  return { type: 'SET_CURRENT_PAGE', pageName };
+}

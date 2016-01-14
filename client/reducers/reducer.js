@@ -87,6 +87,8 @@ export default function mainReducer(state, action) {
   switch (action.type) {
     case 'RESET':
       return Object.assign({}, initialState, {countryIncomeData: state.countryIncomeData});
+    case 'SET_CURRENT_PAGE':
+      return Object.assign({}, state, {currentPage: action.pageName});
     case 'SET_CHART_WIDTH':
       return Object.assign({}, state, {chartWidth: action.width});
     case 'RECEIVE_COUNTRY_DATA':

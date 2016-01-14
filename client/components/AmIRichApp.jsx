@@ -15,6 +15,7 @@ import PercentileBox from './PercentileBox';
 import ChartBox from './ChartBox';
 import ChartInfoBox from './ChartInfoBox';
 import ChartBottomControls from './ChartBottomControls';
+import About from './About';
 
 import { LOADING_STATES } from '../data/types.js';
 
@@ -29,7 +30,8 @@ function mapStateToProps(state) {
     householdType: state.householdType,
     guessedPercentile: state.guessedPercentile,
     guessedIncome: state.guessedIncome,
-    locationLevel: state.locationLevel
+    locationLevel: state.locationLevel,
+    currentPage: state.currentPage
   }
 }
 
@@ -97,18 +99,23 @@ class AmIRichApp extends React.Component {
         ? null
         : (
         <ChartBottomControls />);
+    const mainApp = this.props.currentPage === 'app' ? (
+        <div className="box-container col-md-10 col-md-offset-1 col-sm-12">
+          {chartInfoBox}
+          {locationBox}
+          {incomeBox}
+          {percentileBox}
+          {chartBox}
+          {chartBottomControls}
+        </div>
+    ) : null;
+    const aboutPage = this.props.currentPage === 'about' ? <About /> : null;
     return (
       <div className="main-page container">
         <div className="row">
-            <div className="box-container col-md-10 col-md-offset-1 col-sm-12">
-              {chartInfoBox}
-              {locationBox}
-              {incomeBox}
-              {percentileBox}
-              {chartBox}
-              {chartBottomControls}
-            </div>
-          </div>
+          {mainApp}
+          {aboutPage}
+        </div>
       </div>
     );
   }

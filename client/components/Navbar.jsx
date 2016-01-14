@@ -12,6 +12,7 @@ import * as AmIRichActions from '../actions/actions';
 
 function mapStateToProps(state) {
   return {
+    currentPage: state.currentPage
   }
 }
 
@@ -22,12 +23,14 @@ function mapDispatchToProps(dispatch) {
 }
 
 const propTypes = {
+  currentPage: React.PropTypes.string
 };
 
 // Main AmIRichApp component
 class Navbar extends React.Component {
 
   render() {
+    const props = this.props;
     return (
         <div className="navbar navbar-inverse navbar-static-top">
           <div className="container-fluid">
@@ -38,11 +41,23 @@ class Navbar extends React.Component {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-brand" href="#">Am I Middle Class?</a>
+              <a
+                  className="navbar-brand"
+                  onClick={props.actions.setCurrentPage.bind(null, "app")}
+                  href="#">Am I Middle Class?</a>
             </div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav navbar-right">
-                <li><a href="#">About</a></li>
+                <li>
+                  <a
+                      onClick={props.actions.setCurrentPage.bind(null, "app")}
+                      href="#">Calculator</a>
+                </li>
+                <li>
+                  <a
+                    onClick={props.actions.setCurrentPage.bind(null, "about")}
+                    href="#">About</a>
+                </li>
                 <li>
                   <a
                       onClick={postToFacebook}
