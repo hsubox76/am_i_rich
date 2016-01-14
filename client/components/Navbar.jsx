@@ -43,25 +43,21 @@ class Navbar extends React.Component {
               </button>
               <a
                   className="navbar-brand"
-                  onClick={props.actions.setCurrentPage.bind(null, "app")}
-                  href="#">Am I Middle Class?</a>
+                  onClick={props.actions.setCurrentPage.bind(null, "app")}>Am I Middle Class?</a>
             </div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav navbar-right">
                 <li>
                   <a
-                      onClick={props.actions.setCurrentPage.bind(null, "app")}
-                      href="#">Calculator</a>
+                      onClick={props.actions.setCurrentPage.bind(null, "app")}>Calculator</a>
                 </li>
                 <li>
                   <a
-                    onClick={props.actions.setCurrentPage.bind(null, "about")}
-                    href="#">About</a>
+                    onClick={props.actions.setCurrentPage.bind(null, "about")}>About</a>
                 </li>
                 <li>
                   <a
                       onClick={postToFacebook}
-                      href="#"
                       className="fa fa-facebook-official"></a>
                 </li>
               </ul>
