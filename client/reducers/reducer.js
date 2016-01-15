@@ -104,7 +104,10 @@ export default function mainReducer(state, action) {
     case 'RECEIVE_COUNTY_LIST':
       return Object.assign({}, state, {
         loadingCountyList: LOADING_STATES.LOADED,
-        counties: [{name: "select a county", countyCode: "0"}]
+        counties: [
+          {name: "select a county", countyCode: "0"},
+          {name: "My county isn't listed", countyCode: "-1"}
+        ]
             .concat(
                 action.countyData.map(function(county) {
                   return {

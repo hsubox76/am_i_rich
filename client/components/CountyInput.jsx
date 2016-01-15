@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { LOCATION_LEVELS, LOADING_STATES } from '../data/types.js';
+
 import * as AmIRichActions from '../actions/actions';
 
 const propTypes = {
@@ -33,14 +35,21 @@ class CountyInput extends React.Component {
   onCountySelect (event) {
     const countyInfo = event.target.value.split(':');
     this.props.actions.setCurrentCounty(countyInfo[0], countyInfo[1]);
-    this.props.actions.requestCountyData(countyInfo[0], this.props.currentState.code);
+    if (countyInfo[0] !== '-1') {
+      // county exists
+      this.props.actions.requestCountyData(countyInfo[0], this.props.currentState.code);
+    } else {
+      // county not listed
+      this.props.actions.setLocationLevel(LOCATION_LEVELS.STATE);
+      this.props.actions.setCurrentDataSet();
+    }
   }
 
   render () {
     const listItems = this.props.counties.map(function(county) {
       return (
           <option
-              key={'county-'+county.countyCode}
+              key={'county-' + county.countyCode}
               value={county.countyCode + ':' + county.name}>{county.name}
           </option>
       )

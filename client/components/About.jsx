@@ -14,6 +14,14 @@ class About extends React.Component {
             </p>
             <hr />
             <h3>FAQ</h3>
+            <p className="faq-q">
+              Why isn't my county included?
+            </p>
+            <p className="faq-a">
+              The ACS is a survey so apparently it only includes a sampling of counties, 26%
+              to be exact.  If you can't find your county, you can pick a nearby one, or pick
+              "My county isn't listed" to just get the info for your state.
+            </p>
             <p className="faq-q">Why doesn't the median marker line up with your calculated
               "50th percentile"?
             </p>

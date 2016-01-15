@@ -12,11 +12,13 @@ const propTypes = {
   setLocationLevel: React.PropTypes.func,
   setSelectingLocationLevel: React.PropTypes.func,
   householdType: React.PropTypes.string,
-  selectingHouseholdType: React.PropTypes.bool
+  selectingHouseholdType: React.PropTypes.bool,
+  countyIncomeData: React.PropTypes.array
 };
 
 function mapStateToProps(state) {
   return {
+    countyIncomeData: state.countyIncomeData,
     currentState: state.currentState,
     currentCounty: state.currentCounty,
     userIncome: state.userIncome,
@@ -55,6 +57,9 @@ class ChartInfoBox extends React.Component {
       {mode: LOCATION_LEVELS.COUNTY, text: props.currentCounty.name + ', ' + props.currentState.name},
       {mode: LOCATION_LEVELS.STATE, text: props.currentState.name},
       {mode: LOCATION_LEVELS.US, text: 'United States'}];
+    if (_.isUndefined(props.countyIncomeData)) {
+      locationLevels.shift();
+    }
     const locationItems = locationLevels.map(function(level, index) {
       if (level.mode !== props.locationLevel) {
         return (
@@ -94,8 +99,8 @@ class ChartInfoBox extends React.Component {
     return (
             <div className="box box-user-info row">
               <div className="user-info-container col-xs-12">
-                <div className="user-info-text">
-                  {'$' + Math.round(props.userIncome).toLocaleString()} among
+                <div className="user-info-text">You're in the top {(100 - props.userPercentile)}%
+                  among
                 </div>
                 <div className="user-info" onClick={actions.setSelectingHouseholdType}>
                   <span className="user-info-select-display">

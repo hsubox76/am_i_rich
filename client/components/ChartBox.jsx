@@ -26,6 +26,7 @@ const TYPES = React.PropTypes;
 
 const propTypes = {
   loadingCountyIncomeData: TYPES.string,
+  loadingStateIncomeData: TYPES.string,
   countyIncomeData: TYPES.object,
   stateIncomeData: TYPES.object,
   countryIncomeData: TYPES.object,
@@ -38,12 +39,14 @@ const propTypes = {
   guessedIncome: TYPES.number,
   guessedPercentile: TYPES.number,
   markerShowState: TYPES.object,
-  setChartWidth: TYPES.func
+  setChartWidth: TYPES.func,
+  currentCounty: TYPES.object
 };
 
 function mapStateToProps(state) {
   return {
     loadingCountyIncomeData: state.loadingCountyIncomeData,
+    loadingStateIncomeData: state.loadingStateIncomeData,
     countyIncomeData: state.countyIncomeData,
     countryIncomeData: state.countryIncomeData,
     stateIncomeData: state.stateIncomeData,
@@ -55,7 +58,8 @@ function mapStateToProps(state) {
     userIncome: state.userIncome,
     userPercentile: state.userPercentile,
     guessedIncome: state.guessedIncome,
-    guessedPercentile: state.guessedPercentile
+    guessedPercentile: state.guessedPercentile,
+    currentCounty: state.currentCounty
   }
 }
 
@@ -101,7 +105,11 @@ class ChartBox extends React.Component {
   render() {
     const props = this.props;
     const showChart = this.props.chartWidth
-        && this.props.loadingCountyIncomeData === 'loaded'
+        && (
+          this.props.loadingCountyIncomeData === 'loaded'
+          || (this.props.loadingStateIncomeData === 'loaded'
+              && this.props.currentCounty.code === '-1')
+        )
         && this.props.guessedPercentile;
     const toggles = _.map(MARKERS, function(marker, index) {
       let selectedClass;

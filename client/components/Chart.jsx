@@ -255,7 +255,7 @@ class Chart extends React.Component {
         .attr('text-anchor', 'middle')
         .attr('font-size', LABEL_FONT_SIZE)
         .attr('class', 'label-text')
-        .text(percentile + '%');
+        .text('top ' + (100 - percentile) + '%');
     const textBBox = labelTitle[0][0].getBBox();
     const labelHeight = textBBox.height * 2 + LABEL_PADDING * 4;
     const labelWidth = textBBox.width + LABEL_PADDING * 2;
