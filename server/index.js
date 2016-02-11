@@ -19,6 +19,43 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+function sendIncomeData(res, dbData) {
+  const incomeData = {
+    all: dbData.incomeDataAll,
+    family: dbData.incomeDataFamilies,
+    nonfamily: dbData.incomeDataNonFamilies,
+    "median-all": dbData.medianAll,
+    "median-family": dbData.medianFamilies,
+    "median-nonfamily": dbData.medianNonFamilies
+  };
+  res.send(JSON.stringify(incomeData));
+}
+
+// Split first point into 2 points to smooth out beginning and have it start at 0
+//const zeroBracket = [{min: 0, max: 0, households: allBrackets[0].households * 0.25}];
+//allBrackets[0].households *= 0.75;
+function addTails(brackets) {
+  const zeroBracket = [{min: 0, max: 0, households: brackets[0].households * 0.25}];
+  brackets[0].households *= 0.75;
+  const lastBracket = brackets[brackets.length-1];
+  const highBracket = [{min: 225000, max: 225000, households: lastBracket.households * 0.25}];
+  const bracketsWithTails = zeroBracket
+      .concat(brackets.slice(0,-1))
+      .concat([{min: 205000, max: 205000, households: lastBracket.households * 0.75}])
+      .concat(highBracket);
+  return bracketsWithTails;
+}
+
+function handleIncomeDataRequest(error, results, state, county, res) {
+  if (error) {
+    console.error(error);
+  } else if (results.length === 0 || results[0].incomeDataAll.length === 0) {
+    getIncomeDataFromAPI(state, county, res);
+  } else {
+    sendIncomeData(res, results[0]);
+  }
+}
+
 function getCountiesFromAPI(stateCode, stateName, res) {
   request({
     url: 'http://api.census.gov/data/2013/acs1/profile',
@@ -52,18 +89,6 @@ function getCountiesFromAPI(stateCode, stateName, res) {
   });
 }
 
-function getCountryIncomeDataFromAPI(res) {
-  getIncomeDataFromAPI(null, null, res);
-}
-
-function getStateIncomeDataFromAPI(stateCode, res) {
-  getIncomeDataFromAPI(stateCode, null, res);
-}
-
-function getCountyIncomeDataFromAPI(stateCode, countyCode, res) {
-  getIncomeDataFromAPI(stateCode, countyCode, res);
-}
-
 function getIncomeDataFromAPI(stateCode, countyCode, res) {
   let queryString;
   if (countyCode) {
@@ -92,8 +117,6 @@ function getIncomeDataFromAPI(stateCode, countyCode, res) {
     obj[item.code] = 0;
     return obj;
   }, {});
-  //const allBrackets = _.indexBy(codes.ALL_HOUSEHOLDS.concat(codes.FAMILIES), 'code');
-  //const totalBrackets = allBrackets.length;
   const totalBrackets = allBrackets.length;
   let bracketsSoFar = 0;
   let mediansSoFar = 0;
@@ -102,16 +125,16 @@ function getIncomeDataFromAPI(stateCode, countyCode, res) {
       url: 'http://api.census.gov/data/2013/acs1/profile',
       qs: _.extend({}, queryString, {'get': code}),
       json: true
-    }, function (error, response) {
+    }, function (error, censusResponse) {
       mediansSoFar++;
       if (error) {
         console.error(error);
-      } else if (response.statusCode !== 200) {
-        console.error(response.statusCode);
+      } else if (censusResponse.statusCode !== 200) {
+        console.error(censusResponse.statusCode);
       } else {
-        mediansHashMap[key] = response.body[1][0];
+        mediansHashMap[key] = censusResponse.body[1][0];
         if (bracketsSoFar === totalBrackets && mediansSoFar === 3) {
-          onRequestsDone(res, response, codeHashMap, mediansHashMap, countyCode, stateCode);
+          onRequestsDone(res, censusResponse, codeHashMap, mediansHashMap, countyCode, stateCode);
         }
       }
     });
@@ -156,9 +179,6 @@ function onRequestsDone(res, data, codeHashMap, mediansHashMap, countyCode, stat
     return _.extend({}, item, {households: codeHashMap[item.code1]
     - codeHashMap[item.code2]});
   });
-  // Split first point into 2 points to smooth out beginning and have it start at 0
-  //const zeroBracket = [{min: 0, max: 0, households: allBrackets[0].households * 0.25}];
-  //allBrackets[0].households *= 0.75;
 
   const documentData = {
     incomeDataAll: addTails(allHouseholds),
@@ -173,15 +193,7 @@ function onRequestsDone(res, data, codeHashMap, mediansHashMap, countyCode, stat
     if (err || !newEntry) {
       console.error("Couldn't find entry in DB. Error: " + err);
     } else {
-      const incomeData = {
-        all: newEntry.incomeDataAll,
-        family: newEntry.incomeDataFamilies,
-        nonfamily: newEntry.incomeDataNonFamilies,
-        "median-all": newEntry.medianAll,
-        "median-family": newEntry.medianFamilies,
-        "median-nonfamily": newEntry.medianNonFamilies
-      };
-      res.send(JSON.stringify(incomeData));
+      sendIncomeData(res, newEntry);
     }
   }
 
@@ -192,7 +204,6 @@ function onRequestsDone(res, data, codeHashMap, mediansHashMap, countyCode, stat
       name: data.body[1][1].split(',')[0]
     }), onInsertDone);
   } else if (stateCode) {
-    console.log(documentData);
     State.findOneAndUpdate({stateCode: stateCode}, {
       $set: documentData
     }, {
@@ -205,18 +216,6 @@ function onRequestsDone(res, data, codeHashMap, mediansHashMap, countyCode, stat
       new: true
     }, onInsertDone);
   }
-}
-
-function addTails(brackets) {
-  const zeroBracket = [{min: 0, max: 0, households: brackets[0].households * 0.25}];
-  brackets[0].households *= 0.75;
-  const lastBracket = brackets[brackets.length-1];
-  const highBracket = [{min: 225000, max: 225000, households: lastBracket.households * 0.25}];
-  const bracketsWithTails = zeroBracket
-      .concat(brackets.slice(0,-1))
-      .concat([{min: 205000, max: 205000, households: lastBracket.households * 0.75}])
-      .concat(highBracket);
-  return bracketsWithTails;
 }
 
 app.get('/counties', function (req, res) {
@@ -232,57 +231,21 @@ app.get('/counties', function (req, res) {
       });
 });
 
-function sendIncomeData(res, dbData) {
-  const incomeData = {
-    all: dbData.incomeDataAll,
-    family: dbData.incomeDataFamilies,
-    nonfamily: dbData.incomeDataNonFamilies,
-    "median-all": dbData.medianAll,
-    "median-family": dbData.medianFamilies,
-    "median-nonfamily": dbData.medianNonFamilies
-  };
-  res.send(JSON.stringify(incomeData));
-}
-
 app.get('/incomes', function (req, res) {
-  const state = req.query.state;
-  const county = req.query.county;
+  const state = req.query.state || null;
+  const county = req.query.county || null;
   if (county) {
     County.find({stateCode: state, countyCode: county})
-        .exec(function(error, results) {
-          if (error) {
-            console.error(error);
-          } else if (results.length === 0) { // not found in DB
-            getCountyIncomeDataFromAPI(state, county, res);
-          } else { // found in DB
-            sendIncomeData(res, results[0]);
-          }
-        });
+        .exec((error, results) => { handleIncomeDataRequest(error, results, state, county, res); })
   } else if (state) {
     State.find({stateCode: req.query.state})
-      .exec(function(error, results) {
-        if (error) {
-          console.error(error);
-        } else if (results.length === 0 || results[0].incomeDataAll.length === 0) {
-          getStateIncomeDataFromAPI(state, res);
-        } else {
-          sendIncomeData(res, results[0]);
-        }
-      })
+        .exec((error, results) => { handleIncomeDataRequest(error, results, state, county, res); })
   } else {
     Country.find({name: 'United States'})
-        .exec(function(error, results) {
-          if (error) {
-            console.error(error);
-          } else if (results.length === 0 || results[0].incomeDataAll.length === 0) {
-            getCountryIncomeDataFromAPI(res);
-          } else {
-            sendIncomeData(res, results[0]);
-          }
-        })
+        .exec((error, results) => { handleIncomeDataRequest(error, results, state, county, res); })
   }
 });
 
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 app.listen(port);
 console.log('listening on port ' + port);

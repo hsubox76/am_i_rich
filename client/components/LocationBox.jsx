@@ -1,5 +1,8 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import * as AmIRichActions from '../actions/actions';
 
 import StateInput from './StateInput';
 import CountyInput from './CountyInput';
@@ -10,15 +13,35 @@ const propTypes = {
 
 function mapStateToProps(state) {
   return {
-    currentState: state.currentState
+    currentState: state.currentState,
+    faqs: state.faqs
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AmIRichActions, dispatch)
   }
 }
 
 class LocationBox extends React.Component {
   render () {
+    const props = this.props;
+    const actions = this.props.actions;
     const countyInput = this.props.currentState.code === "0"
         ? null
         : (<CountyInput />);
+    const countyQuestion = this.props.currentState.code === "0"
+        ? null
+        : (
+            <div className="box-body faq-link col-xs-12">
+              <span onClick={actions.toggleTooltip.bind(null, 0)}>Why Isn't My County Listed?</span>
+              {props.faqs[0].show
+                ? <div onClick={actions.toggleTooltip.bind(null, 0)}
+                  className="faq-tooltip">{props.faqs[0].answer}</div>
+                  : null}
+            </div>
+          );    
     return (
             <div className="box box-form row">
               <div className="box-title box-title-location col-xs-12">
@@ -30,6 +53,7 @@ class LocationBox extends React.Component {
                   {countyInput}
                 </form>
               </div>
+              {countyQuestion}
             </div>
     );
   }
@@ -37,4 +61,4 @@ class LocationBox extends React.Component {
 
 LocationBox.propTypes = propTypes;
 
-export default connect(mapStateToProps)(LocationBox);
+export default connect(mapStateToProps, mapDispatchToProps)(LocationBox);

@@ -97,6 +97,9 @@ export function setSelectingHouseholdType() {
 export function setHouseholdType(householdType) {
   return { type: 'SET_HOUSEHOLD_TYPE', householdType }
 }
+export function setIncomeTimePeriod(incomeTimePeriod) {
+  return { type: 'SET_INCOME_TIME_PERIOD', incomeTimePeriod }
+}
 export function resetApp() {
   return { type: 'RESET' }
 }
@@ -108,4 +111,7 @@ export function toggleMarker(markerName) {
 }
 export function setCurrentPage(pageName) {
   return { type: 'SET_CURRENT_PAGE', pageName };
+}
+export function toggleTooltip(tooltipIndex) {
+  return { type: 'TOGGLE_TOOLTIP', tooltipIndex }
 }

@@ -153,13 +153,13 @@ export default function mainReducer(state, action) {
       return Object.assign({}, state, {
         chartData: null
       });
+    case 'SET_INCOME_TIME_PERIOD':
+      return Object.assign({}, state, {incomeTimePeriod: action.incomeTimePeriod});
     case 'SET_INCOME':
       const userIncome = action.userIncome || state.userIncome;
-      //const userPercentile = findPercentileAtIncome(state, userIncome);
       return Object.assign({}, state, {userIncome: parseInt(userIncome)});
     case 'SET_PERCENTILE':
       const guessedPercentile = action.guessedPercentile || state.guessedPercentile;
-      //const guessedIncome = getPercentileMap(state)[guessedPercentile];
       return Object.assign({}, state, {
         guessedPercentile: parseInt(guessedPercentile)
       });
@@ -195,6 +195,12 @@ export default function mainReducer(state, action) {
         newMarkerShowState[action.markerName] = !state.markerShowState[action.markerName];
       return Object.assign({}, state, {
         markerShowState: newMarkerShowState
+      });
+    case 'TOGGLE_TOOLTIP':
+      return Object.assign({}, state, {
+        faqs: state.faqs.slice(0, action.tooltipIndex)
+                  .concat(Object.assign({}, state.faqs[action.tooltipIndex], {show: !state.faqs[action.tooltipIndex].show}))
+                  .concat(state.faqs.slice(action.tooltipIndex + 1))
       });
     default:
       return state;

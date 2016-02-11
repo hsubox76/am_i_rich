@@ -1,6 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { INCOME_TIME_PERIODS } from '../data/types';
 
 import * as AmIRichActions from '../actions/actions';
 
@@ -8,9 +10,10 @@ const propTypes = {
   setIncome: React.PropTypes.func
 };
 
-function mapStateToProps() {
+function mapStateToProps(state) {
   return {
-  }
+    incomeTimePeriod: state.incomeTimePeriod
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -28,10 +31,31 @@ class IncomeBox extends React.Component {
   onSubmit(e) {
     e.preventDefault();
     const self = this;
-    this.props.actions.setIncome(self.refs.income.value);
+    this.props.actions.setIncome(parseInt(self.refs.income.value) *
+      self.props.incomeTimePeriod.divideBy);
   }
 
   render() {
+    const props = this.props;
+    const incomeTimePeriodButtons = _.map(INCOME_TIME_PERIODS, function(type, key) {
+      console.log(props.incomeTimePeriod);
+      const btnClass = props.incomeTimePeriod.divideBy === type.divideBy
+        ? 'btn-selected' : 'btn-default';
+      return (
+          <button
+              type="button"
+              key={key}
+              onClick={props.actions.setIncomeTimePeriod.bind(null, type)}
+              className={"btn " + btnClass}>
+            {type.text}
+          </button>
+      );
+    });
+    const incomeTimePeriodButtonGroup = (
+        <div className="btn-group button-group-app button-group-income">
+          {incomeTimePeriodButtons}
+        </div>
+    );
     return (
             <div className="box box-form row">
               <div className="box-title box-title-income col-xs-12">
@@ -56,6 +80,7 @@ class IncomeBox extends React.Component {
                             aria-label="Amount (to the nearest dollar)" />
                         <span className="input-group-addon">.00</span>
                       </div>
+                      {incomeTimePeriodButtonGroup}
                       <button className="btn-next btn">
                       <span
                           className="glyphicon glyphicon-circle-arrow-down"

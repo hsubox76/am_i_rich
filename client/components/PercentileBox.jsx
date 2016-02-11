@@ -50,7 +50,7 @@ class PercentileBox extends React.Component {
       );
     });
     const householdTypeButtonGroup = (
-        <div className="btn-group button-group-household">
+        <div className="btn-group button-group-app">
           {householdTypeButtons}
         </div>
     );
@@ -65,9 +65,9 @@ class PercentileBox extends React.Component {
                     onSubmit={this.onSubmit}
                     ref="form">
                   <div className="row">
-                    <div className="form-row col-md-4 col-xs-12">
-                      <div className="form-inline">
-                        <label className="control-label">Your Guess</label>
+                    <div className="form-row col-lg-6 col-xs-12">
+                      <div className="form-inline form-inline-percentile-guess">
+                        <label className="control-label">I Think I Make Less Than</label>
                         <div className="input-group input-percentile">
                           <input
                               type="number"
@@ -79,9 +79,10 @@ class PercentileBox extends React.Component {
                               aria-label="Guess your percentile" />
                           <span className="input-group-addon">%</span>
                         </div>
+                        <label className="control-label">Of The Population</label>
                       </div>
                     </div>
-                    <div className="form-row col-md-8 col-xs-12">
+                    <div className="form-row col-lg-6 col-xs-12">
                       <div className="form-inline">
                         <label className="control-label">Compare To Household Type</label>
                         {householdTypeButtonGroup}

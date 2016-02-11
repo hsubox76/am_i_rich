@@ -15,6 +15,12 @@ export const LOADING_STATES = {
   LOADED: 'loaded'
 };
 
+export const INCOME_TIME_PERIODS = {
+  YEAR: {text: 'per year', divideBy: 1},
+  WEEK: {text: 'per week', divideBy: 52},
+  HOUR: {text: 'per hour', divideBy: 40 * 52}
+};
+
 export const MARKERS = [
   {
     title: 'your income',
@@ -29,6 +35,17 @@ export const MARKERS = [
   {
     title: 'median',
     className: 'median-label',
+    show: false
+  }
+];
+
+export const FAQ = [
+  {
+    question: "Why isn't my county included?",
+    answer: "The ACS is a survey so apparently it only includes " +
+    "a sampling of counties, 26% to be exact. If you can't find your " +
+    "county, you can pick a nearby one, or pick \"My county isn't listed\" to " +
+    "just get the info for your state.",
     show: false
   }
 ];

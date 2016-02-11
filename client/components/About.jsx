@@ -9,8 +9,8 @@ class About extends React.Component {
           <div className="box-container col-md-10 col-md-offset-1 col-sm-12">
             <h3>About</h3>
             <p>Income data for this project is sourced from the
-              <a href="https://www.census.gov/programs-surveys/acs/data.html"> 2014 US Census American
-              Community Survey</a>.
+              <a href="https://www.census.gov/programs-surveys/acs/data.html"> 2014 US Census
+              American Community Survey</a>.
             </p>
             <hr />
             <h3>FAQ</h3>

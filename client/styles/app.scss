@@ -12,6 +12,7 @@ html, body {
 body {
   background: url('../images/swirl_pattern.png'),
   $color-primary-0;
+  font-family: Lato, Helvetica, Arial, sans-serif;
 }
 
 #content {
@@ -133,8 +134,33 @@ h1 {
   .box-body {
     padding-left: 20px;
     height: 100%;
+    &.faq-link {
+      text-align: right;
+      padding-right: 25px;
+      color: $color-primary-0;
+      margin-bottom: 5px;
+      cursor: pointer;
+      position: relative;
+    }
+    .faq-tooltip {
+      position: absolute;
+      right: 15px;
+      top: 25px;
+      width: 200px;
+      font-size: 12px;
+      text-align: center;
+      background-color: #eee;
+      border: 1px solid $color-primary-0;
+      border-radius: 5px;
+      color: $color-primary-3;
+      padding: 5px;
+      z-index: 100;
+    }
     .form-row {
       margin: 5px 0;
+    }
+    .form-inline-percentile-guess {
+      margin-top: 3px;
     }
     > div.form-group {
       margin: 10px 0;
@@ -147,7 +173,7 @@ h1 {
     label {
       color: $color-primary-0;
       margin: auto 15px auto 0;
-      font-weight: 300;
+      font-weight: 400;
     }
     select {
       margin-right: 15px;
@@ -163,17 +189,21 @@ h1 {
     }
     .input-income {
       margin-right: 10px;
+      margin-bottom: 5px;
       max-width: 200px;
       input {
         text-align: right;
       }
     }
-    .button-group-household {
+    .button-group-app {
       display: table;
       margin-right: 10px;
       @media(min-width: 768px) {
         display: inline-table;
       }
+    }
+    .button-group-income {
+      margin-bottom: 5px;
     }
     .input-percentile {
       margin-right: 10px;

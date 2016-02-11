@@ -1,4 +1,4 @@
-import {LOCATION_LEVELS, HOUSEHOLD_TYPES, MARKERS} from './types';
+import {LOCATION_LEVELS, HOUSEHOLD_TYPES, INCOME_TIME_PERIODS, MARKERS, FAQ} from './types';
 import STATES from './state-codes';
 import _ from 'lodash';
 
@@ -10,6 +10,7 @@ export const initialState = {
   counties: [],
   locationLevel: LOCATION_LEVELS.COUNTY,
   householdType: HOUSEHOLD_TYPES.NONFAMILY,
+  incomeTimePeriod: INCOME_TIME_PERIODS.YEAR,
   currentIncomeData: null,
   currentMedianValue: null,
   currentPage: 'app',
@@ -17,5 +18,6 @@ export const initialState = {
   markerShowState: _.reduce(MARKERS, function(obj, marker) {
     obj[marker.title] = marker.show;
     return obj;
-  }, {})
+  }, {}),
+  faqs: FAQ
 };

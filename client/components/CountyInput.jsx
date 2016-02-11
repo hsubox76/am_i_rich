@@ -34,14 +34,17 @@ class CountyInput extends React.Component {
   }
   onCountySelect (event) {
     const countyInfo = event.target.value.split(':');
-    this.props.actions.setCurrentCounty(countyInfo[0], countyInfo[1]);
-    if (countyInfo[0] !== '-1') {
-      // county exists
-      this.props.actions.requestCountyData(countyInfo[0], this.props.currentState.code);
-    } else {
-      // county not listed
-      this.props.actions.setLocationLevel(LOCATION_LEVELS.STATE);
-      this.props.actions.setCurrentDataSet();
+    if (countyInfo[0] !== '0') {
+      // if '0', user clicked back on 'select a county'
+      this.props.actions.setCurrentCounty(countyInfo[0], countyInfo[1]);
+      if (countyInfo[0] !== '-1') {
+        // county exists
+        this.props.actions.requestCountyData(countyInfo[0], this.props.currentState.code);
+      } else {
+        // county not listed
+        this.props.actions.setLocationLevel(LOCATION_LEVELS.STATE);
+        this.props.actions.setCurrentDataSet();
+      }
     }
   }
 

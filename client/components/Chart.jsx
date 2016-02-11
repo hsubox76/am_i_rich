@@ -187,8 +187,8 @@ class Chart extends React.Component {
   }
 
   intersectRect(r1, r2) {
-    var r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
-    var r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
+    r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
+    r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
 
     //CHECK IF THE TWO BOUNDING BOXES OVERLAP
     return !(r2.left > r1.right ||
@@ -268,12 +268,14 @@ class Chart extends React.Component {
     }
     const offset = 0; // set this programmatically
     const textX = labelWidth / 2;
-    const textY = (labelHeight / 2) + chartData.height * 0.05 + ((labelHeight + LABEL_SPACING) * offset);
+    const textY = (labelHeight / 2) + chartData.height * 0.05
+      + ((labelHeight + LABEL_SPACING) * offset);
     labelTitle.attr('transform', 'translate(0, ' + (-textBBox.height) + ')');
     labelPercentile.attr('transform', 'translate(0, ' + (textBBox.height) + ')');
     box.attr('width', labelWidth)
         .attr('height', labelHeight)
-        .attr ('transform', 'translate(' + boxOffset + ', ' + (((labelHeight + LABEL_SPACING) * offset)
+        .attr ('transform', 'translate(' + boxOffset + ', '
+            + (((labelHeight + LABEL_SPACING) * offset)
             + chartData.height * 0.05) + ')');
     labelText.attr('transform', 'translate(' + (textX + boxOffset) + ',' + textY + ')');
     line.attr('y1', ((labelHeight + LABEL_SPACING) * offset) + chartData.height * 0.05);
@@ -357,7 +359,8 @@ class Chart extends React.Component {
 
     _.forEach(markerElements, function(markerElement, markerIndex) {
       _.forEach(markerElements, function(otherElement, otherIndex) {
-        if (self.intersectRect($(markerElement.element).find('rect')[0], $(otherElement.element).find('rect')[0]) ) {
+        if (self.intersectRect($(markerElement.element).find('rect')[0],
+          $(otherElement.element).find('rect')[0]) ) {
           let topElement = null;
           let bottomElement = null;
           if (otherElement.xPos > markerElement.xPos) {
@@ -418,8 +421,10 @@ class Chart extends React.Component {
             const bottomTextOriginalX = $bottomElementText[0].transform.baseVal.getItem(0).matrix.e;
             const bottomTextOriginalY = $bottomElementText[0].transform.baseVal.getItem(0).matrix.f;
             $bottomElementLine.attr('y1', bottomLineOriginalY1 + topElementHeight + 10);
-            $bottomElementFlag.attr("transform", "translate(" + bottomFlagOriginalX + ", " + (bottomFlagOriginalY + topElementHeight + 10) + ")");
-            $bottomElementText.attr("transform", "translate(" + bottomTextOriginalX + ", " + (bottomTextOriginalY + topElementHeight + 10) + ")");
+            $bottomElementFlag.attr("transform", "translate(" + bottomFlagOriginalX + ", "
+              + (bottomFlagOriginalY + topElementHeight + 10) + ")");
+            $bottomElementText.attr("transform", "translate(" + bottomTextOriginalX + ", "
+              + (bottomTextOriginalY + topElementHeight + 10) + ")");
           }
         }
       });
@@ -531,7 +536,8 @@ class Chart extends React.Component {
               id={"d3-element"}
               width={this.props.chartData.svgWidth} height={this.props.chartData.svgHeight}>
             <g id="grid-container"
-               transform={"translate(" + (chartData.svgWidth * 0.1) + "," + chartData.svgHeight * 0.05 + ")"}
+               transform={"translate(" + (chartData.svgWidth * 0.1) + ","
+                + chartData.svgHeight * 0.05 + ")"}
                width={this.props.chartWidth} height={this.props.chartData.height}>
               <g id="bg-grid" />
               <g className="x-axis"
@@ -545,7 +551,9 @@ class Chart extends React.Component {
                   <rect id="lower-clip-shape" x="0" y="0" height={this.props.chartData.svgHeight} />
                 </clipPath>
                 <clipPath id="higher-clip">
-                  <rect id="higher-clip-shape" x="0" y="0" height={this.props.chartData.svgHeight} />
+                  <rect
+                    id="higher-clip-shape" x="0" y="0"
+                    height={this.props.chartData.svgHeight} />
                 </clipPath>
               </defs>
               {this.renderGraphArea('lower-clip')}
