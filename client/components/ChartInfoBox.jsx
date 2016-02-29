@@ -13,7 +13,7 @@ const propTypes = {
   setSelectingLocationLevel: React.PropTypes.func,
   householdType: React.PropTypes.string,
   selectingHouseholdType: React.PropTypes.bool,
-  countyIncomeData: React.PropTypes.array
+  countyIncomeData: React.PropTypes.object
 };
 
 function mapStateToProps(state) {
@@ -99,7 +99,7 @@ class ChartInfoBox extends React.Component {
     return (
             <div className="box box-user-info row">
               <div className="user-info-container col-xs-12">
-                <div className="user-info-text">You're in the top {(100 - props.userPercentile)}%
+                <div className="user-info-text">You're a "{(100 - props.userPercentile)}-percenter"
                   among
                 </div>
                 <div className="user-info" onClick={actions.setSelectingHouseholdType}>

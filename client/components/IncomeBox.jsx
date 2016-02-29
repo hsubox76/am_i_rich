@@ -12,7 +12,8 @@ const propTypes = {
 
 function mapStateToProps(state) {
   return {
-    incomeTimePeriod: state.incomeTimePeriod
+    incomeTimePeriod: state.incomeTimePeriod,
+    faqs: state.faqs
   };
 }
 
@@ -37,8 +38,8 @@ class IncomeBox extends React.Component {
 
   render() {
     const props = this.props;
+    const actions = this.props.actions;
     const incomeTimePeriodButtons = _.map(INCOME_TIME_PERIODS, function(type, key) {
-      console.log(props.incomeTimePeriod);
       const btnClass = props.incomeTimePeriod.divideBy === type.divideBy
         ? 'btn-selected' : 'btn-default';
       return (
@@ -55,7 +56,7 @@ class IncomeBox extends React.Component {
         <div className="btn-group button-group-app button-group-income">
           {incomeTimePeriodButtons}
         </div>
-    );
+    );   
     return (
             <div className="box box-form row">
               <div className="box-title box-title-income col-xs-12">
@@ -88,7 +89,15 @@ class IncomeBox extends React.Component {
                       </button>
                   </div>
                   </div>
+                  <div className="box-body faq-link col-xs-12 col-sm-8 col-md-6">
+                    <span onClick={actions.toggleTooltip.bind(null, 1)}>{props.faqs[1].question}</span>
+                    {props.faqs[1].show
+                      ? <div onClick={actions.toggleTooltip.bind(null, 1)}
+                        className="faq-tooltip">{props.faqs[1].answer}</div>
+                        : null}
+                  </div>
                 </form>
+
               </div>
             </div>
     );

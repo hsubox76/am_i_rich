@@ -43,14 +43,7 @@ h1 {
 }
 #d3-element {
   background-color: #fff;
-  //font-size: 18px;
   font-weight: 300;
-  //@media(max-width: 1200px) {
-  //  font-size: 1.5vw;
-  //}
-  //@media(max-width: 768px) {
-  //  font-size: 1.75vw;
-  //}
 }
 .d3-container {
   background-color: #fff;
@@ -379,12 +372,23 @@ h1 {
 .box-chart-bottom {
   border: 1px solid #ccc;
   padding: 10px;
+  .summary-text {
+    font-size: 16px;
+    color: #777;
+    font-weight: 300;
+    margin: 5px 0;
+    .stat {
+      margin: 0 2px;
+      font-weight: 400;
+      color: $color-primary-0;
+    }
+  }
 }
 .share-buttons {
   color: #777;
   font-size: 16px;
   display: inline-block;
-  padding: 2px 12px 2px 12px;
+  padding: 2px 0;
   width: auto;
   span.fa-facebook-official {
     cursor: pointer;

@@ -161,7 +161,7 @@ export default function mainReducer(state, action) {
     case 'SET_PERCENTILE':
       const guessedPercentile = action.guessedPercentile || state.guessedPercentile;
       return Object.assign({}, state, {
-        guessedPercentile: parseInt(guessedPercentile)
+        guessedPercentile: 100 - parseInt(guessedPercentile)
       });
     case 'CALCULATE_PERCENTILE_AND_INCOME':
       const userPercentile = findPercentileAtIncome(state);

@@ -47,5 +47,11 @@ export const FAQ = [
     "county, you can pick a nearby one, or pick \"My county isn't listed\" to " +
     "just get the info for your state.",
     show: false
+  },
+  {
+    question: "What if I don't work full time?",
+    answer: "The hourly option assumes you work full time (40 hrs/week)." +
+    "If not, try the weekly option and estimate your weekly income.",
+    show: false
   }
 ];

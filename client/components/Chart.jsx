@@ -37,7 +37,8 @@ const propTypes = {
   householdType: TYPES.string,
   locationLevel: TYPES.string,
   markerShowState: TYPES.object,
-  currentMedianValue: TYPES.number
+  currentMedianValue: TYPES.number,
+  currentPage: TYPES.string
 };
 
 function mapStateToProps(state) {
@@ -53,7 +54,8 @@ function mapStateToProps(state) {
     guessedPercentile: state.guessedPercentile,
     householdType: state.householdType,
     locationLevel: state.locationLevel,
-    markerShowState: state.markerShowState
+    markerShowState: state.markerShowState,
+    currentPage: state.currentPage
   }
 }
 
@@ -209,7 +211,7 @@ class Chart extends React.Component {
       d3.select("#lower-clip-shape").attr("width", chartData.xRange(xValue));
       d3.select("#higher-clip-shape")
           .attr("x", chartData.xRange(xValue))
-          .attr("width", chartData.xRange(chartData.maxX) - chartData.xRange(xValue));
+          .attr("width", chartData.xRange(chartData.maxX) - chartData.xRange(Math.min(xValue, chartData.maxX)));
     }
 
     const LABEL_PADDING = chartData.width * 0.012;
@@ -219,7 +221,9 @@ class Chart extends React.Component {
     let xPos = chartData.xRange(xValue);
     if (xPos > chartData.width - chartData.margins.right) {
       xPos = (chartData.width - chartData.margins.right);
-      percentile = '99+';
+      percentile = '<1';
+    } else {
+      percentile = 100 - percentile;
     }
     const g = gridContainer.append('g').attr('class', 'graph-label ' + className);
     const line = g.append('svg:line')
@@ -255,7 +259,7 @@ class Chart extends React.Component {
         .attr('text-anchor', 'middle')
         .attr('font-size', LABEL_FONT_SIZE)
         .attr('class', 'label-text')
-        .text('top ' + (100 - percentile) + '%');
+        .text('top ' + percentile + '%');
     const textBBox = labelTitle[0][0].getBBox();
     const labelHeight = textBBox.height * 2 + LABEL_PADDING * 4;
     const labelWidth = textBBox.width + LABEL_PADDING * 2;
@@ -444,7 +448,9 @@ class Chart extends React.Component {
 
   componentDidMount() {
     this.props.actions.calculatePercentileAndIncome();
-    //this.calculateChartVars();
+    if (this.props.chartData) {
+      this.drawChart();
+    }
   }
 
 
@@ -467,6 +473,7 @@ class Chart extends React.Component {
             $("#d3-element").children().length === 0
             || _.isNull(prevProps.chartData)
             || !_.isEqual(this.props.chartData, prevProps.chartData)
+            || !_.isEqual(this.props.currentPage, prevProps.currentPage)
         )
     ) {
       console.log('===DRAW CHART==');

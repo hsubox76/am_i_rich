@@ -159,14 +159,13 @@ module.exports = function(grunt) {
         src: ['client/scripts/index.jsx'],
         dest: 'public/scripts/app.build.js',
         options: {
-          debug: true,
           watch: true,
           keepAlive: true,
           browserifyOptions: {
             extensions: [".js", ".jsx"],
             debug: true,
             transform: [
-              "babelify",
+              ["babelify"],
               ["envify", {
                   NODE_ENV: 'development'
                 }
@@ -213,7 +212,7 @@ module.exports = function(grunt) {
         tasks: ['sass']
       },
       html: {
-        files: ['client/iindex.html'],
+        files: ['client/index.html'],
         tasks: ['copy:html']
       },
       css: {

@@ -43,7 +43,7 @@ class Navbar extends React.Component {
               </button>
               <a
                   className="navbar-brand"
-                  onClick={props.actions.setCurrentPage.bind(null, "app")}>Am I Middle Class?</a>
+                  onClick={props.actions.setCurrentPage.bind(null, "app")}>What "Percenter" Am I?</a>
             </div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav navbar-right">

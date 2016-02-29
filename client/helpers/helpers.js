@@ -13,12 +13,12 @@ export function getCurrentDataSet(locationLevel, householdType) {
   }
 }
 
-export function postToFacebook() {
+export function postToFacebook(message) {
   FB.ui({
     method: 'feed',
-    link: "http://52.25.45.188/",
-    picture: "http://52.25.45.188/images/chart-thumb.png",
-    description: "Find out how rich or poor you really are.  (Example results above.)",
+    link: "http://percentilizer.com",
+    picture: "http://percentilizer.com/images/chart-thumb.png",
+    description: message,
     "redirect-uri": "http://localhost:3000/"
   });
 }

@@ -35,7 +35,7 @@ class LocationBox extends React.Component {
         ? null
         : (
             <div className="box-body faq-link col-xs-12">
-              <span onClick={actions.toggleTooltip.bind(null, 0)}>Why Isn't My County Listed?</span>
+              <span onClick={actions.toggleTooltip.bind(null, 0)}>{props.faqs[0].question}</span>
               {props.faqs[0].show
                 ? <div onClick={actions.toggleTooltip.bind(null, 0)}
                   className="faq-tooltip">{props.faqs[0].answer}</div>
