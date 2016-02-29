@@ -57,7 +57,7 @@ class Navbar extends React.Component {
                 </li>
                 <li>
                   <a
-                      onClick={postToFacebook}
+                      onClick={postToFacebook.bind(null, 'Are you a one-percenter?  Or a 77-percenter?')}
                       className="fa fa-facebook-official"></a>
                 </li>
               </ul>

@@ -19,6 +19,6 @@ export function postToFacebook(message) {
     link: "http://percentilizer.com",
     picture: "http://percentilizer.com/images/chart-thumb.png",
     description: message,
-    "redirect-uri": "http://localhost:3000/"
+    "redirect-uri": "http://percentilizer.com/"
   });
 }
